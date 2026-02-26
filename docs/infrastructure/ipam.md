@@ -73,7 +73,7 @@ Click a subnet to drill into its address list, DHCP ranges, and utilization deta
 
 A searchable, filterable table of all tracked IP addresses across all subnets. Filter by subnet, status, site, or search by IP/hostname.
 
-{/* ![IPAM subnet utilization](./img/ipam-subnets.png) */}
+![IPAM subnet utilization](./img/ipam-subnets.png)
 
 ---
 

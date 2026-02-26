@@ -31,7 +31,7 @@ Navigate to **Administration → Sites** and click **Add Site**.
 If you set a **preferred collector** on the site, new nodes added to that site will automatically be assigned to that collector. This is the easiest way to ensure remote-site nodes are polled by the correct local collector.
 :::
 
-{/* ![Site creation form](./img/site-create.png) */}
+![Site creation form](./img/site-create.png)
 
 ---
 
