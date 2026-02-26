@@ -19,6 +19,10 @@ const config = {
   organizationName: 'Stratora-Platforms',
   projectName: 'stratora-docs',
 
+  markdown: {
+    mermaid: true,
+  },
+
   onBrokenLinks: 'throw',
 
   i18n: {
@@ -57,6 +61,8 @@ const config = {
       }),
     ],
   ],
+
+  themes: ['@docusaurus/theme-mermaid'],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
