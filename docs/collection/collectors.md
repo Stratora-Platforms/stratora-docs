@@ -26,7 +26,7 @@ For devices in networks not reachable from the server — branch offices, factor
 - Sends all collected metrics back to the Stratora server over HTTPS
 - Pulls its configuration from the server every 10 seconds
 
-You can deploy as many remote collectors as your environment needs. Each one operates independently — if the WAN link to the server goes down, the collector queues metrics locally and resumes delivery when connectivity returns.
+You can deploy as many remote collectors as your environment needs. Each one operates independently — if the WAN link to the server goes down, collectors buffer metrics in memory during temporary connectivity interruptions. For brief outages, metrics are retained and delivered when connectivity resumes. During extended outages or restarts, in-memory buffers may be exhausted, resulting in partial metric gaps.
 
 ---
 
