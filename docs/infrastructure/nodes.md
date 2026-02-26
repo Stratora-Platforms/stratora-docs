@@ -113,7 +113,7 @@ Every node has a health status that reflects its current state. Status is evalua
 | **Maintenance** | Node is in a scheduled or manual maintenance window (alerts suppressed) |
 
 :::info
-Health status is driven by [alert definitions](../alerting/alert-definitions.md). The highest-severity active alert determines the node's status. If no alerts are firing and the node is reachable, it shows as **Healthy**.
+Health status is driven by [alert configurations](../alerting/alert-configurations.md). The highest-severity active alert determines the node's status. If no alerts are firing and the node is reachable, it shows as **Healthy**.
 :::
 
 ---
@@ -136,7 +136,7 @@ Change which collector polls the selected nodes. When you reassign a collector, 
 
 ### Maintenance Mode
 
-Place selected nodes into maintenance mode to suppress alerts during planned work. See [Maintenance Windows](../alerting/maintenance-windows.md) for details.
+Place selected nodes into maintenance mode to suppress alerts during planned work. See [Maintenance](../alerting/maintenance.md) for details.
 
 ---
 
