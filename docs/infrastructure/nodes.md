@@ -7,7 +7,7 @@ title: Nodes
 
 A **node** is any device Stratora monitors — a Windows server, Linux box, network switch, firewall, NAS, VMware host, or anything reachable by SNMP, an agent, or a ping. Nodes are the core unit of monitoring: every metric, alert, and dashboard panel ties back to a node.
 
-Every node belongs to a [site](./sites.md) and is assigned a [device template](./device-templates.md) that determines what gets collected.
+Every node belongs to a [site](./sites.md) and is assigned a device template that determines what gets collected. Nodes can also be organized into [node groups](./node-groups.md) for filtering and management.
 
 ---
 
@@ -22,7 +22,7 @@ Every node belongs to a [site](./sites.md) and is assigned a [device template](.
 | Storage (NAS/SAN) | SNMP | Synology, QNAP |
 | VMware ESXi Host | SNMP | ESXi 6.x/7.x/8.x hosts |
 | VMware vCenter | vSphere API | vCenter Server Appliance |
-| Wireless AP | SNMP | Aruba Instant APs |
+| Wi-Fi Controller / AP | SNMP | Aruba Instant APs |
 | HTTP/HTTPS Endpoint | HTTP | Web apps, APIs, public URLs |
 | Ping | ICMP | Any IP-reachable device |
 
@@ -45,15 +45,16 @@ Navigate to **Infrastructure → Nodes** and click **Add Node**. You'll need:
 
 The node enters **Discovering** status until the first metrics arrive.
 
-### Via Discovery
+### Via Discovery Import
 
-Run a [network discovery scan](../collection/discovery.md) against a subnet. Stratora probes each host with ICMP, SNMP, and other signals to identify device types and auto-match templates. You then review the results and import selected devices as nodes.
+Run a [network discovery scan](../collection/discovery.md) against a subnet. Stratora probes each host with ICMP, SNMP, HTTP banners, and other signals to identify device types and auto-match templates. You then review the results and import selected devices as nodes.
 
 During import, Stratora automatically:
 - Sets the node type based on fingerprinting results
 - Assigns the best-matching device template
 - Populates SNMP system fields (sysDescr, sysObjectID, sysName)
 - Assigns the node to the site where the discovery was run
+- Creates an [IPAM](./ipam.md) address record for the discovered IP
 
 ### Via Agent Enrollment
 
@@ -80,7 +81,7 @@ Click any node to open its detail view. The layout adapts based on the device te
 - **System info** — OS, manufacturer, model, serial number (populated by agent or SNMP)
 - **Assigned collector** — which collector is polling this node
 - **Active alerts** — any currently firing alerts with severity and duration
-- **Tags** — custom labels for filtering and organization
+- **Node groups** — color-coded group badges showing which [groups](./node-groups.md) this node belongs to
 
 ### Key Metrics by Type
 
@@ -92,7 +93,7 @@ Click any node to open its detail view. The layout adapts based on the device te
 | NAS/Storage | Disk health, RAID status, volume capacity, temperature, read/write IO |
 | VMware ESXi | CPU/memory, VM count, datastore usage, per-vmnic throughput |
 | VMware vCenter | Cluster resources, top VMs by CPU/memory, datastore usage, VM latency |
-| Wireless AP | Connected clients by SSID, radio utilization, AP memory/CPU |
+| Wi-Fi Controller / AP | Connected clients by SSID, radio utilization, AP memory/CPU |
 | HTTP/HTTPS | Response time, HTTP status code, availability percentage, SSL certificate expiry |
 | Ping | Response time (min/avg/max), packet loss |
 
@@ -126,6 +127,7 @@ Select multiple nodes from the node list to perform bulk operations.
 Move selected nodes to a different site. Useful when reorganizing after initial setup or when a new site is created.
 
 - Select nodes → **Actions → Move to Site** → choose target site
+- Up to 500 nodes per operation
 - Nodes already in the target site are skipped automatically
 
 ### Assign Collector
@@ -163,7 +165,7 @@ Rejected nodes remain in the database but are excluded from monitoring and dashb
 | Site | Parent site | Manual (required) |
 | Template | Device template | Manual or discovery auto-match |
 | Environment | production, staging, or development | Manual (default: production) |
-| Tags | Custom labels | Manual |
+| Node Groups | Color-coded group memberships | Manual |
 | OS Name / Version | Operating system | Agent or SNMP sysDescr |
 | Manufacturer / Model | Hardware info | Agent (WMI/DMI) or SNMP |
 | Serial Number | Device serial | Agent or SNMP |

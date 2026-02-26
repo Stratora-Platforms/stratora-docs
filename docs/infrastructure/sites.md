@@ -11,7 +11,7 @@ Sites serve three purposes:
 
 1. **Organization** — group nodes by location so operators can quickly scope dashboards, alerts, and views to what matters
 2. **Collector assignment** — each site has a preferred collector, so nodes added to a site automatically get polled by the right collector in the right network
-3. **Network documentation** — sites contain network definitions (CIDRs, VLANs, gateways) that support discovery scans and IPAM
+3. **Network documentation** — sites contain network definitions (CIDRs, VLANs, gateways) that feed into [IPAM](./ipam.md) and discovery scans
 
 ---
 
@@ -32,44 +32,6 @@ If you set a **preferred collector** on the site, new nodes added to that site w
 :::
 
 {/* ![Site creation form](./img/site-create.png) */}
-
----
-
-## Site Networks
-
-Each site can have one or more **network definitions** describing the subnets at that location. These serve as documentation and as targets for discovery scans.
-
-### Adding a Network
-
-From the site detail view, go to the **Networks** tab and click **Add Network**.
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| CIDR | Yes | Network range in CIDR notation (e.g., `10.1.20.0/24`) |
-| Name | No | Friendly name (e.g., "Server VLAN") |
-| VLAN ID | No | 802.1Q VLAN tag (1–4094) |
-| Network Type | No | Classification for the subnet |
-| Allocation Type | No | static, dhcp, or reserved |
-| Gateway IP | No | Default gateway for the subnet |
-| Discovery Enabled | No | Whether discovery scans should include this network |
-
-### Network Types
-
-Stratora ships with built-in network type classifications:
-
-| Type | Use For |
-|------|---------|
-| Infrastructure | Management and backbone networks |
-| Production | Server and application networks |
-| OT | Operational technology (SCADA, ICS, PLCs) |
-| User | End-user workstation networks |
-| Guest | Guest and visitor networks |
-| DMZ | External-facing services |
-| Other | Anything else |
-
-:::info
-Network types are labels for organizational clarity. They don't affect monitoring behavior, but they help operators quickly identify the purpose of each subnet.
-:::
 
 ---
 
@@ -150,4 +112,5 @@ Most views in Stratora support site-based filtering:
 - **Node list** — filter by site to see only nodes at a specific location
 - **Alerts** — filter alerts by site to focus on a location during an incident
 - **Dashboards** — scope dashboard views to a single site
+- **IPAM** — view subnets and addresses scoped to a site
 - **Reports** — generate per-site reports for capacity planning or compliance
