@@ -60,7 +60,7 @@ During import, Stratora automatically:
 
 When you install the Stratora Agent on a Windows or Linux server, the agent registers itself with the Stratora server during first startup. The node appears in **Infrastructure → Nodes** with a **Pending** approval status. Once you approve the node, monitoring begins.
 
-See [Windows Agent](../collection/windows-agent.md) and [Linux Agent](../collection/linux-agent.md) for installation details.
+See [Enrollment](../collection/enrollment.md) for installation and registration details.
 
 :::tip
 Agent-enrolled nodes automatically detect installed roles and services. For example, a Windows server running Active Directory will have LDAP, DNS, and DHCP metrics collected without extra configuration.
