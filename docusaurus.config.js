@@ -63,7 +63,8 @@ const config = {
     ({
       image: 'img/stratora-logo-transparent.png',
       colorMode: {
-        respectPrefersColorScheme: true,
+        defaultMode: 'dark',
+        respectPrefersColorScheme: false,
       },
       navbar: {
         title: 'Stratora Docs',
