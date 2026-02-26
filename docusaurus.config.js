@@ -6,7 +6,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'Stratora Docs',
   tagline: 'Operator-first infrastructure monitoring for IT/OT environments',
-  favicon: 'img/stratora-favicon.png',
+  favicon: 'img/favicon.png',
 
   future: {
     v4: true,
@@ -70,7 +70,7 @@ const config = {
         title: 'Stratora Docs',
         logo: {
           alt: 'Stratora Logo',
-          src: 'img/stratora-favicon.png',
+          src: 'img/favicon.png',
         },
         items: [
           {
