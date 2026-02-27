@@ -1,256 +1,117 @@
 # Getting Started
 
-Stratora is designed to get you from installation to real visibility
-fast.
+A guided setup wizard is coming soon. In the meantime, follow these steps in order to get your environment monitored — each one builds on the previous. Click through to the linked pages for full details on each topic.
 
-> **In under 30 minutes, you can have live infrastructure monitoring
-> running in your environment.**
+> **Estimated time:** 20–45 minutes depending on environment size.
 
-By the end of this guide, you will have:
+---
 
--   Live CPU, memory, disk, and interface metrics
--   Auto-generated dashboards per device
--   Real-time health badges
--   A discovery-backed inventory of your network
--   At least one verified alert notification
--   A site-based structure ready for expansion
+## 1. Activate Your License
 
-> **A guided setup wizard is coming soon. Until then, follow the steps below
-> in order: each builds on the previous.**
+Confirm your edition and device headroom before you start adding nodes. Every Stratora installation starts as Community Edition (100 devices). If you have a Pro or Enterprise license, upload your `.lic` file to unlock higher limits.
 
-------------------------------------------------------------------------
+→ [License](https://docs.stratora.io/docs/administration/license)
 
-## System Requirements (Evaluation / Lab)
+---
 
-Minimum recommended for a small lab or pilot:
+## 2. Secure Your Admin Account & Create Users
 
--   4 vCPU\
--   8--16 GB RAM\
--   50 GB disk\
--   PostgreSQL 15+\
--   VictoriaMetrics (single-node)\
--   Windows Server or Linux supported
+Change the default admin password, then create accounts for your team. Stratora has two roles: **Admin** (full configuration access) and **Operator** (monitoring and alert acknowledgment).
 
-Stratora does **not** modify monitored devices. Discovery and polling
-are read-only (SNMP, HTTPS, and API-based collection).
+> **Key concept:** User accounts are for _login and alert acknowledgment_ only. Where notifications get delivered — email, Slack, Teams — is configured separately in [Escalation Teams](https://docs.stratora.io/docs/alerting/escalation-teams) (Step 8).
 
-------------------------------------------------------------------------
+→ [Users](https://docs.stratora.io/docs/administration/users)
 
-## How Stratora Works (Quick Architecture Overview)
+---
 
-    Agents (Windows / Linux)
-            ↓
-       Stratora Server
-            ↓
-    NGINX (fronts internal services)
-            ↓
-    VictoriaMetrics + PostgreSQL
+## 3. Create Your Sites
 
-    SNMP Devices / HTTPS Endpoints
-            ↓
-    Collectors (Telegraf-based)
-            ↓
-         Stratora Server
-            ↓
-    NGINX (fronts internal services)
-            ↓
-    VictoriaMetrics + PostgreSQL
+Every node in Stratora must belong to a site. Create your site structure first — whether that's by physical location, network segment, or client (for MSPs). You'll assign everything else to sites as you go.
 
-Key points:
+→ [Sites](https://docs.stratora.io/docs/infrastructure/sites)
 
--   **Agents send directly to the Stratora Server** (no collector
-    required)
--   **SNMP/HTTPS monitoring flows through Collectors**, which forward
-    metrics to the Stratora Server
--   **NGINX sits in front of VictoriaMetrics and PostgreSQL** on the
-    Stratora Server
--   The Stratora Server handles orchestration, dashboards, alerting, and
-    identity
+---
 
-Remote collectors are optional at first --- small environments can start
-without them and expand later.
+## 4. Add SNMP & VMware Credentials
 
-------------------------------------------------------------------------
+If you're monitoring switches, firewalls, access points, NAS, or VMware hosts, add their credentials to the vault now. You can add multiple credential sets — Stratora will try them during discovery.
 
-# Step-by-Step Setup
+→ [Credentials](https://docs.stratora.io/docs/collection/credentials)
 
-## 1. Secure Your Admin Account & Create Users
+---
 
-Immediately change the default admin password.
+## 5. Enroll Your First Agents
 
-Then create accounts for your team.
+For Windows and Linux servers, generate an enrollment token and run the install command on each host. Agents handle enrollment, metric collection (via Telegraf), and service monitoring automatically.
 
-Stratora includes two roles:
+Tokens are re-viewable by Admins at any time. The local Stratora server acts as the default collector — remote collectors are a separate configuration and not required for initial setup.
 
--   **Admin** --- full configuration access\
--   **Operator** --- monitoring, dashboards, alert acknowledgment
+→ [Enrollment](https://docs.stratora.io/docs/collection/enrollment)
 
-> **Key concept:** User accounts control login and alert acknowledgment.
-> Notification delivery (email, Slack, Teams) is configured separately
-> in Escalation Teams (Step 8).
+---
 
-------------------------------------------------------------------------
+## 6. Define IPAM Subnets
 
-## 2. Create Your Sites
+Add the subnets you want Stratora to track and scan. Assign each subnet to a site. Stratora can auto-suggest subnets from the server's own interfaces to get you started quickly.
 
-Every node in Stratora belongs to a site.
+You don't need every subnet right away — start with the ones you'll scan in the next step.
 
-Create your site structure first --- by:
+→ [IPAM](https://docs.stratora.io/docs/infrastructure/ipam)
 
--   Physical location\
--   Network segment\
--   Business unit\
--   Customer (for MSPs)
+---
 
-Everything else will be assigned to sites as you go.
+## 7. Run Discovery & Import Nodes
 
-------------------------------------------------------------------------
+With credentials and subnets in place, run a discovery scan. Stratora fingerprints devices via SNMP (sysObjectID, sysDescr) and auto-matches templates. Review the results, select what to import, and nodes are assigned to sites based on their subnet.
 
-## 3. Add SNMP & VMware Credentials
+Imported nodes enter a **Discovering** state while initial collection completes, then auto-generated dashboards appear with real data.
 
-If you plan to monitor switches, firewalls, access points, NAS devices,
-or VMware hosts, add credentials now.
+→ [Discovery](https://docs.stratora.io/docs/collection/discovery)
+→ [Nodes](https://docs.stratora.io/docs/infrastructure/nodes)
+→ [Dashboards](https://docs.stratora.io/docs/monitoring/dashboards)
 
-You can add multiple credential sets. During discovery, Stratora will
-attempt them automatically.
-
-Credentials are stored securely in the encrypted vault.
-
-------------------------------------------------------------------------
-
-## 4. Enroll Your First Agents
-
-For Windows and Linux servers:
-
-1.  Generate an enrollment token\
-2.  Run the install command on the target host\
-3.  The agent auto-registers with Stratora
-
-Agents handle:
-
--   Enrollment\
--   Metric collection (agent → Stratora Server)\
--   Service monitoring\
--   OS and hardware identity reporting
-
-Enrollment tokens are re-viewable by Admins at any time.
-
-------------------------------------------------------------------------
-
-## 5. Define IPAM Subnets
-
-Add the subnets you want Stratora to track and scan.
-
--   Assign each subnet to a site\
--   Use auto-suggested subnets from the server if desired\
--   Start small --- you can expand later
-
-You do not need every subnet defined before starting.
-
-------------------------------------------------------------------------
-
-## 6. Run Discovery & Import Nodes
-
-With credentials and subnets in place, run a discovery scan.
-
-During discovery, Stratora:
-
--   Fingerprints devices via SNMP (sysObjectID, sysDescr)\
--   Detects reachable HTTPS endpoints (where configured)\
--   Auto-matches device templates\
--   Does **not** change device configuration (read-only collection)
-
-Review results and select devices to import.
-
-Imported nodes enter a **Discovering** state while initial collection
-completes. Once complete:
-
--   Dashboards are auto-generated\
--   Health badges activate\
--   Metrics begin populating in real time
-
-------------------------------------------------------------------------
-
-## 7. Confirm Live Dashboards
-
-Before proceeding, confirm:
-
--   CPU and memory metrics are updating\
--   Interface status appears (where applicable)\
--   Health indicators reflect real status\
--   The global time range selector updates panels consistently
-
-If dashboards are live, monitoring is active.
-
-------------------------------------------------------------------------
+---
 
 ## 8. Configure Alerts & Escalation Teams
 
-Stratora includes built-in alert configurations for:
+Stratora ships with built-in alert configurations covering CPU, memory, disk, interface status, and more. Review the defaults and adjust thresholds for your environment.
 
--   CPU usage\
--   Memory usage\
--   Disk utilization\
--   Interface status\
--   Device reachability
+Then create escalation teams to control where notifications go: email distribution lists, Slack webhooks, or Teams webhooks. Assign each team to one or more sites and **send a test notification** to confirm delivery.
 
-Review thresholds and adjust for your environment.
+→ [Alert Configurations](https://docs.stratora.io/docs/alerting/alert-configurations)
+→ [Escalation Teams](https://docs.stratora.io/docs/alerting/escalation-teams)
+→ [Contacts](https://docs.stratora.io/docs/alerting/contacts)
 
-Then:
+---
 
-1.  Create an escalation team\
-2.  Add notification targets (email, Slack, Teams, webhook)\
-3.  Assign the team to one or more sites\
-4.  **Send a test notification**
+## Pre-Flight Checklist
 
-Confirm delivery before considering setup complete.
+Before you consider initial setup complete:
 
-------------------------------------------------------------------------
+- [ ] License activated, edition and device headroom confirmed
+- [ ] Default admin password changed
+- [ ] At least one site created
+- [ ] SNMP/VMware credentials added (if applicable)
+- [ ] Agent installed on at least one server
+- [ ] Subnets defined in IPAM
+- [ ] Discovery scan run and devices imported
+- [ ] Escalation team created with notification targets
+- [ ] Test notification received
+- [ ] Auto-generated dashboards showing real data
 
-## 9. Review Licensing (Optional for Community Edition)
+---
 
-Every installation starts as **Community Edition (100 devices)**.
+## What's Next
 
-If you have a Pro or Enterprise license:
+With the basics in place, explore the rest of what Stratora offers:
 
-1.  Upload your `.lic` file\
-2.  Device limits update immediately\
-3.  No restart required
-
-Only actively monitored devices count toward the limit.
-
-------------------------------------------------------------------------
-
-# Pre-Flight Checklist
-
--   [ ] Default admin password changed\
--   [ ] At least one site created\
--   [ ] Credentials added (if applicable)\
--   [ ] Agent installed on at least one server\
--   [ ] Subnets defined in IPAM\
--   [ ] Discovery scan run\
--   [ ] Devices imported\
--   [ ] Dashboards showing live data\
--   [ ] Escalation team created\
--   [ ] Test notification received
-
-If all boxes are checked, Stratora is operational.
-
-------------------------------------------------------------------------
-
-# What's Next
-
-With core monitoring active, you can expand into:
-
--   Maps --- Interactive topology maps\
--   Rack Diagrams --- Physical rack visualization\
--   Reports --- Scheduled reporting\
--   Node Groups --- Logical grouping\
--   Maintenance --- Planned alert suppression\
--   Collectors --- Distributed collection\
--   Data Retention --- Retention policies & enforcement\
--   Identity Providers --- OIDC SSO (Microsoft Entra ID)\
--   SSL / TLS Certificates --- Trusted certificates
-
-Stratora is now discovering infrastructure, collecting metrics,
-generating dashboards, and enforcing alerts.
+- [Maps](https://docs.stratora.io/docs/monitoring/maps) — Interactive topology and floor plan maps
+- [Rack Diagrams](https://docs.stratora.io/docs/monitoring/racks) — Document physical rack layouts tied to monitored nodes
+- [Reports](https://docs.stratora.io/docs/monitoring/reports) — Scheduled and on-demand reporting
+- [Node Groups](https://docs.stratora.io/docs/infrastructure/node-groups) — Logical groupings across sites
+- [Maintenance](https://docs.stratora.io/docs/alerting/maintenance) — Suppress alerts during planned work
+- [Collectors](https://docs.stratora.io/docs/collection/collectors) — Distributed collection for remote sites
+- [Data Retention](https://docs.stratora.io/docs/administration/data-retention) — Control how long metric data is stored
+- [Identity Providers](https://docs.stratora.io/docs/administration/identity-providers) — SSO with Microsoft Entra ID or other OIDC providers
+- [SSL / TLS Certificates](https://docs.stratora.io/docs/administration/ssl-tls-certificates) — Trusted certs for the web interface
+- [Settings](https://docs.stratora.io/docs/administration/settings) — Global platform configuration
