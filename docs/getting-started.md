@@ -34,9 +34,6 @@ Minimum recommended for a small lab or pilot:
 Stratora does **not** modify monitored devices. Discovery and polling
 are read-only (SNMP, HTTPS, and API-based collection).
 
-> **Estimated setup time:** 20--45 minutes depending on environment
-> size.
-
 ------------------------------------------------------------------------
 
 ## How Stratora Works (Quick Architecture Overview)
