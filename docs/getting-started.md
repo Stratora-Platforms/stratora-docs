@@ -16,7 +16,7 @@ Confirm your edition and device headroom before you start adding nodes. Every St
 
 ## 2. Secure Your Admin Account & Create Users
 
-Change the default admin password, then create accounts for your team. Stratora has two roles: **Admin** (full configuration access) and **Operator** (monitoring and alert acknowledgment).
+Change the default admin password, then create accounts for your team. Stratora has three roles: **Admin** (full configuration access), **Operator** (monitoring and alert acknowledgment), and **Viewer** (read only monitoring).
 
 > **Key concept:** User accounts are for _login and alert acknowledgment_ only. Where notifications get delivered — email, Slack, Teams — is configured separately in [Escalation Teams](https://docs.stratora.io/docs/alerting/escalation-teams) (Step 8).
 
