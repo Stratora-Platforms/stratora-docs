@@ -16,7 +16,7 @@ By the end of this guide, you will have:
 -   A site-based structure ready for expansion
 
 > A guided setup wizard is coming soon. Until then, follow the steps below
-> in order --- each builds on the previous.
+> in order: each builds on the previous.
 
 ------------------------------------------------------------------------
 
