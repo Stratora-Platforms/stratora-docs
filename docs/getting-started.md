@@ -10,7 +10,7 @@ A guided setup wizard is coming soon. In the meantime, follow these steps in ord
 
 Confirm your edition and device headroom before you start adding nodes. Every Stratora installation starts as Community Edition (100 devices). If you have a Pro or Enterprise license, upload your `.lic` file to unlock higher limits.
 
-→ [License](/docs/administration/license)
+→ [License](https://docs.stratora.io/docs/administration/license)
 
 ---
 
@@ -18,9 +18,9 @@ Confirm your edition and device headroom before you start adding nodes. Every St
 
 Change the default admin password, then create accounts for your team. Stratora has two roles: **Admin** (full configuration access) and **Operator** (monitoring and alert acknowledgment).
 
-> **Key concept:** User accounts are for _login and alert acknowledgment_ only. Where notifications get delivered — email, Slack, Teams — is configured separately in [Escalation Teams](/docs/alerting/escalation-teams) (Step 8).
+> **Key concept:** User accounts are for _login and alert acknowledgment_ only. Where notifications get delivered — email, Slack, Teams — is configured separately in [Escalation Teams](https://docs.stratora.io/docs/alerting/escalation-teams) (Step 8).
 
-→ [Users](/docs/administration/users)
+→ [Users](https://docs.stratora.io/docs/administration/users)
 
 ---
 
@@ -28,7 +28,7 @@ Change the default admin password, then create accounts for your team. Stratora 
 
 Every node in Stratora must belong to a site. Create your site structure first — whether that's by physical location, network segment, or client (for MSPs). You'll assign everything else to sites as you go.
 
-→ [Sites](/docs/infrastructure/sites)
+→ [Sites](https://docs.stratora.io/docs/infrastructure/sites)
 
 ---
 
@@ -36,7 +36,7 @@ Every node in Stratora must belong to a site. Create your site structure first �
 
 If you're monitoring switches, firewalls, access points, NAS, or VMware hosts, add their credentials to the vault now. You can add multiple credential sets — Stratora will try them during discovery.
 
-→ [Credentials](/docs/collection/credentials)
+→ [Credentials](https://docs.stratora.io/docs/collection/credentials)
 
 ---
 
@@ -46,7 +46,7 @@ For Windows and Linux servers, generate an enrollment token and run the install 
 
 Tokens are re-viewable by Admins at any time. The local Stratora server acts as the default collector — remote collectors are a separate configuration and not required for initial setup.
 
-→ [Enrollment](/docs/collection/enrollment)
+→ [Enrollment](https://docs.stratora.io/docs/collection/enrollment)
 
 ---
 
@@ -56,7 +56,7 @@ Add the subnets you want Stratora to track and scan. Assign each subnet to a sit
 
 You don't need every subnet right away — start with the ones you'll scan in the next step.
 
-→ [IPAM](/docs/infrastructure/ipam)
+→ [IPAM](https://docs.stratora.io/docs/infrastructure/ipam)
 
 ---
 
@@ -66,9 +66,9 @@ With credentials and subnets in place, run a discovery scan. Stratora fingerprin
 
 Imported nodes enter a **Discovering** state while initial collection completes, then auto-generated dashboards appear with real data.
 
-→ [Discovery](/docs/collection/discovery)
-→ [Nodes](/docs/infrastructure/nodes)
-→ [Dashboards](/docs/monitoring/dashboards)
+→ [Discovery](https://docs.stratora.io/docs/collection/discovery)
+→ [Nodes](https://docs.stratora.io/docs/infrastructure/nodes)
+→ [Dashboards](https://docs.stratora.io/docs/monitoring/dashboards)
 
 ---
 
@@ -78,9 +78,9 @@ Stratora ships with built-in alert configurations covering CPU, memory, disk, in
 
 Then create escalation teams to control where notifications go: email distribution lists, Slack webhooks, or Teams webhooks. Assign each team to one or more sites and **send a test notification** to confirm delivery.
 
-→ [Alert Configurations](/docs/alerting/alert-configurations)
-→ [Escalation Teams](/docs/alerting/escalation-teams)
-→ [Contacts](/docs/alerting/contacts)
+→ [Alert Configurations](https://docs.stratora.io/docs/alerting/alert-configurations)
+→ [Escalation Teams](https://docs.stratora.io/docs/alerting/escalation-teams)
+→ [Contacts](https://docs.stratora.io/docs/alerting/contacts)
 
 ---
 
@@ -105,13 +105,13 @@ Before you consider initial setup complete:
 
 With the basics in place, explore the rest of what Stratora offers:
 
-- [Maps](/docs/monitoring/maps) — Interactive topology and floor plan maps
-- [Rack Diagrams](/docs/monitoring/rack-diagrams) — Document physical rack layouts tied to monitored nodes
-- [Reports](/docs/monitoring/reports) — Scheduled and on-demand reporting
-- [Node Groups](/docs/infrastructure/node-groups) — Logical groupings across sites
-- [Maintenance](/docs/alerting/maintenance) — Suppress alerts during planned work
-- [Collectors](/docs/collection/collectors) — Distributed collection for remote sites
-- [Data Retention](/docs/administration/data-retention) — Control how long metric data is stored
-- [Identity Providers](/docs/administration/identity-providers) — SSO with Microsoft Entra ID or other OIDC providers
-- [SSL / TLS Certificates](/docs/administration/ssl-tls-certificates) — Trusted certs for the web interface
-- [Settings](/docs/administration/settings) — Global platform configuration
+- [Maps](https://docs.stratora.io/docs/monitoring/maps) — Interactive topology and floor plan maps
+- [Rack Diagrams](https://docs.stratora.io/docs/monitoring/rack-diagrams) — Document physical rack layouts tied to monitored nodes
+- [Reports](https://docs.stratora.io/docs/monitoring/reports) — Scheduled and on-demand reporting
+- [Node Groups](https://docs.stratora.io/docs/infrastructure/node-groups) — Logical groupings across sites
+- [Maintenance](https://docs.stratora.io/docs/alerting/maintenance) — Suppress alerts during planned work
+- [Collectors](https://docs.stratora.io/docs/collection/collectors) — Distributed collection for remote sites
+- [Data Retention](https://docs.stratora.io/docs/administration/data-retention) — Control how long metric data is stored
+- [Identity Providers](https://docs.stratora.io/docs/administration/identity-providers) — SSO with Microsoft Entra ID or other OIDC providers
+- [SSL / TLS Certificates](https://docs.stratora.io/docs/administration/ssl-tls-certificates) — Trusted certs for the web interface
+- [Settings](https://docs.stratora.io/docs/administration/settings) — Global platform configuration
