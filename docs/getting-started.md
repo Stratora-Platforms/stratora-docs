@@ -15,8 +15,8 @@ By the end of this guide, you will have:
 -   At least one verified alert notification
 -   A site-based structure ready for expansion
 
-> A guided setup wizard is coming soon. Until then, follow the steps below
-> in order: each builds on the previous.
+> **A guided setup wizard is coming soon. Until then, follow the steps below
+> in order: each builds on the previous.**
 
 ------------------------------------------------------------------------
 
