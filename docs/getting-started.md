@@ -106,7 +106,7 @@ Before you consider initial setup complete:
 With the basics in place, explore the rest of what Stratora offers:
 
 - [Maps](https://docs.stratora.io/docs/monitoring/maps) — Interactive topology and floor plan maps
-- [Rack Diagrams](https://docs.stratora.io/docs/monitoring/rack-diagrams) — Document physical rack layouts tied to monitored nodes
+- [Rack Diagrams](https://docs.stratora.io/docs/monitoring/racks) — Document physical rack layouts tied to monitored nodes
 - [Reports](https://docs.stratora.io/docs/monitoring/reports) — Scheduled and on-demand reporting
 - [Node Groups](https://docs.stratora.io/docs/infrastructure/node-groups) — Logical groupings across sites
 - [Maintenance](https://docs.stratora.io/docs/alerting/maintenance) — Suppress alerts during planned work
