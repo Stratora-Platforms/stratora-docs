@@ -113,4 +113,4 @@ Most views in Stratora support site-based filtering:
 - **Alerts** — filter alerts by site to focus on a location during an incident
 - **Dashboards** — scope dashboard views to a single site
 - **IPAM** — view subnets and addresses scoped to a site
-- **Reports** — generate per-site reports for capacity planning or compliance
+- **[Reports](../reports/overview.md)** — generate per-site reports for health summaries and compliance
