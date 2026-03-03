@@ -124,7 +124,7 @@ A site is considered "empty" if it had zero non-maintenance nodes for the entire
 
 ## How Maintenance Affects Metrics
 
-[Maintenance windows](../alerting/maintenance.md) have specific effects on report metrics to ensure planned downtime doesn't distort your data.
+[Maintenance windows](../../alerting/maintenance.md) have specific effects on report metrics to ensure planned downtime doesn't distort your data.
 
 | Metric | Maintenance Effect |
 |--------|-------------------|
@@ -136,7 +136,7 @@ A site is considered "empty" if it had zero non-maintenance nodes for the entire
 | **Heatmap** | Maintenance periods are shown as **gray** blocks, distinct from healthy or degraded states |
 
 :::tip
-Schedule [maintenance windows](../alerting/maintenance.md) before performing planned work. This ensures your reports accurately reflect organic reliability rather than planned disruptions.
+Schedule [maintenance windows](../../alerting/maintenance.md) before performing planned work. This ensures your reports accurately reflect organic reliability rather than planned disruptions.
 :::
 
 ---
