@@ -1,117 +1,211 @@
-# Getting Started
+# Getting Started with Stratora
 
-A guided setup wizard is coming soon. In the meantime, follow these steps in order to get your environment monitored — each one builds on the previous. Click through to the linked pages for full details on each topic.
+This guide walks you through installing Stratora and setting up monitoring for your infrastructure. The built-in Setup Wizard handles most of the configuration automatically — you'll go from installation to live dashboards in under 10 minutes.
 
-> **Estimated time:** 20–45 minutes depending on environment size.
+## Prerequisites
 
----
+Before installing Stratora, ensure you have:
 
-## 1. Activate Your License
+- **Windows Server 2019 or 2022** (recommended)
+- **4 CPU cores minimum**
+- **16 GB RAM minimum**
+- **200 GB disk** on C:\ (recommended)
+- **Network access** to the subnets you intend to monitor (ICMP, SNMP UDP/161)
+- **SNMP credentials** for your network devices (community strings for v2c, or username/auth/priv for v3)
 
-Confirm your edition and device headroom before you start adding nodes. Every Stratora installation starts as Community Edition (100 devices). If you have a Pro or Enterprise license, upload your `.lic` file to unlock higher limits.
+## Installation
 
-→ [License](https://docs.stratora.io/docs/administration/license)
+### 1. Download and Install
 
----
+Download the latest Stratora MSI installer from your license portal. Run the installer on your designated monitoring server:
 
-## 2. Secure Your Admin Account & Create Users
+```
+msiexec /i Stratora-x.x.x.msi /qn
+```
 
-Change the default admin password, then create accounts for your team. Stratora has three roles: **Admin** (full configuration access), **Operator** (monitoring and alert acknowledgment), and **Viewer** (read only monitoring).
+The installer configures all required Stratora services automatically.
 
-> **Key concept:** User accounts are for _login and alert acknowledgment_ only. Where notifications get delivered — email, Slack, Teams — is configured separately in [Escalation Teams](https://docs.stratora.io/docs/alerting/escalation-teams) (Step 8).
+### 2. Verify Services
 
-→ [Users](https://docs.stratora.io/docs/administration/users)
+After installation, confirm all Stratora services are running:
 
----
+- **Stratora Server** — core API and web interface
+- **Stratora Metrics** — time-series storage
+- **Stratora Collector** — metric collection
+- **Stratora Proxy** — web proxy serving the UI
 
-## 3. Create Your Sites
+### 3. Access the Web Interface
 
-Every node in Stratora must belong to a site. Create your site structure first — whether that's by physical location, network segment, or client (for MSPs). You'll assign everything else to sites as you go.
+Open a browser and navigate to `https://your-server-hostname`. Log in with your administrator credentials configured during installation.
 
-→ [Sites](https://docs.stratora.io/docs/infrastructure/sites)
+## Setup Wizard
 
----
+On first login, the Setup Wizard opens automatically. It guides you through 9 steps to configure your monitoring environment. Each step builds on the previous — by the end, you'll have devices discovered, imported, and monitored with active alerting.
 
-## 4. Add SNMP & VMware Credentials
+The wizard is re-runnable and additive. You can close it at any time (your progress is saved), and relaunch it from the Home page. Running it again won't duplicate existing configuration — it detects what's already set up and lets you add more.
 
-If you're monitoring switches, firewalls, access points, NAS, or VMware hosts, add their credentials to the vault now. You can add multiple credential sets — Stratora will try them during discovery.
+### Step 1: Welcome
 
-→ [Credentials](https://docs.stratora.io/docs/collection/credentials)
+The welcome screen outlines what the wizard will configure. Click **Get Started** to begin.
 
----
+### Step 2: License
 
-## 5. Enroll Your First Agents
+Stratora runs in Community edition by default with a 25-device monitoring limit. If you have a Pro or Enterprise license:
 
-For Windows and Linux servers, generate an enrollment token and run the install command on each host. Agents handle enrollment, metric collection (via Telegraf), and service monitoring automatically.
+1. Click **Upload License**
+2. Select your `.lic` file
+3. The edition and device limit update immediately
 
-Tokens are re-viewable by Admins at any time. The local Stratora server acts as the default collector — remote collectors are a separate configuration and not required for initial setup.
+The device headroom bar shows how many of your licensed slots are in use. Node limits are enforced only on actively monitored devices — discovered but unimported devices don't count.
 
-→ [Enrollment](https://docs.stratora.io/docs/collection/enrollment)
+### Step 3: Sites
 
----
+Sites represent your physical locations — data centers, branch offices, factory floors, or client environments. Every monitored device belongs to a site.
 
-## 6. Define IPAM Subnets
+1. Enter a **Site Name** (e.g., "HQ Data Center", "Boca Raton Office")
+2. Optionally add an **Address** for geographic mapping
+3. Click **Add** to create the site
+4. Create at least one site to continue (you can add more later)
 
-Add the subnets you want Stratora to track and scan. Assign each subnet to a site. Stratora can auto-suggest subnets from the server's own interfaces to get you started quickly.
+Sites created here automatically get dashboards, topology maps, and health scoring.
 
-You don't need every subnet right away — start with the ones you'll scan in the next step.
+### Step 4: Credentials
 
-→ [IPAM](https://docs.stratora.io/docs/infrastructure/ipam)
+Add SNMP credentials that Stratora will use to discover and monitor network devices. These are stored in an encrypted credential vault.
 
----
+**For SNMP v2c:**
+- Enter the community string (e.g., `public` for read-only)
 
-## 7. Run Discovery & Import Nodes
+**For SNMP v3:**
+- Enter the username, security level, and authentication/privacy protocols and passwords
 
-With credentials and subnets in place, run a discovery scan. Stratora fingerprints devices via SNMP (sysObjectID, sysDescr) and auto-matches templates. Review the results, select what to import, and nodes are assigned to sites based on their subnet.
+You can add multiple credentials — during discovery, Stratora tries each credential sequentially per device and uses the first one that succeeds.
 
-Imported nodes enter a **Discovering** state while initial collection completes, then auto-generated dashboards appear with real data.
+This step is skippable if you plan to monitor agent-based devices only.
 
-→ [Discovery](https://docs.stratora.io/docs/collection/discovery)
-→ [Nodes](https://docs.stratora.io/docs/infrastructure/nodes)
-→ [Dashboards](https://docs.stratora.io/docs/monitoring/dashboards)
+### Step 5: Agents
 
----
+Deploy Stratora agents to Windows and Linux servers for deep OS-level monitoring (CPU, memory, disk, services, processes).
 
-## 8. Configure Alerts & Escalation Teams
+1. Click **Generate Token** to create an enrollment token
+2. Optionally select a **Site** to auto-assign enrolled agents
+3. Follow the on-screen instructions — the wizard generates the install commands for you and provides direct download links for the installer packages
+4. Deploy to your servers using the provided commands, or distribute the installers via GPO, SCCM, Intune, Ansible, or any other deployment tool
 
-Stratora ships with built-in alert configurations covering CPU, memory, disk, interface status, and more. Review the defaults and adjust thresholds for your environment.
+Agents enroll automatically and begin reporting metrics within 60 seconds. This step is skippable — you can deploy agents later.
 
-Then create escalation teams to control where notifications go: email distribution lists, Slack webhooks, or Teams webhooks. Assign each team to one or more sites and **send a test notification** to confirm delivery.
+### Step 6: Network (IPAM Subnets)
 
-→ [Alert Configurations](https://docs.stratora.io/docs/alerting/alert-configurations)
-→ [Escalation Teams](https://docs.stratora.io/docs/alerting/escalation-teams)
-→ [Contacts](https://docs.stratora.io/docs/alerting/contacts)
+Define the IP subnets Stratora should know about. These are used for discovery scanning and IPAM tracking.
 
----
+1. Enter a **CIDR** (e.g., `10.40.0.0/24`)
+2. Assign a **Site**
+3. Optionally add a **Name**, **Gateway**, and **VLAN ID**
+4. Click **Add**
 
-## Pre-Flight Checklist
+Add all subnets you want to scan. The discovery step will use these as scan targets.
 
-Before you consider initial setup complete:
+This step is skippable if you only plan to monitor agent-based devices.
 
-- [ ] License activated, edition and device headroom confirmed
-- [ ] Default admin password changed
-- [ ] At least one site created
-- [ ] SNMP/VMware credentials added (if applicable)
-- [ ] Agent installed on at least one server
-- [ ] Subnets defined in IPAM
-- [ ] Discovery scan run and devices imported
-- [ ] Escalation team created with notification targets
-- [ ] Test notification received
-- [ ] Auto-generated dashboards showing real data
+### Step 7: Discovery
 
----
+This is where Stratora scans your network and finds devices automatically.
 
-## What's Next
+**Configure:** Your subnets from Step 6 and credentials from Step 4 are pre-selected. Adjust if needed, then click **Start Scan**.
 
-With the basics in place, explore the rest of what Stratora offers:
+**Scan:** Stratora scans all IP addresses in your selected subnets using ICMP ping, TCP port probing, and SNMP queries. Devices appear in the results table as they're discovered. The scan typically takes 5–10 minutes for a few /24 subnets.
 
-- [Maps](https://docs.stratora.io/docs/monitoring/maps) — Interactive topology and floor plan maps
-- [Rack Diagrams](https://docs.stratora.io/docs/monitoring/racks) — Document physical rack layouts tied to monitored nodes
-- [Reports](https://docs.stratora.io/docs/monitoring/reports) — Scheduled and on-demand reporting
-- [Node Groups](https://docs.stratora.io/docs/infrastructure/node-groups) — Logical groupings across sites
-- [Maintenance](https://docs.stratora.io/docs/alerting/maintenance) — Suppress alerts during planned work
-- [Collectors](https://docs.stratora.io/docs/collection/collectors) — Distributed collection for remote sites
-- [Data Retention](https://docs.stratora.io/docs/administration/data-retention) — Control how long metric data is stored
-- [Identity Providers](https://docs.stratora.io/docs/administration/identity-providers) — SSO with Microsoft Entra ID or other OIDC providers
-- [SSL / TLS Certificates](https://docs.stratora.io/docs/administration/ssl-tls-certificates) — Trusted certs for the web interface
-- [Settings](https://docs.stratora.io/docs/administration/settings) — Global platform configuration
+Each discovered device is classified automatically:
+- **High confidence** — SNMP-responding devices with full identification (firewalls, switches, APs, NAS, servers)
+- **Medium confidence** — Devices with a hostname or open ports but no SNMP
+- **Low confidence** — ICMP-only responses (often proxy ARP phantoms from firewalls)
+
+**Import:** After the scan completes, review the results. Devices are pre-selected based on confidence level. Click **Import Devices** to add them to monitoring. Imported devices are automatically assigned dashboard templates and default alert rules based on their device type.
+
+This step is skippable if you prefer to add devices manually.
+
+### Step 8: Alerts & Escalation
+
+Create an escalation team to receive alert notifications when something goes wrong.
+
+Click **Create Escalation Team** to open the full escalation team builder:
+
+**Team Details:** Name your team (e.g., "Network Operations", "IT On-Call").
+
+**Schedule:** Choose how the team operates:
+- **Always Active** — Notifications fire 24/7 to configured channels
+- **Time-Based** — Notifications only during specified hours and days
+- **On-Call Rotation** — Notifications route to whoever is currently on-call. Define your rotation roster (team members in order), rotation period (e.g., 7 days), and handoff time.
+
+**Notification Steps:** Configure escalation tiers:
+- **Step 1 (Immediate):** Notify via email, Slack, Teams, or webhook
+- **Step 2 (after delay):** Escalate to additional contacts if unacknowledged
+- Add as many steps as needed
+
+For on-call rotation teams, notification steps can target rotation positions (On-Call #1, #2, #3, etc.) instead of specific contacts. The actual recipient is resolved from the roster at alert time.
+
+**Settings:** Configure repeat cycle behavior for unacknowledged alerts.
+
+**Review:** Confirm the configuration and create the team.
+
+This step is skippable — you can configure escalation teams later from **Alerting > Escalation Teams**.
+
+### Step 9: Summary
+
+The summary shows your configured environment at a glance: sites, credentials, subnets, monitored devices, and alert rules. Click **Go to Dashboard** to complete setup and start monitoring.
+
+## After Setup
+
+### Home Dashboard
+
+Your Home page now shows the **Infrastructure Brief** — a triage-oriented overview with:
+
+- **Health Score** trending across your environment
+- **Critical Impact** alerts requiring immediate attention
+- **Resource Risk** warnings (disk space, CPU, memory trends)
+- **Recommended Actions** — deterministic suggestions based on your environment state
+
+### Site Dashboards
+
+Each site gets an auto-seeded dashboard with panels for node health, service status, and network topology. Navigate to a site to see its dedicated view.
+
+### Adding More Devices
+
+As your environment grows:
+
+- **Re-run the wizard** from the Home page to add more sites, subnets, or credentials
+- **Run discovery scans** from **Discovery > Scan** for ad-hoc network scanning
+- **Schedule recurring scans** from **IPAM > Subnets** to automatically detect new devices
+- **Deploy agents** to additional servers using the enrollment token from **Settings > Enrollment**
+
+### Monitoring Configuration
+
+Stratora auto-assigns monitoring templates based on device type. To customize:
+
+- **Dashboard templates** — Edit auto-created dashboards or build custom ones
+- **Alert rules** — Modify default thresholds in **Alerting > Alert Configurations**
+- **Escalation policies** — Add teams, adjust delays, and configure on-call schedules in **Alerting > Escalation Teams**
+
+## Manual Setup (Without Wizard)
+
+If you prefer to configure everything manually or skipped the wizard:
+
+1. **Create sites** in **Infrastructure > Sites**
+2. **Add SNMP credentials** in **Settings > Credential Vault**
+3. **Define subnets** in **IPAM > Subnets**
+4. **Run a discovery scan** in **Discovery > Scan** — select subnets and credentials, start the scan, then import discovered devices
+5. **Deploy agents** using enrollment tokens from **Settings > Enrollment**
+6. **Create escalation teams** in **Alerting > Escalation Teams**
+7. **Configure alert rules** in **Alerting > Alert Configurations**
+
+All of these capabilities are the same ones the wizard orchestrates — the wizard just sequences them for a streamlined first-run experience.
+
+## Next Steps
+
+- [Agent Deployment Guide](/docs/agent-deployment) — Detailed agent installation for Windows and Linux
+- [SNMP Monitoring Guide](/docs/snmp-monitoring) — Configuring SNMP credentials and templates
+- [Discovery & IPAM](/docs/discovery-ipam) — Network scanning, IPAM management, and scheduled scans
+- [Alerting & Escalation](/docs/alerting) — Alert rules, escalation teams, and on-call rotation
+- [Dashboard Customization](/docs/dashboards) — Building and customizing dashboards
+- [SSL/TLS Configuration](/docs/ssl-tls) — Setting up HTTPS with Let's Encrypt or custom certificates
+- [Licensing](/docs/licensing) — Community, Pro, and Enterprise edition details
