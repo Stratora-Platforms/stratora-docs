@@ -199,13 +199,3 @@ If you prefer to configure everything manually or skipped the wizard:
 7. **Configure alert rules** in **Alerting > Alert Configurations**
 
 All of these capabilities are the same ones the wizard orchestrates — the wizard just sequences them for a streamlined first-run experience.
-
-## Next Steps
-
-- [Agent Deployment Guide](/docs/agent-deployment) — Detailed agent installation for Windows and Linux
-- [SNMP Monitoring Guide](/docs/snmp-monitoring) — Configuring SNMP credentials and templates
-- [Discovery & IPAM](/docs/discovery-ipam) — Network scanning, IPAM management, and scheduled scans
-- [Alerting & Escalation](/docs/alerting) — Alert rules, escalation teams, and on-call rotation
-- [Dashboard Customization](/docs/dashboards) — Building and customizing dashboards
-- [SSL/TLS Configuration](/docs/ssl-tls) — Setting up HTTPS with Let's Encrypt or custom certificates
-- [Licensing](/docs/licensing) — Community, Pro, and Enterprise edition details
