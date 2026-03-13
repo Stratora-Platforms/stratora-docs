@@ -71,7 +71,7 @@ Stratora ships with a wide range of panel types, each designed for a specific ki
 | **Table** | Tabular data with sorting, filtering, and configurable columns |
 | **Port Grid** | Interactive switch port visualization with real-time status and PoE indicators — shows all ports in a physical layout |
 | **Interface Throughput Grid** | Per-interface throughput visualization across all interfaces on a device |
-| **Top Nodes by Response Time** | Ranked list of nodes by response time — useful for identifying slow devices |
+| **Top by Response Time** | Ranked list of nodes by response time — useful for identifying slow devices |
 | **Incidents Table** | Alert and incident history for the scoped nodes |
 
 ### Infrastructure-Specific
@@ -111,6 +111,8 @@ Available presets range from **5 minutes** to **7 days**. Individual panels can 
 
 ## Auto-Generated Dashboards
 
+### Node Dashboards
+
 When a node has a device template assigned, Stratora generates a dashboard tailored to that device type. For example:
 
 - A **Windows Server** node gets CPU/memory gauges, disk usage charts, network throughput, service status, and event log panels
@@ -122,6 +124,31 @@ These dashboards appear automatically on the node's detail view. You don't need 
 :::tip
 You can add a node's auto-generated panels to a custom dashboard. In the builder, select a node from the sidebar and its template-defined panels become available to drag onto your dashboard.
 :::
+
+### Site Dashboards
+
+When you create a site, Stratora automatically generates a fully-configured monitoring dashboard for it. No manual panel configuration required.
+
+**Trigger behavior:**
+- Dashboard is created on site creation
+- Updates automatically when nodes are added, removed, or have their device type changed
+- Regeneration is idempotent — safe to trigger multiple times without creating duplicate panels
+
+**Default panel layout:**
+
+| Row | Panels |
+|-----|--------|
+| **Key Metrics** | Nodes Online, Nodes Down, Active Alerts, Availability, Avg Response Time |
+| **Topology & Status** | Network Topology, Up/Down Status |
+| **Health & Breakdown** | Health Breakdown, Device Types, WAN Health *(conditional)* |
+| **Performance** | Top by Response Time, Top by CPU, Top by Memory, Top by Disk |
+| **Alerts** | Active Alerts detail |
+
+**Conditional panels:**
+- **WAN Health** only appears when the site has one or more nodes with `node_type = 'wan_circuit'`
+- **Storage Capacity** is available in the component picker for custom dashboards but is not included in the auto-generated template
+
+**Read-only:** Auto-generated site dashboards are read-only and display an "Auto-Generated" badge. Click **Clone & Edit** to create a customizable copy.
 
 ---
 
