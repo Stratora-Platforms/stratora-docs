@@ -32,11 +32,12 @@ Read-only access. Viewers can see dashboards, nodes, alerts, and maps, but canno
 | Section | Area | Admin | Operator | Viewer |
 |---------|------|:-----:|:--------:|:------:|
 | **Monitoring** | **Dashboards** | View, create, edit, delete, share | View, create, edit, delete, share | View only |
-| **Monitoring** | **Node groups** | View, manage | View, manage | View only |
-| **Monitoring** | **Nodes** | View, create, edit, delete | View, create, edit | View only |
 | **Monitoring** | **Rack diagrams** | View, create, edit, delete | View, create, edit, delete | View only |
+| **Monitoring** | **Reports** | View, manage | View, manage | View only |
 | **Monitoring** | **Topology maps** | View, create, edit, delete | View, create, edit, delete | View only |
 | **Infrastructure** | **IPAM** | View, manage | View, manage | View only |
+| **Infrastructure** | **Node groups** | View, manage | View, manage | View only |
+| **Infrastructure** | **Nodes** | View, create, edit, delete | View, create, edit | View only |
 | **Infrastructure** | **Sites** | View, manage | View, manage | View only |
 | **Collection** | **Agents** | Deploy, download, generate tokens | Deploy, download | — |
 | **Collection** | **Collectors** | View, manage, deploy | View, deploy | View only |
@@ -49,7 +50,6 @@ Read-only access. Viewers can see dashboards, nodes, alerts, and maps, but canno
 | **Alerting** | **Escalation teams** | View, manage | View, manage | View only |
 | **Alerting** | **Maintenance** | View, manage | View, manage | View only |
 | **Administration** | **License** | View, manage | View only | — |
-| **Administration** | **Reports** | View, manage | View, manage | View only |
 | **Administration** | **Settings** | View, modify | View only | — |
 | **Administration** | **Users** | View, manage | — | — |
 
