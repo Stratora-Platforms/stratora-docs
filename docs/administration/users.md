@@ -32,26 +32,26 @@ Read-only access. Viewers can see dashboards, nodes, alerts, and maps, but canno
 | Section | Area | Admin | Operator | Viewer |
 |---------|------|:-----:|:--------:|:------:|
 | **Monitoring** | **Dashboards** | View, create, edit, delete, share | View, create, edit, delete, share | View only |
-| | **Node groups** | View, manage | View, manage | View only |
-| | **Nodes** | View, create, edit, delete | View, create, edit | View only |
-| | **Rack diagrams** | View, create, edit, delete | View, create, edit, delete | View only |
-| | **Topology maps** | View, create, edit, delete | View, create, edit, delete | View only |
+| **Monitoring** | **Node groups** | View, manage | View, manage | View only |
+| **Monitoring** | **Nodes** | View, create, edit, delete | View, create, edit | View only |
+| **Monitoring** | **Rack diagrams** | View, create, edit, delete | View, create, edit, delete | View only |
+| **Monitoring** | **Topology maps** | View, create, edit, delete | View, create, edit, delete | View only |
 | **Infrastructure** | **IPAM** | View, manage | View, manage | View only |
-| | **Sites** | View, manage | View, manage | View only |
+| **Infrastructure** | **Sites** | View, manage | View, manage | View only |
 | **Collection** | **Agents** | Deploy, download, generate tokens | Deploy, download | — |
-| | **Collectors** | View, manage, deploy | View, deploy | View only |
-| | **Credentials** | View, create, edit, delete, reveal | View (masked), attach/detach | View (masked) |
-| | **Discovery** | View, run, manage | View, run, manage | View only |
-| | **Enrollment tokens** | View, create, reveal, delete | View, select existing | — |
+| **Collection** | **Collectors** | View, manage, deploy | View, deploy | View only |
+| **Collection** | **Credentials** | View, create, edit, delete, reveal | View (masked), attach/detach | View (masked) |
+| **Collection** | **Discovery** | View, run, manage | View, run, manage | View only |
+| **Collection** | **Enrollment tokens** | View, create, reveal, delete | View, select existing | — |
 | **Alerting** | **Alert configurations** | View, edit | View, edit | View only |
-| | **Alerts** | View, acknowledge, mute | View, acknowledge, mute | View only |
-| | **Contacts** | View, manage | View, manage | View only |
-| | **Escalation teams** | View, manage | View, manage | View only |
-| | **Maintenance** | View, manage | View, manage | View only |
+| **Alerting** | **Alerts** | View, acknowledge, mute | View, acknowledge, mute | View only |
+| **Alerting** | **Contacts** | View, manage | View, manage | View only |
+| **Alerting** | **Escalation teams** | View, manage | View, manage | View only |
+| **Alerting** | **Maintenance** | View, manage | View, manage | View only |
 | **Administration** | **License** | View, manage | View only | — |
-| | **Reports** | View, manage | View, manage | View only |
-| | **Settings** | View, modify | View only | — |
-| | **Users** | View, manage | — | — |
+| **Administration** | **Reports** | View, manage | View, manage | View only |
+| **Administration** | **Settings** | View, modify | View only | — |
+| **Administration** | **Users** | View, manage | — | — |
 
 :::info
 **Credential access** deserves special attention: Operators can see which credentials exist and attach them to nodes for monitoring, but they cannot view the actual secret values, create new credentials, or delete existing ones. Only Admins can reveal plaintext secrets. Viewers see credential names and types only — all secret fields are masked.
