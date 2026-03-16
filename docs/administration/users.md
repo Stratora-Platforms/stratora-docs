@@ -11,7 +11,7 @@ The **Users** page lets administrators manage who can access Stratora and what t
 
 ## Roles
 
-Every user is assigned one of three roles. Roles determine what actions the user can perform across the platform.
+Every user is assigned one of three roles. Roles determine what actions the user can perform across the platform. For the full permissions breakdown by feature area, see [User Roles & Permissions](./user-roles-and-permissions.md).
 
 ### Admin
 
@@ -19,7 +19,7 @@ Full access to everything in Stratora. Admins can manage users, configure identi
 
 ### Operator
 
-Day-to-day operational access. Operators can create and manage nodes, dashboards, alerts, and maintenance windows, but cannot access user management, system settings, or delete nodes.
+Day-to-day operational access. Operators can create and manage nodes, deploy agents and collectors, run discovery scans, manage dashboards, alerts, and maintenance windows, but cannot access user management, system settings, or delete nodes.
 
 ### Viewer
 
@@ -29,27 +29,29 @@ Read-only access. Viewers can see dashboards, nodes, alerts, and maps, but canno
 
 ## Permissions Breakdown
 
-| Area | Admin | Operator | Viewer |
-|------|:-----:|:--------:|:------:|
-| **Dashboards** | View, create, edit, delete, share | View, create, edit, delete, share | View only |
-| **Nodes** | View, create, edit, delete | View, create, edit | View only |
-| **Alerts** | View, acknowledge, mute | View, acknowledge, mute | View only |
-| **Alert configurations** | View, edit | View, edit | View only |
-| **Sites** | View, manage | View, manage | View only |
-| **Node groups** | View, manage | View, manage | View only |
-| **Discovery** | View, run, manage | View, run, manage | View only |
-| **IPAM** | View, manage | View, manage | View only |
-| **Topology maps** | View, create, edit, delete | View, create, edit, delete | View only |
-| **Rack diagrams** | View, create, edit, delete | View, create, edit, delete | View only |
-| **Contacts** | View, manage | View, manage | View only |
-| **Escalation teams** | View, manage | View, manage | View only |
-| **Maintenance** | View, manage | View, manage | View only |
-| **Credentials** | View, create, edit, delete, reveal | View (masked), attach/detach | View (masked) |
-| **Collectors** | View, manage | View only | View only |
-| **Enrollment tokens** | View, manage | View only | — |
-| **Users** | View, manage | — | — |
-| **Settings** | View, modify | View only | View only |
-| **License** | View, manage | View only | View only |
+| Section | Area | Admin | Operator | Viewer |
+|---------|------|:-----:|:--------:|:------:|
+| **Monitoring** | **Dashboards** | View, create, edit, delete, share | View, create, edit, delete, share | View only |
+| | **Node groups** | View, manage | View, manage | View only |
+| | **Nodes** | View, create, edit, delete | View, create, edit | View only |
+| | **Rack diagrams** | View, create, edit, delete | View, create, edit, delete | View only |
+| | **Topology maps** | View, create, edit, delete | View, create, edit, delete | View only |
+| **Infrastructure** | **IPAM** | View, manage | View, manage | View only |
+| | **Sites** | View, manage | View, manage | View only |
+| **Collection** | **Agents** | Deploy, download, generate tokens | Deploy, download | — |
+| | **Collectors** | View, manage, deploy | View, deploy | View only |
+| | **Credentials** | View, create, edit, delete, reveal | View (masked), attach/detach | View (masked) |
+| | **Discovery** | View, run, manage | View, run, manage | View only |
+| | **Enrollment tokens** | View, create, reveal, delete | View, select existing | — |
+| **Alerting** | **Alert configurations** | View, edit | View, edit | View only |
+| | **Alerts** | View, acknowledge, mute | View, acknowledge, mute | View only |
+| | **Contacts** | View, manage | View, manage | View only |
+| | **Escalation teams** | View, manage | View, manage | View only |
+| | **Maintenance** | View, manage | View, manage | View only |
+| **Administration** | **License** | View, manage | View only | — |
+| | **Reports** | View, manage | View, manage | View only |
+| | **Settings** | View, modify | View only | — |
+| | **Users** | View, manage | — | — |
 
 :::info
 **Credential access** deserves special attention: Operators can see which credentials exist and attach them to nodes for monitoring, but they cannot view the actual secret values, create new credentials, or delete existing ones. Only Admins can reveal plaintext secrets. Viewers see credential names and types only — all secret fields are masked.

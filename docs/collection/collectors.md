@@ -32,6 +32,13 @@ You can deploy as many remote collectors as your environment needs. Each one ope
 
 ## Deploying a Remote Collector
 
+The fastest way to deploy a collector is from the **Deploy Collector** modal in the UI. Navigate to **Collection → Collectors** and click the **Deploy Collector** button. The modal provides two modes:
+
+- **Silent Install** — generates a ready-to-run PowerShell command with your server URL, enrollment token, collector name, and site pre-filled. Copy and run on the target server.
+- **Interactive Install** — download the MSI and run it manually. The modal shows your server URL for reference.
+
+The MSI can also be downloaded directly at `/api/v1/downloads/collector/windows`.
+
 ### MSI Installer
 
 Remote collectors are installed via an MSI package. During installation you provide:
