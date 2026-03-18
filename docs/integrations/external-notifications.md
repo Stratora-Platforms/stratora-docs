@@ -18,7 +18,7 @@ Stratora delivers alert notifications to external systems through multiple chann
 | **Microsoft Teams** | Adaptive Cards (v1.4) | Available |
 | **Generic Webhook** | JSON payload via HTTP POST | Available |
 | **SMS** | Text messages via Twilio | Available |
-| **Voice** | Automated voice calls via Twilio | Planned |
+| **Voice** | Automated voice calls via Twilio | Available (bidirectional mode) |
 
 ---
 
@@ -333,11 +333,51 @@ Submit verification in the Twilio Console before production use: [Twilio Toll-Fr
 
 ---
 
-## Voice
+## Voice Calls
 
-:::info
-**Voice** (automated phone call) notifications via Twilio TwiML are planned for a future release. The escalation team configuration UI shows the Voice channel type with a "Coming soon" badge.
-:::
+Stratora can call escalation team members when an alert fires. The call uses text-to-speech to announce the alert, then prompts for a DTMF response.
+
+### What you hear
+
+> "Stratora alert. CRITICAL on SERVER-01, site HQ. High CPU Usage.
+> Press 1 to acknowledge. Press 2 to escalate. Press 3 to repeat this message."
+
+### DTMF responses
+
+| Key | Action |
+|-----|--------|
+| **1** | Acknowledge the alert |
+| **2** | Escalate to the next step |
+| **3** | Repeat the message |
+| No input (10s timeout) | No action — log in to Stratora to manage the alert |
+
+### Requirements
+
+- **Bidirectional mode only** — Twilio must be able to fetch TwiML from Stratora (voice polling mode is not yet supported)
+- `server.external_url` must be set and reachable from the internet
+- Rotation member must have a phone number (E.164) and **Voice** enabled
+
+### Enabling voice for a team member
+
+1. Go to **Alerting → Escalation Teams** → select a team
+2. Edit a rotation member
+3. Enter a phone number in E.164 format (e.g., `+18005551234`)
+4. Enable the **Voice** toggle
+5. Save the team
+
+### Resolution calls
+
+When an alert resolves, members with voice enabled receive a call:
+
+> "This is a Stratora resolved notification. High CPU Usage on SERVER-01 has been resolved. Goodbye."
+
+No keypress is required for resolution calls.
+
+### Toll-free number verification
+
+Twilio requires toll-free numbers to be verified before carriers will deliver calls and SMS at production volume. During verification (typically 2–5 business days), messages may show as UNDELIVERED with error 30032 — this is expected and resolves automatically once verification clears.
+
+Submit verification at: [Twilio Toll-Free Verification](https://help.twilio.com/articles/1260803965530)
 
 ---
 
