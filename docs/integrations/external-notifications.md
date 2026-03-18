@@ -17,7 +17,7 @@ Stratora delivers alert notifications to external systems through multiple chann
 | **Slack** | Block Kit messages | Available |
 | **Microsoft Teams** | Adaptive Cards (v1.4) | Available |
 | **Generic Webhook** | JSON payload via HTTP POST | Available |
-| **SMS** | Text messages via Twilio | Planned |
+| **SMS** | Text messages via Twilio | Available |
 | **Voice** | Automated voice calls via Twilio | Planned |
 
 ---
@@ -28,7 +28,7 @@ Email notifications use your organization's SMTP server to deliver HTML-formatte
 
 ### SMTP Configuration
 
-Navigate to **Administration → SMTP Settings** to configure your mail server.
+Navigate to **Settings → External Notifications → Email / SMTP** to configure your mail server.
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -214,10 +214,129 @@ A successful test confirms the URL is reachable and returns an HTTP 2xx response
 
 ---
 
-## SMS and Voice
+## SMS (Twilio)
+
+Stratora sends SMS alert notifications and receives ACK/Escalate replies via Twilio. Bring your own Twilio account — Community, Pro, and Enterprise editions are all supported.
+
+### Prerequisites
+
+- A Twilio account (free dev accounts work for testing)
+- A phone number with SMS capability (toll-free recommended for production volume)
+- For **polling mode**: a Twilio Sync Service and a Twilio Function to handle inbound SMS
+- For **bidirectional mode**: Stratora must be reachable from the internet at the configured `external_url`
+
+### Configuration
+
+Navigate to **Settings → External Notifications → SMS & Voice**.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Account SID | Yes | Twilio account SID (`ACxxxxxxxx`) |
+| Auth Token | Yes | Twilio auth token (encrypted at rest) |
+| From Number | Yes | E.164 format (e.g., `+18005551234`) |
+| Mode | Yes | `Bidirectional`, `Polling`, or `Outbound Only` |
+| ACK & Escalate | No | Include reply instructions in SMS body (default: on) |
+
+**Credential changes** (Account SID, Auth Token, From Number) take effect immediately after saving — no restart needed. **Mode changes** require a backend service restart; the UI displays an amber warning banner when this applies.
+
+### Modes
+
+| Mode | Inbound Handling | Best For |
+|------|-----------------|----------|
+| **Bidirectional** | Twilio sends inbound SMS directly to Stratora via webhook | Internet-accessible deployments |
+| **Polling** | Stratora polls a Twilio Sync Map for reply actions | Air-gapped or outbound-only networks |
+| **Outbound Only** | No inbound handling — SMS body omits reply instructions | Send-only alerting |
+
+### Bidirectional Mode Setup
+
+1. Save your Twilio credentials and select **Bidirectional** mode
+2. Copy the webhook URL displayed in the settings page
+3. In the **Twilio Console** → Phone Numbers → Active Numbers → select your number → Messaging → "A message comes in" → paste the webhook URL
+4. Stratora validates inbound requests using `X-Twilio-Signature` (HMAC-SHA1) — spoofed requests are rejected
+
+:::caution
+The webhook URL must match your `server.external_url` setting exactly. If `external_url` is wrong, all signature validations will fail silently.
+:::
+
+### Polling Mode Setup
+
+Polling mode is designed for air-gapped or segmented networks where Stratora cannot receive inbound connections from the internet.
+
+1. **Create a Sync Service** in the Twilio Console, copy the Service SID
+2. **Create a Sync Map** named `alert-actions` (or configure a custom name)
+3. **Create a Twilio Function** to handle inbound SMS and write to the Sync Map:
+
+```javascript
+// Twilio Function: parse inbound SMS, write to Sync Map
+exports.handler = async function(context, event, callback) {
+  const client = context.getTwilioClient();
+  const body = (event.Body || '').trim().toUpperCase();
+  const parts = body.split(/\s+/);
+  if (parts.length < 2 || !['ACK', 'ESCALATE'].includes(parts[0])) {
+    return callback(null, new Twilio.twiml.MessagingResponse());
+  }
+  const syncService = 'YOUR_SYNC_SERVICE_SID';
+  const mapName = 'alert-actions';
+  await client.sync.v1.services(syncService).syncMaps(mapName).syncMapItems.create({
+    key: `${Date.now()}-${event.From}`,
+    data: { action: parts[0], token: parts[1].toLowerCase(), from: event.From, ts: new Date().toISOString() },
+    ttl: 3600,
+  });
+  return callback(null, new Twilio.twiml.MessagingResponse());
+};
+```
+
+4. Set the Function URL as the inbound SMS webhook on your Twilio phone number
+5. In Stratora settings, enter the **Sync Service SID** and set mode to **Polling**
+6. Stratora polls the Sync Map every 15 seconds (configurable) and processes ACK/ESCALATE items
+
+### Outbound Only Mode
+
+No inbound handling. SMS alerts are sent but reply instructions (ACK/ESCALATE tokens) are omitted from the message body. Recipients are directed to log in to Stratora to manage alerts.
+
+### Configuring Recipients
+
+SMS notifications are sent to escalation team rotation members who have SMS enabled:
+
+1. Go to **Alerting → Escalation Teams** → select a team
+2. Add or edit an escalation step with the **SMS** channel
+3. On each rotation member, enter a phone number (E.164 format) and enable the **SMS** toggle
+
+Phone numbers are masked in all server logs for privacy (`+1***1234`).
+
+### ACK and Escalate via SMS Reply
+
+When ACK & Escalate is enabled and the mode supports inbound handling:
+
+- **Reply format**: `ACK <token>` or `ESCALATE <token>` (case-insensitive)
+- Tokens are single-use with a 24-hour TTL
+- **ACK**: acknowledges the alert; ACK notifications sent to all other channels
+- **ESCALATE**: manually advances the escalation to the next step
+
+### Testing
+
+1. **Check Connectivity** — verifies `api.twilio.com:443` is reachable from the server
+2. **Send Test SMS** — sends a test message to a phone number you specify, returns the Twilio message SID on success
+
+### Toll-Free Number Verification
+
+Twilio requires toll-free number verification for production SMS volume. Free dev accounts have throughput caps that are sufficient for testing but not for production.
+
+Submit verification in the Twilio Console before production use: [Twilio Toll-Free Verification](https://help.twilio.com/articles/1260803965530)
+
+### Troubleshooting
+
+- Check backend logs for `[Twilio/SMS]`, `[Twilio/Webhook]`, `[Twilio/Sync]` prefixed lines
+- Verify config source at startup: `[Twilio] config loaded from database` or `[Twilio] config loaded from config.yaml (no DB record found)`
+- Mode changes require a server restart — the UI warns when this applies
+- In bidirectional mode, confirm `server.external_url` matches the URL configured in Twilio
+
+---
+
+## Voice
 
 :::info
-**SMS** (text message) and **Voice** (automated phone call) notification channels via Twilio integration are planned for a future release. The escalation team configuration UI includes these channel types, but delivery is not yet active.
+**Voice** (automated phone call) notifications via Twilio TwiML are planned for a future release. The escalation team configuration UI shows the Voice channel type with a "Coming soon" badge.
 :::
 
 ---
