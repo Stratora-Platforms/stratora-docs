@@ -86,7 +86,7 @@ This section documents the expected detection and recovery latencies for Strator
 
 | Alert Type | Detection | Recovery (Stratora) | Recovery (Total) |
 |------------|-----------|---------------------|------------------|
-| Node Unreachable | 20–30s | ~33s after node is reachable | 35–90s depending on boot speed |
+| Node Unreachable | 20–30s | ~40s after node is reachable | 45–100s depending on boot speed |
 | High Packet Loss | ~60s of sustained loss | ~80s after loss returns to 0% | ~80–110s |
 | Agent Heartbeat | 30s (3 missed heartbeats) | Immediate on next heartbeat | ~10s |
 | Service Stopped | 10–20s | 10–20s after service restarts | 10–20s |
@@ -103,19 +103,21 @@ Graceful shutdowns (OS-initiated) may respond to some ICMP packets during the sh
 
 ### Node Unreachable — Recovery
 
-After a node becomes genuinely reachable again, Stratora's contribution to recovery latency is approximately **33 seconds**:
+After a node becomes genuinely reachable again, Stratora's contribution to recovery latency is approximately **40 seconds**:
 
-- **~13 seconds** — evaluator cycle alignment and Telegraf data collection
-- **20 seconds** — resolution grace period (condition must be continuously clear)
+- **~30 seconds** — recovery streak: 3 consecutive ping evaluation cycles must show less than 100% packet loss. This prevents false resolutions from brief network blips or intermittent partial responses on a node that is still offline.
+- **~10 seconds** — one additional evaluation cycle for hysteresis confirmation
 
-The grace period prevents false resolution during post-boot network instability. When a node boots, its network stack often takes time to stabilize — ping responses may alternate between success and failure for 20–60 seconds. The grace period holds the alert active until the node has been stable for 20 consecutive seconds, preventing a resolve/re-fire cycle that would generate unnecessary notifications.
+Unlike other alert types, node reachability alerts do not use an additional grace period — the recovery streak itself provides the stability window. This keeps recovery as fast as possible while still preventing alert flapping.
+
+If a node is intentionally offline (powered down, decommissioned, or under maintenance), you can [mute the node](/alerting/maintenance) to suppress ongoing alerts and notifications.
 
 **Total recovery time** depends on the node's boot speed:
 
 | Scenario | Typical Total Recovery |
 |----------|----------------------|
-| Physical server or fast-boot VM | 35–45s |
-| Standard VM (full OS + network stack init) | 60–90s |
+| Physical server or fast-boot VM | 45–55s |
+| Standard VM (full OS + network stack init) | 60–100s |
 | Slow boot (disk checks, large service inventory) | 90–120s |
 
 ### High Packet Loss (Threshold Alert)
