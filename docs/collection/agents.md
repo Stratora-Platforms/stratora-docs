@@ -148,3 +148,29 @@ If the agent doesn't appear, check:
 | **Metrics** | OS-level (CPU, memory, disk, services) | Protocol-dependent (SNMP OIDs, ping, HTTP) |
 
 Most environments use both: agents on servers, collectors for network infrastructure.
+
+---
+
+## Hostname Resolution
+
+The Stratora Linux agent reports the fully qualified domain name (FQDN) of the host when possible, rather than the short hostname.
+
+On each heartbeat, the agent:
+1. Reads the OS hostname via `gethostname(2)`
+2. Performs a forward DNS lookup to resolve the hostname to an IP address (preferring IPv4)
+3. Performs a reverse DNS lookup on that IP to retrieve the FQDN
+4. Reports the FQDN if one is found; falls back to the short hostname if DNS is not configured or no PTR record exists
+
+For FQDN reporting to work, your DNS server must have:
+- An **A record** mapping the hostname to its IP address
+- A **PTR record** mapping the IP address back to the FQDN
+
+Nodes without PTR records will continue to report their short hostname until a PTR record is added. The hostname updates automatically on the next heartbeat — no agent restart or redeployment required.
+
+---
+
+## Hostname and Display Name
+
+For agent-monitored nodes, the hostname and display name are set by the agent and reflect the server's actual identity. These fields are read-only in the Stratora UI.
+
+To change how a node appears, update the hostname on the server itself (`hostnamectl set-hostname`) or update the PTR record in DNS. Stratora will reflect the change within 10 seconds (one heartbeat cycle).

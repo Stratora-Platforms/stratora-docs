@@ -213,3 +213,15 @@ The dashboard HUD displays a real-time summary of the alert landscape:
 - **Healthy nodes** — nodes with no active alerts
 
 The alert count also breaks down into acknowledged and muted counts for quick triage.
+
+---
+
+## DNS Resolution Alerts
+
+Stratora checks DNS resolution for all monitored nodes every 5 minutes. An alert fires when a node's hostname cannot be resolved via DNS, and clears automatically within 5 minutes of a valid DNS entry being created.
+
+:::info
+After adding a DNS A record or PTR record for a node, allow up to 5 minutes for the alert to clear. No manual action is required in Stratora.
+:::
+
+Nodes that genuinely have no DNS record will continue to show an active DNS resolution alert until a record is created. This is expected behavior for network devices (switches, APs, firewalls) that are not registered in DNS.
