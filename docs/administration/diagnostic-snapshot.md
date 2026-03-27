@@ -10,21 +10,19 @@ The Diagnostic Snapshot provides a real-time summary of your Stratora server's h
 
 ## Accessing Diagnostics
 
-Navigate to **Administration > Diagnostics**. This page is visible to admin users only.
+Navigate to **Administration > Diagnostics** in the sidebar. The page is titled **Diagnostic Snapshot**. This page is visible to admin users only.
 
 ## Summary Cards
 
-The diagnostics page displays the following sections:
-
-| Section | What it shows |
+| Section | Details |
 |---|---|
 | **Server** | Version, build time, hostname, uptime, Go runtime info |
-| **Database** | Connectivity, latency, connection pool stats, full migration history |
-| **VictoriaMetrics** | Connectivity, latency, base URL |
-| **Collectors** | Total, online, stale, and offline collector counts |
-| **Agents** | Total agent count and stale agent count (stale = no check-in within 5 minutes) |
-| **Alerts** | Total active alerts and firing count by state |
-| **License** | Edition, active node count vs. limit, expiry |
+| **Database** | Connectivity status, latency, connection pool stats, full applied migration history |
+| **VictoriaMetrics** | Connectivity status, latency, base URL |
+| **Collectors** | Total, online, stale, and offline counts with per-collector node assignments |
+| **Agents** | Total count and stale count (stale = no check-in within 5 minutes) |
+| **Alerts** | Total active alerts and breakdown by state |
+| **License** | Edition, active node count vs. limit, trial status, expiry |
 
 ## Downloading a Support Bundle
 
@@ -53,4 +51,4 @@ No credentials, passwords, API keys, tokens, or secrets of any kind are included
 
 ## Providing the Bundle to Support
 
-When opening a support request, attach the `diagnostic.json` file (or the full ZIP) to give the support team an accurate picture of your environment without requiring manual information gathering.
+When opening a support request, attach the `diagnostic.json` file or the full ZIP. This gives the support team an accurate snapshot of your environment without requiring manual information gathering or follow-up questions.
