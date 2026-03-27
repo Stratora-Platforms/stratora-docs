@@ -110,7 +110,7 @@ After a node becomes genuinely reachable again, Stratora's contribution to recov
 
 Unlike other alert types, node reachability alerts do not use an additional grace period — the recovery streak itself provides the stability window. This keeps recovery as fast as possible while still preventing alert flapping.
 
-If a node is intentionally offline (powered down, decommissioned, or under maintenance), you can [mute the node](/alerting/maintenance) to suppress ongoing alerts and notifications.
+If a node is intentionally offline (powered down, decommissioned, or under maintenance), you can [mute the node](./maintenance.md) to suppress ongoing alerts and notifications.
 
 **Total recovery time** depends on the node's boot speed:
 
