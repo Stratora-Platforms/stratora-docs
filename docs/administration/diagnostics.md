@@ -19,10 +19,10 @@ Navigate to **Administration > Diagnostics** in the sidebar. This page is visibl
 | **Server** | Version, build time, hostname, uptime, Go runtime info |
 | **Database** | Connectivity status, latency, connection pool stats, full applied migration history |
 | **VictoriaMetrics** | Connectivity status, latency, base URL |
-| **Collectors** | Total, online, stale, and offline counts with per-collector node assignments |
-| **Agents** | Total count and stale count (stale = no check-in within 5 minutes) |
+| **Collectors** | Total, online, stale, and offline counts. Stale count highlights in yellow with context when collectors haven't reported within 5 minutes. |
+| **Agents** | Total count and stale count. Highlights in yellow with last-seen context when agents haven't checked in within 5 minutes. |
 | **Alerts** | Total active alerts and breakdown by state |
-| **License** | Edition, active node count vs. limit, trial status, expiry |
+| **License** | Edition, active node count vs. limit with usage progress bar (green < 80%, yellow 80–94%, red ≥ 95%), trial status, expiry. |
 
 ## Downloading a Support Bundle
 
