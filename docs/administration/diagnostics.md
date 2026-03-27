@@ -1,16 +1,16 @@
 ---
-title: Diagnostic Snapshot
-sidebar_label: Diagnostic Snapshot
+title: Diagnostics
+sidebar_label: Diagnostics
 sidebar_position: 6
 ---
 
-# Diagnostic Snapshot
+# Diagnostics
 
-The Diagnostic Snapshot provides a real-time summary of your Stratora server's health and configuration, and lets you download a support bundle to share with Stratora support when troubleshooting.
+The Diagnostics page provides a real-time summary of your Stratora server's health and configuration, and lets you download a support bundle to share with Stratora support when troubleshooting.
 
 ## Accessing Diagnostics
 
-Navigate to **Administration > Diagnostics** in the sidebar. The page is titled **Diagnostic Snapshot**. This page is visible to admin users only.
+Navigate to **Administration > Diagnostics** in the sidebar. This page is visible to admin users only.
 
 ## Summary Cards
 
