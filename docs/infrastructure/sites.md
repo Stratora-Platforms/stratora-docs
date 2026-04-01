@@ -105,6 +105,27 @@ You can override the preferred collector on individual nodes. The site preferenc
 
 ---
 
+## Site Detail Page
+
+Clicking any site opens the site detail page, which provides a complete view of everything at that location across eight tabs.
+
+| Tab | Content |
+|-----|---------|
+| **Overview** | Health score, 24h health history, site details, IPAM networks, node health breakdown, device type breakdown |
+| **Dashboard** | Auto-generated site dashboard with live metrics panels |
+| **Nodes** | All nodes at this site — health status, type, IP address, last seen |
+| **Topology** | Network topology map scoped to this site |
+| **Racks** | Rack diagrams for this site |
+| **Alerts** | Active and recently resolved alerts for nodes at this site |
+| **Reports** | Shortcuts to run site-scoped Site Health and Disk Capacity reports |
+| **Photos** | Site photo gallery (see [Site Photos](./site-photos)) |
+
+### Networks
+
+The Overview tab shows all IPAM subnets assigned to this site. Click any subnet row to navigate directly to that subnet in the IPAM module.
+
+---
+
 ## Filtering by Site
 
 Most views in Stratora support site-based filtering:
