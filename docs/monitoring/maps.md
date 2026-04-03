@@ -84,19 +84,24 @@ Connections represent links between devices. They support:
 
 ## World Maps
 
-A world map shows your [sites](../infrastructure/sites.md) and maps as pins on a geographic view, with live health status.
+A world map shows your [sites](../infrastructure/sites.md), maps, and dashboards as pins on a geographic view, with live health status. World maps use dark-themed OpenStreetMap tiles — no external account or API key required.
 
 {/* ![World map view](./img/world-map.png) */}
 
-### Pin Types
+### Pin Link Types
 
-You can place three kinds of pins on a world map:
+You can place four kinds of pins on a world map:
 
-| Pin Type | Links To | Health Source |
-|----------|----------|--------------|
-| **Site** | A Stratora site | Aggregated reachability of all nodes at the site |
-| **Topology Map** | A saved topology map | Health of devices placed on that map |
+| Link Type | Navigates To | Health Color Source |
+|-----------|-------------|---------------------|
+| **Site** | Site detail page | Aggregated reachability of all nodes at the site |
+| **Network Map** | Network map view | Health of devices placed on that map |
 | **World Map** | Another world map | Worst-state rollup from the linked map (hierarchical) |
+| **Dashboard** | Site dashboard | Reachability of the dashboard's associated site |
+
+:::note
+The Dashboard link type only shows auto-generated site dashboards — dashboards that are associated with a specific site. Custom dashboards without a site association are not available as pin destinations.
+:::
 
 ### Health Status
 
@@ -105,33 +110,64 @@ Pin colors reflect real-time health based on node reachability:
 | Color | Meaning |
 |-------|---------|
 | **Green** | All nodes online |
-| **Yellow** | Some nodes offline |
-| **Red** | All nodes offline |
-| **Orange** | In maintenance |
+| **Yellow** | Some nodes degraded |
+| **Orange** | Critical alerts |
+| **Red** | Nodes offline |
+| **Purple** | In maintenance |
 | **Gray** | Unknown or no nodes |
 
 ### Building a World Map
 
 1. Navigate to **Monitoring → Maps** and click **New World Map**
 2. The builder opens with three panels:
-   - **Left sidebar** — browse sites, topology maps, and other world maps available for pinning
+   - **Left sidebar** — browse sites, network maps, and other world maps available for pinning
    - **Center canvas** — interactive geographic map with pan and zoom
-   - **Right panel** — list of placed pins with status indicators
-3. Drag items from the sidebar onto the map, or click the map to place a pin at specific coordinates
-4. Drag pins to adjust their position
-5. Click **Save** to persist
+   - **Right panel** — pin properties editor (appears when a pin is selected)
+3. Drag items from the sidebar onto the map, or click **Place Pin** to add a pin by clicking the map
+4. Select a pin to configure its properties in the right panel
+5. Click **Save** to persist, or **View** to switch to view mode
+
+### Pin Placement — Three Methods
+
+When positioning a pin on the map, three input methods are available simultaneously. All three stay in sync — changing one updates the others.
+
+| Method | How It Works |
+|--------|-------------|
+| **Address search** | Type any address, city, or place name into the search field. An autocomplete dropdown shows up to 5 results (powered by OpenStreetMap Nominatim — all countries supported). Select a result to set the pin coordinates. |
+| **Lat/Lng entry** | Type latitude (-90 to 90) and longitude (-180 to 180) directly into the coordinate fields. The pin repositions as you type. |
+| **Drag on map** | Drag an existing pin to a new position. The coordinate fields update in real-time. |
+
+### Pin Properties
+
+When a pin is selected, the right panel shows:
+
+- **Label** — custom display name. Shown as bold text in the pin tooltip. Defaults to the linked entity's name.
+- **Address Search** — geocoding field to find and set coordinates by place name
+- **Latitude / Longitude** — direct coordinate entry
+- **Link Type** — Site, Network Map, World Map, or Dashboard
+- **Link Target** — dropdown to select the specific entity to link to
+- **Health Source** — for Site pins: choose which site drives the pin color. For Dashboard pins: automatically set to the linked dashboard's site (shown as a read-only label).
+
+### Pin Tooltip
+
+Hovering over a pin shows:
+
+- **Custom label** (bold) — the pin's display name
+- **Entity name** (muted subtitle) — only shown when the label differs from the linked entity name
+- **Node counts** — online/offline breakdown when health data is available
+- **Link type indicator** — for network map and world map pins
 
 ### Preset Views
 
 The world map includes preset zoom levels for quick navigation:
 
 - World, North America, Europe, Asia Pacific, South America, Africa, Middle East
-- US regional views (Northeast, Southeast, Midwest, West Coast)
-- UK, DACH (Germany/Austria/Switzerland)
+- US regional views (Northeast, Midwest, West)
+- UK & Ireland, DACH (Germany/Austria/Switzerland)
 
 ### Drill-Down
 
-Click a pin to navigate to the linked site, topology map, or nested world map. This makes world maps a natural entry point for a hierarchical view of your infrastructure — start with a global view, click into a region, then into a site.
+Click a pin to navigate to the linked resource — site detail page, network map, nested world map, or site dashboard. This makes world maps a natural entry point for a hierarchical view of your infrastructure — start with a global view, click into a region, then into a specific site or dashboard.
 
 ---
 
