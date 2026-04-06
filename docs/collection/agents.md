@@ -174,3 +174,21 @@ Nodes without PTR records will continue to report their short hostname until a P
 For agent-monitored nodes, the hostname and display name are set by the agent and reflect the server's actual identity. These fields are read-only in the Stratora UI.
 
 To change how a node appears, update the hostname on the server itself (`hostnamectl set-hostname`) or update the PTR record in DNS. Stratora will reflect the change within 10 seconds (one heartbeat cycle).
+
+---
+
+## Server Renames and Agent Re-enrollment
+
+When a monitored server is renamed, the Stratora agent continues reporting under the original node record using its stored node ID. Routine hostname changes are reflected automatically via the agent's heartbeat — no action is required in this case.
+
+However, if the agent configuration is wiped and the agent re-enrolls (for example, after an OS reinstall or agent uninstall/reinstall on a renamed server), Stratora will register a new node under the new hostname rather than updating the existing record. This results in a duplicate node entry.
+
+**To resolve this:**
+
+1. Uninstall the Stratora agent from the server
+2. In Stratora, navigate to **Infrastructure → Nodes** and delete the old node entry
+3. Redeploy the agent — it will register cleanly under the new hostname
+
+:::note
+This limitation applies only when the agent is fully reinstalled on a server whose hostname has changed since the original enrollment. Normal hostname changes on a running agent are handled automatically.
+:::
