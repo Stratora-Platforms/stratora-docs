@@ -10,6 +10,32 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.1 — April 6, 2026
+
+### New Built-In Reports
+
+- **Alert Intelligence** (7-day and 30-day) — severity breakdown, top noisy nodes, time-to-acknowledge and time-to-resolve metrics.
+- **Availability / SLA** (monthly and quarterly) — per-site uptime percentage, downtime, incident count, MTTR, MTBF.
+- **Top Offenders** (24-hour and 7-day) — top nodes by CPU, memory, latency, interface errors.
+
+### Linux CPU and Memory Alerts
+
+Built-in alert definitions for Linux nodes added: High CPU Usage (warn 80%, crit 95%) and High Memory Usage (warn 80%, crit 95%) with a 5-minute sustain window. Evaluator queries `linux_cpu_usage_percent` and `linux_memory_usage_percent` scoped to `linux-server` nodes only.
+
+Windows and Linux memory alert warning thresholds lowered from 85% to 80% in built-in definitions.
+
+### Fixes
+
+- NGINX reload (FQDN save, cert upload, ACME issuance, manual reload) no longer causes a 5-second HTTPS outage — service restart now runs asynchronously after the HTTP response is sent.
+- Setup wizard step 3 now shows an error toast when the FQDN save fails on a network error instead of silently stalling.
+- Top Resources widget no longer returns 500 — removed invalid `deleted_at` column reference from `GetFreshNodeIDs`; canonical `is_active = true` filter is sufficient.
+- Discovery jobs stuck in `running` state after a server crash or unclean shutdown are now automatically recovered at startup and marked failed with a descriptive error.
+- Discovery scan context now has a 1-hour maximum runtime deadline; scans that hang indefinitely are cancelled and marked failed.
+- Collector Failover alert definition no longer fires false positives against non-collector nodes when they go offline — now correctly routed to the collector-scoped evaluator.
+- Alert toast ACK/Escalate buttons now show "Alert already resolved" instead of a generic error when the alert resolved before the user could act.
+
+---
+
 ## v2.1.0 — April 1, 2026
 
 ### Disk Capacity Reporting
