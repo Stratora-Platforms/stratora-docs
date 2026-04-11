@@ -148,7 +148,7 @@ For on-call rotation teams, notification steps can target rotation positions (On
 
 **Review:** Confirm the configuration and create the team.
 
-This step is skippable — you can configure escalation teams later from **Alerting > Escalation Teams**.
+This step is skippable — you can configure escalation teams later from **Alerting → Escalation Teams**.
 
 ### Step 9: Summary
 
@@ -174,28 +174,28 @@ Each site gets an auto-seeded dashboard with panels for node health, service sta
 As your environment grows:
 
 - **Re-run the wizard** from the Home page to add more sites, subnets, or credentials
-- **Run discovery scans** from **Discovery > Scan** for ad-hoc network scanning
-- **Schedule recurring scans** from **IPAM > Subnets** to automatically detect new devices
-- **Deploy agents** to additional servers using the enrollment token from **Settings > Enrollment**
+- **Run discovery scans** from **Collection → Discovery Jobs** for ad-hoc network scanning
+- **Schedule recurring scans** from **Infrastructure → IPAM** to automatically detect new devices
+- **Deploy agents** to additional servers using an enrollment token from **Collection → Enrollment API**
 
 ### Monitoring Configuration
 
 Stratora auto-assigns monitoring templates based on device type. To customize:
 
 - **Dashboard templates** — Edit auto-created dashboards or build custom ones
-- **Alert rules** — Modify default thresholds in **Alerting > Alert Configurations**
-- **Escalation policies** — Add teams, adjust delays, and configure on-call schedules in **Alerting > Escalation Teams**
+- **Alert rules** — Modify default thresholds in **Alerting → Alert Configurations**
+- **Escalation policies** — Add teams, adjust delays, and configure on-call schedules in **Alerting → Escalation Teams**
 
 ## Manual Setup (Without Wizard)
 
 If you prefer to configure everything manually or skipped the wizard:
 
-1. **Create sites** in **Infrastructure > Sites**
-2. **Add SNMP credentials** in **Settings > Credential Vault**
-3. **Define subnets** in **IPAM > Subnets**
-4. **Run a discovery scan** in **Discovery > Scan** — select subnets and credentials, start the scan, then import discovered devices
-5. **Deploy agents** using enrollment tokens from **Settings > Enrollment**
-6. **Create escalation teams** in **Alerting > Escalation Teams**
-7. **Configure alert rules** in **Alerting > Alert Configurations**
+1. **Create sites** in **Infrastructure → Sites**
+2. **Add SNMP credentials** in **Collection → Credentials**
+3. **Define subnets** in **Infrastructure → IPAM**
+4. **Run a discovery scan** in **Collection → Discovery Jobs** — select subnets and credentials, start the scan, then import discovered devices
+5. **Deploy agents** using enrollment tokens from **Collection → Enrollment API** (install commands are also available from **Collection → Agents**)
+6. **Create escalation teams** in **Alerting → Escalation Teams**
+7. **Configure alert rules** in **Alerting → Alert Configurations**
 
 All of these capabilities are the same ones the wizard orchestrates — the wizard just sequences them for a streamlined first-run experience.

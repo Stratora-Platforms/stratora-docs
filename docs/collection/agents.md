@@ -16,9 +16,9 @@ Unlike SNMP-based monitoring (which is polled by a [collector](./collectors.md))
 
 | Platform | Installer | Tested Versions |
 |----------|-----------|-----------------|
-| Windows Server / Desktop | MSI | Windows Server 2019, 2022; Windows 10/11 |
-| Ubuntu / Debian | `.deb` | Ubuntu 24.x, Debian 12 (Bookworm), Debian 13 (Trixie) |
-| RHEL / Rocky / Alma | `.rpm` | RHEL 9.x, Rocky 9.x, Rocky 8.x |
+| Windows Server / Desktop | MSI (x64) | Windows Server 2019, 2022; Windows 10/11 |
+| Ubuntu / Debian | `.deb` | Ubuntu 24.x; Debian 12 (Bookworm), Debian 13 (Trixie) |
+| RHEL / Rocky / Alma | `.rpm` | RHEL 9.x; Rocky 8.x, 9.x |
 
 ---
 
@@ -123,17 +123,119 @@ If the agent doesn't appear, check:
 
 ### Windows
 
-- **StratoraAgent** — Windows service managing the agent lifecycle
-- **stratora-agent-telegraf** — Windows service running the embedded Telegraf instance
-- A system tray indicator showing agent status
-- Configuration stored in `C:\ProgramData\Stratora\Agent\`
+- **StratoraAgent** — Windows service managing the agent lifecycle (register/heartbeat, hostname detection, role detection, Telegraf config generation)
+- **stratora-agent-telegraf** — Windows service running the embedded Telegraf instance that collects and ships metrics
+- **stratora-tray.exe** — optional per-user tray indicator (launched at login) that shows agent connection status and links to logs
+- Installed to `C:\Program Files\Stratora\`, with configuration and logs under `C:\ProgramData\Stratora\`
 
 ### Linux
 
-- **stratora-agent** — systemd service at `/opt/stratora/bin/stratora-agent`
-- Embedded Telegraf managed as a subprocess
+- **stratora-agent** — systemd service at `/opt/stratora/bin/stratora-agent`, running as the `stratora` user
+- Embedded Telegraf managed as a subprocess (linked to the system package's `telegraf` binary at install time if available)
 - Configuration at `/etc/stratora/agent.json`
+- State at `/var/lib/stratora/`
 - Logs via journald: `journalctl -u stratora-agent -f`
+
+---
+
+## Collected Metrics
+
+Both platforms ship metrics every 10 seconds using an embedded Telegraf instance that writes to the Stratora ingest proxy in InfluxDB line protocol (Linux) or Prometheus remote-write (Windows). The metrics list below reflects what is actually configured in the agent's bundled `telegraf-agent.conf`.
+
+### Windows
+
+Collected via Windows Performance Counters (`win_perf_counters`) plus the cross-platform `mem`, `disk`, and `system` inputs:
+
+| Category | Source | Metrics |
+|----------|--------|---------|
+| CPU | `Processor` (`_Total`) | `% Processor Time`, `% Idle Time`, `% User Time`, `% Privileged Time`, `% Interrupt Time` |
+| Memory | `Memory` + `inputs.mem` | Available Bytes, Committed Bytes, Cache Bytes, Pool paged/non-paged, Pages/sec, Page Faults/sec, plus `mem_total` / `mem_used_percent` |
+| Disk (logical) | `LogicalDisk` (all) | % Free Space, Free Megabytes, % Disk Time, Read/Write Bytes/sec, Reads/Writes per sec |
+| Network | `Network Interface` (all) | Bytes Sent/Received per sec, Packets Sent/Received per sec, inbound/outbound errors |
+| System | `System` + `inputs.system` | Context Switches/sec, System Calls/sec, Processor Queue Length, System Up Time |
+| Services | `inputs.win_services` | State of all installed Windows services |
+
+**Role-aware counters** are collected automatically when the matching role is installed on the host (missing counter objects are silently skipped by Telegraf):
+
+- **Active Directory Domain Services** (NTDS) — LDAP throughput and bind rates, DRA replication traffic, DS directory reads/writes, authentication bind rates
+- **DNS Server** — query rates by protocol, recursive query metrics, dynamic update activity, zone transfer events, caching memory
+- **DHCP Server** — packet and message-type rates (Discovers/Offers/Requests/Acks/Nacks), queue lengths, avg ms per packet
+- **SQL Server** (MSSQLSERVER) — General Statistics, SQL Statistics, Buffer Manager, Memory Manager, Locks, Databases, Wait Statistics
+- **IIS** (W3SVC) — Web Service connection and request rates, Web Service Cache hits/misses, App Pool WAS state, W3SVC_W3WP worker metrics
+- **Hyper-V** (vmms) — Hypervisor logical processors, VM health summary, dynamic memory pressure, virtual storage I/O, virtual network throughput
+
+### Linux
+
+Collected via the standard cross-platform Telegraf inputs:
+
+| Input | Metrics |
+|-------|---------|
+| `inputs.cpu` | Per-core and total CPU utilization (`percpu = true`, `totalcpu = true`) |
+| `inputs.mem` | Total, used, available, buffers, cached memory |
+| `inputs.swap` | Swap total / used / free |
+| `inputs.disk` | Per-mount usage %, total/used/free, inodes (tmpfs / devtmpfs / overlay filesystems ignored) |
+| `inputs.diskio` | Per-device IOPS, read/write bytes, io_time |
+| `inputs.net` | Per-interface bytes/packets in/out, errors, drops |
+| `inputs.system` | Hostname, uptime, 1/5/15-minute load averages, logged-in users |
+| `inputs.processes` | Total processes by state (running, sleeping, zombie, etc.) |
+| `inputs.kernel` | Context switches, interrupts, forks |
+| `inputs.linux_sysctl_fs` | `file-nr`, `inode-nr` from `/proc/sys/fs` |
+| `inputs.systemd_units` | Active / inactive / failed state of all systemd service units |
+
+All metrics are tagged with `node_id`, `hostname`, `vendor`, `os`, and `site` so they join cleanly to the same panels used by collector-based nodes.
+
+---
+
+## Network Requirements
+
+The agent is strictly push-only — it establishes outbound connections to the Stratora server and never listens for inbound traffic.
+
+| Direction | Protocol | Port | Purpose |
+|-----------|----------|------|---------|
+| Agent → Stratora server | HTTPS | 443 | Enrollment, heartbeat, config pull, metric ingest |
+| Inbound to agent host | — | — | **None required.** The agent does not listen on any port. |
+
+**DNS:** The agent must be able to resolve the Stratora server FQDN configured in `server_url`. If DNS is unavailable, use a literal IP address.
+
+**TLS:** HTTPS is mandatory. If the Stratora server uses a self-signed certificate, set `"insecure_skip_verify": true` in the agent config (Linux) or pass the equivalent flag during Windows setup. Production deployments should use a valid certificate instead.
+
+**HTTP/HTTPS proxy:** The current agent HTTP client is configured with an explicit `http.Transport` that does **not** honor `HTTP_PROXY` / `HTTPS_PROXY` environment variables. Deploying behind a forward proxy is not supported in this release — the agent host must have direct outbound HTTPS reachability to the Stratora server.
+
+---
+
+## Updating the Agent
+
+Agents upgrade in-place. Configuration, the enrolled component ID, and the component API key are preserved across upgrades, so **an upgraded agent does not re-enroll** and keeps its existing node record.
+
+### Windows
+
+Run the new `StratoraAgent-X.Y.Z.msi` installer (interactively or silently) — WiX's `MajorUpgrade` schedule removes the older product after the new one is installed. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade; there is a brief metric gap (typically &lt;30 seconds) while the new Telegraf binary takes over.
+
+```cmd
+msiexec /i StratoraAgent-X.Y.Z.msi /qn
+```
+
+The config file under `C:\Program Files\Stratora\` is explicitly preserved — the installer does not declare `RemoveFile` entries on the config component, specifically to prevent MajorUpgrade from deleting enrolled credentials.
+
+### Linux
+
+Install the new package directly over the old one:
+
+```bash
+# Debian / Ubuntu
+sudo dpkg -i stratora-agent_X.Y.Z_amd64.deb
+sudo systemctl restart stratora-agent
+
+# RHEL / Rocky / Alma
+sudo rpm -U stratora-agent-X.Y.Z-1.x86_64.rpm
+sudo systemctl restart stratora-agent
+```
+
+The postinst scripts reload systemd and keep `/etc/stratora/agent.json` in place. The embedded Telegraf subprocess is restarted by the agent on its next startup cycle.
+
+### After upgrade
+
+Verify the new version on the node detail page — the agent reports its version and build time on every heartbeat, so the updated value appears within ~10 seconds.
 
 ---
 
@@ -181,7 +283,9 @@ To change how a node appears, update the hostname on the server itself (`hostnam
 
 When a monitored server is renamed, the Stratora agent continues reporting under the original node record using its stored node ID. Routine hostname changes are reflected automatically via the agent's heartbeat — no action is required in this case.
 
-However, if the agent configuration is wiped and the agent re-enrolls (for example, after an OS reinstall or agent uninstall/reinstall on a renamed server), Stratora will register a new node under the new hostname rather than updating the existing record. This results in a duplicate node entry.
+Re-enrollment on the **same hostname** is also clean: the existing node and component records are updated in place and a new API key is issued (see [Enrollment → Re-Enrollment](./enrollment.md#re-enrollment)). You can reimage a server and reinstall the agent with the same enrollment token without creating a duplicate.
+
+The **only** scenario that produces a duplicate node entry is when the agent configuration is wiped **and** the host's hostname has changed between the original enrollment and the re-enrollment (for example, an OS reinstall on a renamed server). In that case, Stratora has no way to correlate the new hostname with the old node, so it creates a fresh node under the new hostname.
 
 **To resolve this:**
 

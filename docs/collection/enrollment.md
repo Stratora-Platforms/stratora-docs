@@ -44,7 +44,7 @@ After enrollment:
 
 ### Creating a Token
 
-Navigate to **Administration → Enrollment Tokens** and click **Create Token**.
+Navigate to **Collection → Enrollment API** and click **Create Token**.
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -76,13 +76,18 @@ For automated deployments, create a multi-use token with a reasonable expiration
 
 ## Re-Enrollment
 
-If a collector or agent needs to be reinstalled on the same host (e.g., after a rebuild), re-enrollment is automatic. When a component registers with a hostname that already exists:
+If a collector or agent needs to be reinstalled on the same host (e.g., after a rebuild), re-enrollment is automatic. When a component registers with a **hostname that already exists** in `remote_components`:
 
-- The existing record is updated (not duplicated)
+- The existing component record is updated in place (not duplicated)
 - A **new API key** is generated and the old one is invalidated
+- For agents, the matching node in `nodes` is also updated (matched on the reported hostname)
 - The component resumes normal operation with the new key
 
 This means you can reimage a server and reinstall the agent with the same enrollment token — it just works.
+
+:::note
+Re-enrollment only matches on hostname. If the host has been **renamed** between the original enrollment and the re-enrollment (for example, an OS reinstall that also changed the hostname), Stratora cannot correlate the new name with the old record and a duplicate node will be created. See [Server Renames and Agent Re-enrollment](./agents.md#server-renames-and-agent-re-enrollment) for the cleanup procedure.
+:::
 
 ---
 
@@ -107,7 +112,7 @@ sk_stra_aB-cD_eFghIjKlMnOpQrStUvWxYzABC-DeF_GhIjKlMnOpQr
 
 To revoke a component's access:
 
-1. Navigate to **Administration → Collectors** or **Agents**
+1. Navigate to **Collection → Collectors** or **Collection → Agents**
 2. Select the component
 3. Click **Revoke**
 
@@ -121,17 +126,29 @@ Enrollment is designed for mass deployment via common IT automation tools:
 
 | Tool | Approach |
 |------|----------|
-| **PDQ Deploy** | Push the MSI with `SERVER_URL` and `ENROLLMENT_TOKEN` parameters |
-| **SCCM / MECM** | Deploy as an application with silent install command line |
+| **PDQ Deploy** | Push the MSI with the install parameters listed below |
+| **SCCM / MECM** | Deploy as an application with a silent install command line |
 | **Intune** | Package as a Win32 app (`.intunewin`) with install parameters |
-| **Ansible** | Use `win_package` module with MSI path and parameters |
-| **GPO** | Deploy via Group Policy Software Installation with transform file |
+| **Ansible** | Use the `win_package` module with MSI path and parameters |
+| **GPO** | Deploy via Group Policy Software Installation with a transform file |
 
-All tools use the same silent install command:
+The **Agent** and **Collector** MSIs use different property names — they are separate WiX installers and the silent install commands are not interchangeable.
+
+**Collector MSI:**
 
 ```cmd
-msiexec /i StratoraCollector.msi /qn SERVER_URL="https://stratora.example.com" ENROLLMENT_TOKEN="enroll_xxxxx"
+msiexec /i StratoraCollector-X.Y.Z.msi /qn SERVER_URL="https://stratora.example.com" ENROLLMENT_TOKEN="enroll_xxxxx"
 ```
+
+Collector properties: `SERVER_URL`, `ENROLLMENT_TOKEN`, `COLLECTOR_NAME` (optional).
+
+**Agent MSI:**
+
+```cmd
+msiexec /i StratoraAgent-X.Y.Z.msi /qn SERVERURL="https://stratora.example.com" ENROLLTOKEN="enroll_xxxxx"
+```
+
+Agent properties: `SERVERURL`, `ENROLLTOKEN`, `SITE` (optional). Note the lack of underscores — these match the historical Agent property names and differ from the Collector MSI.
 
 Create a multi-use token with a use limit matching your expected deployment count and a short expiration window (e.g., 48 hours for a weekend rollout).
 
