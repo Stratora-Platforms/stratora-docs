@@ -10,6 +10,39 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## Agent v2.1.2 — April 11, 2026
+
+Windows agent point release. Server and Collector are unchanged at 2.1.0.
+
+### DHCP Scope Utilization
+
+The Stratora Agent now collects per-scope DHCP utilization metrics on Windows
+servers running the DHCP Server role. A bundled PowerShell collector
+(`dhcp_scopes.ps1`) invokes `Get-DhcpServerv4ScopeStatistics` every 5 minutes
+and emits one series per scope.
+
+- **Node detail page** — new **DHCP Scope Utilization** table on Windows
+  Server nodes showing Scope Name, Scope ID, In Use, Free, Reserved, Pending,
+  Total, and % Used with a color-coded utilization column (green &lt; 75%,
+  yellow 75–89%, red ≥ 90%).
+- **Alerts** — two new built-in definitions:
+  - **DHCP Scope High Utilization** — warning at 80%, critical at 90%
+  - **DHCP Scope Exhaustion** — critical at 90%
+- **Zero impact on non-DHCP hosts** — the collector script exits silently
+  when the `DhcpServer` PowerShell module is not installed, so the same
+  agent MSI is safe to deploy to every Windows server regardless of role.
+
+### Upgrade
+
+Redeploy `StratoraAgent-2.1.2.msi` over the existing install on any Windows
+server running DHCP. Configuration and enrolled component credentials are
+preserved — no re-enrollment required. After upgrade, wait one 5-minute
+collection interval for scope metrics to appear on the node detail page.
+
+Download: [v2.1.2 release](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.1.2)
+
+---
+
 ## v2.1.1 — April 6, 2026
 
 ### New Built-In Reports
