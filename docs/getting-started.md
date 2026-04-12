@@ -41,7 +41,7 @@ Open a browser and navigate to `https://your-server-hostname`. Log in with your 
 ## Setup Wizard
 
 > **In the next few minutes, you will:**
-> - Discover every device on your network automatically
+> - Discover devices across your network automatically
 > - Have dashboards, topology maps, and health scoring generated instantly
 > - Receive alerts the moment something goes wrong
 > - Go from zero to full infrastructure visibility — without manual configuration
@@ -123,7 +123,7 @@ Deploy Stratora agents to Windows and Linux servers for deep OS-level monitoring
 
 ![Setup Wizard — Step 6: Agents (Linux)](/img/wizard/SCR-20260412-njzg.png)
 
-**Agents enroll automatically and begin reporting metrics within 60 seconds.** This step is skippable — you can deploy agents later.
+**Agents enroll automatically and begin reporting metrics within seconds (typically under 60).** This step is skippable — you can deploy agents later.
 
 ### Step 7: Network (IPAM Subnets)
 
@@ -148,7 +148,7 @@ This is where Stratora scans your network and finds devices automatically.
 
 **Configure:** Your subnets from Step 7 and credentials from Step 5 are pre-selected. Adjust if needed, then click **Start Scan**. Stratora handles everything from here.
 
-**Scan:** Stratora scans all IP addresses in your selected subnets using ICMP ping, TCP port probing, and SNMP queries. Devices appear in the results table as they're discovered. The scan typically takes 5–10 minutes for a few /24 subnets.
+**Scan:** Stratora scans all IP addresses in your selected subnets using ICMP ping, TCP port probing, and SNMP queries. Devices appear in the results table as they're discovered. Within seconds, discovered devices begin appearing in real time. The scan typically takes 5–10 minutes for a few /24 subnets.
 
 Each discovered device is classified automatically:
 - **High confidence** — SNMP-responding devices with full identification (firewalls, switches, APs, NAS, servers)
@@ -195,11 +195,11 @@ This step is skippable — you can configure escalation teams later from **Alert
 
 ![Setup Wizard — Step 10: Summary](/img/wizard/SCR-20260412-nluq.png)
 
-The summary shows your configured environment at a glance: sites, credentials, subnets, monitored devices, and alert rules. If you skipped any steps, a **Complete Later** section lists them with direct links to the relevant settings pages where you can finish configuration at any time. Click **Go to Dashboard** — your infrastructure is live.
+The summary shows your configured environment at a glance: sites, credentials, subnets, monitored devices, and alert rules. If you skipped any steps, a **Complete Later** section lists them with direct links to the relevant settings pages where you can finish configuration at any time. Click **Go to Dashboard** — your infrastructure is now live.
 
 ## After Setup
 
-At this point, your infrastructure is live. Stratora has discovered your devices, generated site dashboards and topology maps, assigned monitoring templates, and activated alert rules — all automatically. What follows is a brief orientation to what you now have.
+At this point, your infrastructure is live. Stratora has discovered your devices, generated site dashboards and topology maps, assigned monitoring templates, and activated alert rules — all automatically. No manual dashboards, alert rules, or templates were required to reach this point. What follows is a brief orientation to what you now have.
 
 ### Home Dashboard
 
