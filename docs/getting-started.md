@@ -40,7 +40,13 @@ Open a browser and navigate to `https://your-server-hostname`. Log in with your 
 
 ## Setup Wizard
 
-On first login, the Setup Wizard opens automatically. It guides you through 10 steps to configure your monitoring environment. Each step builds on the previous — by the end, you'll have devices discovered, imported, and monitored with active alerting.
+> **In the next few minutes, you will:**
+> - Discover every device on your network automatically
+> - Have dashboards, topology maps, and health scoring generated instantly
+> - Receive alerts the moment something goes wrong
+> - Go from zero to full infrastructure visibility — without manual configuration
+
+On first login, the Setup Wizard opens automatically. It guides you through 10 steps — most of which Stratora completes automatically on your behalf. By the end, your network is discovered, devices are imported with templates pre-assigned, dashboards are live, and alerting is active.
 
 The wizard is re-runnable and additive. You can close it at any time (your progress is saved), and relaunch it from the Home page. Running it again won't duplicate existing configuration — it detects what's already set up and lets you add more.
 
@@ -84,13 +90,13 @@ Sites represent your physical locations — data centers, branch offices, factor
 3. Click **Add** to create the site
 4. Create at least one site to continue (you can add more later)
 
-Sites created here automatically get dashboards, topology maps, and health scoring.
+Sites created here automatically get dashboards, topology maps, and health scoring. No manual dashboard setup required.
 
 ### Step 5: Credentials
 
 ![Setup Wizard — Step 5: Credentials](/img/wizard/SCR-20260412-njmm.png)
 
-Add SNMP credentials that Stratora will use to discover and monitor network devices. These are stored in an encrypted credential vault.
+Provide your SNMP credentials so Stratora can automatically identify, fingerprint, and classify every device on your network. These are stored in an encrypted credential vault.
 
 **For SNMP v2c:**
 - Enter the community string (e.g., `public` for read-only)
@@ -117,13 +123,13 @@ Deploy Stratora agents to Windows and Linux servers for deep OS-level monitoring
 
 ![Setup Wizard — Step 6: Agents (Linux)](/img/wizard/SCR-20260412-njzg.png)
 
-Agents enroll automatically and begin reporting metrics within 60 seconds. This step is skippable — you can deploy agents later.
+**Agents enroll automatically and begin reporting metrics within 60 seconds.** This step is skippable — you can deploy agents later.
 
 ### Step 7: Network (IPAM Subnets)
 
 ![Setup Wizard — Step 7: Network](/img/wizard/SCR-20260412-nkhs.png)
 
-Define the IP subnets Stratora should know about. These are used for discovery scanning and IPAM tracking.
+Define the IP ranges to scan. Stratora will do the rest — scanning every address, identifying live hosts, and classifying devices automatically. These are used for discovery scanning and IPAM tracking.
 
 1. Enter a **CIDR** (e.g., `10.40.0.0/24`)
 2. Assign a **Site**
@@ -140,7 +146,7 @@ This step is skippable if you only plan to monitor agent-based devices.
 
 This is where Stratora scans your network and finds devices automatically.
 
-**Configure:** Your subnets from Step 7 and credentials from Step 5 are pre-selected. Adjust if needed, then click **Start Scan**.
+**Configure:** Your subnets from Step 7 and credentials from Step 5 are pre-selected. Adjust if needed, then click **Start Scan**. Stratora handles everything from here.
 
 **Scan:** Stratora scans all IP addresses in your selected subnets using ICMP ping, TCP port probing, and SNMP queries. Devices appear in the results table as they're discovered. The scan typically takes 5–10 minutes for a few /24 subnets.
 
@@ -153,7 +159,7 @@ Each discovered device is classified automatically:
 
 ![Setup Wizard — Step 8: Discovery (Import)](/img/wizard/SCR-20260412-nlpb.png)
 
-**Import:** Review the results. Devices are pre-selected based on confidence level. Click **Import Devices** to add them to monitoring. Imported devices are automatically assigned dashboard templates and default alert rules based on their device type.
+**Import:** Review the results. Devices are pre-selected based on confidence level. Click **Import Devices** to add them to monitoring. Imported devices are immediately assigned monitoring templates, dashboards, and default alert rules based on their device type — no manual configuration required.
 
 This step is skippable if you prefer to add devices manually.
 
@@ -189,9 +195,11 @@ This step is skippable — you can configure escalation teams later from **Alert
 
 ![Setup Wizard — Step 10: Summary](/img/wizard/SCR-20260412-nluq.png)
 
-The summary shows your configured environment at a glance: sites, credentials, subnets, monitored devices, and alert rules. If you skipped any steps, a **Complete Later** section lists them with direct links to the relevant settings pages where you can finish configuration at any time. Click **Go to Dashboard** to complete setup and start monitoring.
+The summary shows your configured environment at a glance: sites, credentials, subnets, monitored devices, and alert rules. If you skipped any steps, a **Complete Later** section lists them with direct links to the relevant settings pages where you can finish configuration at any time. Click **Go to Dashboard** — your infrastructure is live.
 
 ## After Setup
+
+At this point, your infrastructure is live. Stratora has discovered your devices, generated site dashboards and topology maps, assigned monitoring templates, and activated alert rules — all automatically. What follows is a brief orientation to what you now have.
 
 ### Home Dashboard
 
