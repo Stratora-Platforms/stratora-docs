@@ -148,7 +148,7 @@ This is where Stratora scans your network and finds devices automatically.
 
 **Configure:** Your subnets from Step 7 and credentials from Step 5 are pre-selected. Adjust if needed, then click **Start Scan**. Stratora handles everything from here.
 
-**Scan:** Stratora scans all IP addresses in your selected subnets using ICMP ping, TCP port probing, and SNMP queries. Devices appear in the results table as they're discovered. Within seconds, discovered devices begin appearing in real time. The scan typically takes 5–10 minutes for a few /24 subnets.
+**Scan:** Stratora scans all IP addresses in your selected subnets using ICMP ping, TCP port probing, and SNMP queries. Devices appear in the results table as they're discovered. Within under a minute, discovered devices begin appearing in real time as the scan progresses. The scan typically takes 5–10 minutes for a few /24 subnets.
 
 Each discovered device is classified automatically:
 - **High confidence** — SNMP-responding devices with full identification (firewalls, switches, APs, NAS, servers)
