@@ -40,17 +40,21 @@ Open a browser and navigate to `https://your-server-hostname`. Log in with your 
 
 ## Setup Wizard
 
-On first login, the Setup Wizard opens automatically. It guides you through 9 steps to configure your monitoring environment. Each step builds on the previous — by the end, you'll have devices discovered, imported, and monitored with active alerting.
+On first login, the Setup Wizard opens automatically. It guides you through 10 steps to configure your monitoring environment. Each step builds on the previous — by the end, you'll have devices discovered, imported, and monitored with active alerting.
 
 The wizard is re-runnable and additive. You can close it at any time (your progress is saved), and relaunch it from the Home page. Running it again won't duplicate existing configuration — it detects what's already set up and lets you add more.
 
 ### Step 1: Welcome
 
+![Setup Wizard — Step 1: Welcome](/img/wizard/SCR-20260412-nizg.png)
+
 The welcome screen outlines what the wizard will configure. Click **Get Started** to begin.
 
 ### Step 2: License
 
-Stratora runs in Community edition by default with a 25-device monitoring limit. If you have a Pro or Enterprise license:
+![Setup Wizard — Step 2: License](/img/wizard/SCR-20260412-njcc.png)
+
+Stratora runs in Community edition by default, which supports up to 100 monitored devices. If you have a Pro or Enterprise license, upload it here to unlock your licensed device limit and features:
 
 1. Click **Upload License**
 2. Select your `.lic` file
@@ -58,7 +62,20 @@ Stratora runs in Community edition by default with a 25-device monitoring limit.
 
 The device headroom bar shows how many of your licensed slots are in use. Node limits are enforced only on actively monitored devices — discovered but unimported devices don't count.
 
-### Step 3: Sites
+### Step 3: Server (FQDN & Certificate)
+
+![Setup Wizard — Step 3: Server](/img/wizard/SCR-20260412-njfd.png)
+
+Set the FQDN your users will use to reach Stratora. This must match a DNS A record pointing to the server — Stratora validates the DNS resolution live and confirms it matches the server's IP.
+
+**Certificate options:**
+- **DNS-01** *(Recommended)* — Automated Let's Encrypt certificate via DNS verification. Select your DNS provider (Cloudflare supported), enter your API token and Let's Encrypt email, then click Issue Certificate.
+- **HTTP-01** — Let's Encrypt via HTTP challenge on port 80. Requires port 80 to be reachable from the internet.
+- **Self-Signed** — Generates a self-signed certificate immediately. Browsers will show a warning. You can upgrade to a trusted certificate later in Settings → SSL Certificate.
+
+### Step 4: Sites
+
+![Setup Wizard — Step 4: Sites](/img/wizard/SCR-20260412-njhh.png)
 
 Sites represent your physical locations — data centers, branch offices, factory floors, or client environments. Every monitored device belongs to a site.
 
@@ -69,7 +86,9 @@ Sites represent your physical locations — data centers, branch offices, factor
 
 Sites created here automatically get dashboards, topology maps, and health scoring.
 
-### Step 4: Credentials
+### Step 5: Credentials
+
+![Setup Wizard — Step 5: Credentials](/img/wizard/SCR-20260412-njmm.png)
 
 Add SNMP credentials that Stratora will use to discover and monitor network devices. These are stored in an encrypted credential vault.
 
@@ -83,7 +102,9 @@ You can add multiple credentials — during discovery, Stratora tries each crede
 
 This step is skippable if you plan to monitor agent-based devices only.
 
-### Step 5: Agents
+### Step 6: Agents
+
+![Setup Wizard — Step 6: Agents (Windows)](/img/wizard/SCR-20260412-njry.png)
 
 Deploy Stratora agents to Windows and Linux servers for deep OS-level monitoring (CPU, memory, disk, services, processes).
 
@@ -92,9 +113,15 @@ Deploy Stratora agents to Windows and Linux servers for deep OS-level monitoring
 3. Follow the on-screen instructions — the wizard generates the install commands for you and provides direct download links for the installer packages
 4. Deploy to your servers using the provided commands, or distribute the installers via GPO, SCCM, Intune, Ansible, or any other deployment tool
 
+**Linux tab:**
+
+![Setup Wizard — Step 6: Agents (Linux)](/img/wizard/SCR-20260412-njzg.png)
+
 Agents enroll automatically and begin reporting metrics within 60 seconds. This step is skippable — you can deploy agents later.
 
-### Step 6: Network (IPAM Subnets)
+### Step 7: Network (IPAM Subnets)
+
+![Setup Wizard — Step 7: Network](/img/wizard/SCR-20260412-nkhs.png)
 
 Define the IP subnets Stratora should know about. These are used for discovery scanning and IPAM tracking.
 
@@ -107,11 +134,13 @@ Add all subnets you want to scan. The discovery step will use these as scan targ
 
 This step is skippable if you only plan to monitor agent-based devices.
 
-### Step 7: Discovery
+### Step 8: Discovery
+
+![Setup Wizard — Step 8: Discovery](/img/wizard/SCR-20260412-nkjl.png)
 
 This is where Stratora scans your network and finds devices automatically.
 
-**Configure:** Your subnets from Step 6 and credentials from Step 4 are pre-selected. Adjust if needed, then click **Start Scan**.
+**Configure:** Your subnets from Step 7 and credentials from Step 5 are pre-selected. Adjust if needed, then click **Start Scan**.
 
 **Scan:** Stratora scans all IP addresses in your selected subnets using ICMP ping, TCP port probing, and SNMP queries. Devices appear in the results table as they're discovered. The scan typically takes 5–10 minutes for a few /24 subnets.
 
@@ -120,15 +149,21 @@ Each discovered device is classified automatically:
 - **Medium confidence** — Devices with a hostname or open ports but no SNMP
 - **Low confidence** — ICMP-only responses (often proxy ARP phantoms from firewalls)
 
-**Import:** After the scan completes, review the results. Devices are pre-selected based on confidence level. Click **Import Devices** to add them to monitoring. Imported devices are automatically assigned dashboard templates and default alert rules based on their device type.
+**After the scan completes:**
+
+![Setup Wizard — Step 8: Discovery (Import)](/img/wizard/SCR-20260412-nlpb.png)
+
+**Import:** Review the results. Devices are pre-selected based on confidence level. Click **Import Devices** to add them to monitoring. Imported devices are automatically assigned dashboard templates and default alert rules based on their device type.
 
 This step is skippable if you prefer to add devices manually.
 
-### Step 8: Alerts & Escalation
+### Step 9: Alerts & Escalation
 
-Create an escalation team to receive alert notifications when something goes wrong.
+![Setup Wizard — Step 9: Alerts & Contacts](/img/wizard/SCR-20260412-nlsa.png)
 
-Click **Create Escalation Team** to open the full escalation team builder:
+Start by adding your notification contacts — the people who should receive alerts when something goes wrong. Enter a **Name**, **Email**, and optionally a **Phone** number for each contact. You can add contacts individually with **Add Contact**, use a **Template**, or bulk-import via **Import CSV**.
+
+Once your contacts are added, click **Continue to Escalation Team** to open the escalation team builder:
 
 **Team Details:** Name your team (e.g., "Network Operations", "IT On-Call").
 
@@ -150,9 +185,11 @@ For on-call rotation teams, notification steps can target rotation positions (On
 
 This step is skippable — you can configure escalation teams later from **Alerting → Escalation Teams**.
 
-### Step 9: Summary
+### Step 10: Summary
 
-The summary shows your configured environment at a glance: sites, credentials, subnets, monitored devices, and alert rules. Click **Go to Dashboard** to complete setup and start monitoring.
+![Setup Wizard — Step 10: Summary](/img/wizard/SCR-20260412-nluq.png)
+
+The summary shows your configured environment at a glance: sites, credentials, subnets, monitored devices, and alert rules. If you skipped any steps, a **Complete Later** section lists them with direct links to the relevant settings pages where you can finish configuration at any time. Click **Go to Dashboard** to complete setup and start monitoring.
 
 ## After Setup
 
