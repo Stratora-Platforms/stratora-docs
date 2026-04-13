@@ -27,6 +27,8 @@ The installer configures all required Stratora services automatically.
 
 ### 2. Verify Services
 
+![Verify Services](/img/getting-started/services.png)
+
 After installation, confirm all Stratora services are running:
 
 - **Stratora Backend API** — core API and web interface
