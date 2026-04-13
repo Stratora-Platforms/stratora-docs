@@ -29,14 +29,18 @@ The installer configures all required Stratora services automatically.
 
 After installation, confirm all Stratora services are running:
 
-- **Stratora Server** — core API and web interface
-- **Stratora Metrics** — time-series storage
-- **Stratora Collector** — metric collection
-- **Stratora Proxy** — web proxy serving the UI
+- **Stratora Backend API** — core API and web interface
+- **Stratora VictoriaMetrics** — time-series storage
+- **Stratora Collector** — SNMP polling and metrics relay
+- **Stratora Collector Telegraf** — polls SNMP/ICMP/HTTP targets
+- **Stratora Web Server** — NGINX reverse proxy serving the UI
+- **Stratora PostgreSQL Database** — database server
+- **Stratora Agent Telegraf** — local system metrics (on the Stratora server itself)
+- **Stratora Monitoring Agent** — collects system metrics and reports to Stratora
 
 ### 3. Access the Web Interface
 
-Open a browser and navigate to `https://your-server-hostname`. Log in with your administrator credentials configured during installation.
+Open a browser and navigate to `https://your-server-hostname`. Log in with the default credentials — username `admin`, password `admin`. You will be prompted to set a new password on first login.
 
 ## Setup Wizard
 
