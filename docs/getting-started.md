@@ -17,7 +17,7 @@ Before installing Stratora, ensure you have:
 
 ### 1. Download and Install
 
-Download the latest Stratora MSI installer from your license portal. Run the installer on your designated monitoring server:
+Download the latest Stratora MSI installer from the latest release here: https://github.com/Stratora-Platforms/stratora-releases/releases. Run the installer on your designated monitoring server:
 
 ```
 msiexec /i Stratora-x.x.x.msi /qn
