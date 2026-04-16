@@ -10,6 +10,19 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.5 — April 15, 2026
+
+### Bundled Components
+- Agent 2.1.5 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.5
+
+### Fixed
+- Device templates installed to wrong path on fresh deployments — WiX heat.exe was invoked with -srd (suppress root directory), which dropped the `templates` intermediate directory and placed YAML files at `config\devices\` instead of `config\templates\devices\`. All template lookups failed, producing zero SNMP input blocks for 10/12 node types. Removed -srd so the install path matches the Go backend's default.
+- SNMP fallback path defaulted community string to "public" instead of reading the node's assigned credential from the encrypted store. Nodes without a matching device template now resolve their credential via the same decryption path as template-based nodes.
+
+---
+
 ## v2.1.4 — April 15, 2026
 
 ### Bundled Components
