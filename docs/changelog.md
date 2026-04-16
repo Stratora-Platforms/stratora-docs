@@ -10,6 +10,57 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.3 — April 15, 2026
+
+### Bundled Components
+- Agent 2.1.3 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.3
+
+### Audit Logging
+
+- Full CRUD audit coverage across collectors, site photos, contact bulk import, OIDC provider config, component enrollment, server startup, and migration application events.
+- Self-service password change and session cleanup events.
+- IdP contact sync events (create, update, merge) with system actor attribution.
+- License parse-failure downgrade events.
+- DB-level soft immutability via trigger (migration 146) — direct mutation of audit_logs raises an error; retention managed via SECURITY DEFINER function only.
+
+### Escalation Teams
+
+- Contact references stored in `escalation_channel_contacts` junction table (migration 144); email/Slack/Teams dispatch resolves contacts from junction.
+- Live on-call preview banner in rotation schedule showing current position holder and next shift handoff time.
+- Drag-and-drop reordering for rotation members (with keyboard-accessible fallback).
+- Save-time configuration warnings when rotation members lack phone/email for targeted channels.
+- Dispatch-time audit log entries when SMS/Voice notifications are skipped due to missing phone numbers.
+- SMS/Voice targeting chips (On-Call #1, All Members, Specific Contacts) now fully honored by backend dispatch.
+- oncall_notify_sms / oncall_notify_voice toggles exposed in UI for rotation teams.
+- Slack/Teams channels now support ContactPicker for individual contacts alongside freeform webhook URLs.
+
+### Contact Registry
+
+- IdP sync merge path — existing manual contacts promoted to managed on email match at login.
+- Bulk import now logs aggregate audit entry with imported/merged/skipped/errors counts.
+- Two-step modal redesign (Basic Info → Notification Channels).
+- Phone number normalization via react-phone-number-input (country code enforcement, auto-formatting).
+- ContactPicker filters to only show contacts with the required channel configured.
+
+### Fixes
+
+- User menu dropdown clipped by overflow-hidden on TopNavBar flex container.
+- UpsertContactFromIdP: email no longer NULL on fresh IdP contact creation.
+- Toast regressions: acknowledged alerts no longer re-appear; dismissing via "View" works correctly; tab sleep/wake no longer causes burst toasts; toasts no longer render above modals.
+- Escalation teams: clone preserves junction-backed ContactIDs; ConfirmDialog renders via createPortal; SMS/Voice dispatch respects target_type and oncall_position_offset; delete of in-use teams succeeds.
+
+### Changed
+
+- escalation_step_channels.contact_ids column dropped (migration 144); replaced by junction table.
+- contacts.external_id partial unique index added (migration 145).
+- Alert toast polling: acknowledged alerts excluded from recent alerts endpoint.
+- Escalation rotation-member SMS/Voice dispatch gated on oncall_notify_sms / oncall_notify_voice flags (migration 147).
+- All components (Server, Agent, Collector) versioned in lockstep at 2.1.3.
+
+---
+
 ## v2.1.1 — April 6, 2026
 
 ### New Built-In Reports
