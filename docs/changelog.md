@@ -10,6 +10,18 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.4 — April 15, 2026
+
+### Bundled Components
+- Agent 2.1.4 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.4
+
+### Fixed
+- Setup page (/setup) hung on "Getting things ready..." indefinitely due to CSP violation — the inline polling script was blocked by NGINX's script-src 'self' policy. Extracted the IIFE into an embedded setup.js file served via a new /setup.js route; the auto-redirect to /login after service initialization now works correctly on fresh installs.
+
+---
+
 ## v2.1.3 — April 15, 2026
 
 ### Bundled Components
