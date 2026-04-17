@@ -10,6 +10,28 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.8 — April 17, 2026
+
+### Bundled Components
+- Agent 2.1.6 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.6
+
+### Fixed
+- Topology auto-map now tracks the site's live node set. Node deletions, rejections, deactivations, and cross-site moves previously left orphan elements on the map; reconcile now adds missing elements AND prunes orphans in a single pass.
+- Three additional node-creation paths now fire the auto-gen hook chain: discovery single import, discovery bulk import, and agent self-enrollment. Before 2.1.8, bulk-importing discovered devices into a fresh site produced no topology map.
+- `DeleteNode` and `RejectNode` fire the topology hook. Cross-site moves explicitly prune the old-site map.
+
+### Changed
+- Migration 151: `topology_maps.site_id` FK changed from `ON DELETE SET NULL` to `ON DELETE CASCADE`. One-shot cleanup of auto-generated orphans included; user-created maps preserved.
+- `BackfillAllSites` at startup reconciles every site with nodes. First 2.1.8 boot cleans element drift accumulated under the previous additive-only semantics.
+
+### Operator Notes
+- First boot of 2.1.8 will clean accumulated orphan elements from auto-generated maps. User-edited maps are not touched.
+- Schema migration 151 runs automatically on first 2.1.8 startup. No manual DB intervention required.
+
+---
+
 ## v2.1.7 — April 17, 2026
 
 ### Bundled Components
