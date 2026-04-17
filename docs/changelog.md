@@ -10,6 +10,24 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.7 — April 17, 2026
+
+### Bundled Components
+- Agent 2.1.6 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.6
+
+### Fixed
+- Auto-generated topology map is now created and linked to the Network Topology panel on fresh deploys, wizard completion, and first-node-add. Previously the panel rendered "No map selected" because `BootstrapDefaultSite` bypassed the auto-gen hooks and per-request hooks raced the dashboard regeneration against the map creation.
+- `BootstrapDefaultSite` now fires the same sequenced auto-gen hooks as `SiteHandler.CreateSite`, so the default site starts with a dashboard and picks up its topology map as soon as the first node arrives.
+- Site/node hook call sites (`CreateSite`, `CreateNode`, `UpdateNode`, `ApproveNode`, bulk node move) now run topology regeneration before dashboard regeneration inside a single goroutine, eliminating the race that could leave `mapId` stored as empty permanently.
+- Dashboard read path self-heals empty `mapId` values on auto-generated site topology panels by resolving the live map at response time. Repairs dashboards already persisted with empty `mapId` from earlier builds; no migration required.
+
+### Changed
+- Auto-generated topology map IDs are now deterministic UUID v5 values derived from the site ID. Deleting and regenerating the auto-map reuses the original ID, so dashboards referencing the old ID survive the cycle. Differs from prior releases where regenerated maps received a fresh random UUID.
+
+---
+
 ## v2.1.6 — April 16, 2026
 
 ### Bundled Components
