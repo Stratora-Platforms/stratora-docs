@@ -10,6 +10,30 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.6 — April 16, 2026
+
+### Bundled Components
+- Agent 2.1.6 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.6
+
+### Added
+- Node stabilization lifecycle -- newly-created nodes receive a 5-minute stabilization window during which alert evaluation is skipped and the node is excluded from the system-wide health score. Prevents false alerts and health score dips immediately after discovery imports or agent enrollment.
+- "Agent Not Reporting" alert -- fires when an agent node completes stabilization but has never checked in. Resolves automatically when the first heartbeat arrives.
+- Audit log events for node stabilization lifecycle (`node.stabilization_started`, `node.stabilization_completed`).
+- "Stabilizing" visual state in node list, node detail, site nodes, topology maps, and dashboard panels.
+
+### Changed
+- Replaced 4 copy-pasted grace period blocks in the alert evaluator with a single `IsNodeStabilizing()` helper driven by the `stabilization_until` timestamp.
+- Server MSI now supports in-place upgrades. PostInstall.ps1 detects upgrade scenarios and preserves database credentials, SSL certificates, and service registrations.
+- Added PreInstall custom action and WiX ServiceControl elements to stop services before binary replacement during upgrade.
+- Migration 059 (legacy collector migration) guarded for fresh installs without legacy `collectors` table.
+
+### Known Issues
+- Users upgrading from v2.1.5 may see a files-in-use dialog during installation. Click OK to continue -- no reboot is required. This dialog will not appear on future upgrades (v2.1.6+).
+
+---
+
 ## v2.1.5 — April 15, 2026
 
 ### Bundled Components
