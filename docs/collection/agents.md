@@ -125,7 +125,7 @@ If the agent doesn't appear, check:
 
 - **StratoraAgent** — Windows service managing the agent lifecycle (register/heartbeat, hostname detection, role detection, Telegraf config generation)
 - **stratora-agent-telegraf** — Windows service running the embedded Telegraf instance that collects and ships metrics
-- **stratora-tray.exe** — optional per-user tray indicator (launched at login) that shows agent connection status and links to logs
+- **stratora-tray.exe** — system-wide tray indicator (launched at logon for every interactive user) that shows agent connection status and links to logs
 - Installed to `C:\Program Files\Stratora\`, with configuration and logs under `C:\ProgramData\Stratora\`
 
 ### Linux
