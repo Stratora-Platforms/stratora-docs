@@ -10,6 +10,26 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.9 — April 19, 2026
+
+### Bundled Components
+- Agent 2.1.9 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.9
+
+### Fixed
+- Tray icon auto-start now works on every release target. Prior releases wrote the Run key under a custom action with `Impersonate="no"`, which landed the value in `HKEY_USERS\S-1-5-18` — invisible to every real interactive user. Tray auto-start is now a declarative `HKLM\...\Run\StratoraTray` (Agent MSI) and `HKLM\...\Run\StratoraTrayCollector` (Collector MSI) entry that fires for every interactive user at logon. Affects every release through 2.1.8.
+
+### Changed
+- Tray binary no longer self-registers its Run key. The `-install-startup` and `-uninstall-startup` flags are removed from `stratora-tray.exe`; Run-key registration is the installer's sole responsibility.
+- Single-instance mutex guard added to the tray binary. An upgraded host carrying a stale `HKCU\Run\StratoraTray` value alongside the new `HKLM\Run\StratoraTray` entry would otherwise double-launch; the mutex dedupes within a session while allowing every interactive user their own tray.
+
+### Operator Notes
+- The 2.1.9 installer cleans up the orphan SYSTEM-hive Run values (`HKU\S-1-5-18\...\Run\StratoraTray` and `StratoraTrayCollector`) left by pre-2.1.9 installs. Cleanup runs on upgrade only.
+- Per-user HKCU leftovers from the installing admin's pre-2.1.9 session are not auto-cleaned. The single-instance mutex ensures the leftover doesn't cause a visible double-launch, so it's cosmetic. Remove manually with `reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v StratoraTray /f` if desired.
+
+---
+
 ## v2.1.8 — April 17, 2026
 
 ### Bundled Components
