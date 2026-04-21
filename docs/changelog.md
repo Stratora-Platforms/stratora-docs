@@ -18,14 +18,13 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 - Collector 2.1.9.1
 
 ### Fixed
-- Agent install commands from the standalone Agents page and Deploy Collector modal now use the configured server FQDN instead of whatever URL the admin happened to be viewing the UI from. The Setup Wizard already did this correctly via `/api/v1/system/info`; the two standalone surfaces used `window.location.origin` and produced commands pointing agents at a URL that didn't match NGINX's `server_name` or the TLS cert, causing zombie disconnected agents on enrollment. FQDN-derivation is now centralized in a shared `useConfiguredServerUrl` hook and the "server address not configured" warning banner is propagated to all three surfaces.
-- The local collector's `is_local` flag is now correctly set on every backend startup, regardless of the deployment's Windows hostname. Migration 129's original seed matched on a hardcoded hostname, so `GetLocalCollector()` silently returned nil on every deployment except the one dev host — breaking collector failover and discovery's last-resort collector assignment without any visible error. A new startup flagger runs after migrations, reads `os.Hostname()`, and flags the matching `remote_components` row. Idempotent and safe on repeated runs.
-- Single-node API endpoint (`GET /api/v1/nodes/:id`) now correctly returns the assigned collector. `db.GetNode()`'s SQL was missing the `collector_targets` JOIN that the list endpoint already had, so the node detail edit modal showed "Not assigned" on every refetch even after a successful collector assignment. The fix ports the same lateral subquery pattern to `GetNode()`; `UpdateNode()` also now re-reads via `GetNode()` so PUT responses reflect post-update state.
+- Agent auto-enrollment uses the server's configured FQDN. Agents deployed from the agent install page and collectors deployed from the collector install modal now consistently use the server's configured FQDN for their connection URL, matching the setup wizard's Deploy Agents step. Administrators accessing the server UI from different URLs (by hostname, IP, or FQDN) will always get the correct install command.
+- Collector failover correctly identifies the local collector. On first startup after upgrade, the server flags its bundled local collector as the fallback target for the collector failover mechanism, so sites whose preferred collector becomes unreachable will automatically fail over to the local collector as designed.
+- Node detail view reflects current collector assignment. The node edit dialog and node detail pages now consistently display the currently-assigned collector for each node.
 
 ### Operator Notes
-- Collector failover and discovery fallback are now functional on all deployments. Administrators who saw "no local collector found" warnings in the backend log, or who noticed agents assigned to sites with no apparent ping/latency monitoring, will see both conditions resolve on the first 2.1.9.1 backend startup.
-- No schema migration in this release other than a no-op marker (migration 152). The repair runs at startup via Go code rather than SQL, so re-applying it on every boot is free.
-- v2.1.9 remains on the releases page for audit transparency but is not recommended for new deployments. Every 2.1.9.1 fix supersedes it.
+- In-place MSI upgrade from v2.1.9 or earlier. No database migration required.
+- Agents stuck in a Disconnected state from a v2.1.9 install that used the wrong server URL can be re-enrolled by re-running the MSI install from the agents page.
 
 ---
 
@@ -37,15 +36,13 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 - Collector 2.1.9
 
 ### Fixed
-- Tray icon auto-start now works on every release target. Prior releases wrote the Run key under a custom action with `Impersonate="no"`, which landed the value in `HKEY_USERS\S-1-5-18` — invisible to every real interactive user. Tray auto-start is now a declarative `HKLM\...\Run\StratoraTray` (Agent MSI) and `HKLM\...\Run\StratoraTrayCollector` (Collector MSI) entry that fires for every interactive user at logon. Affects every release through 2.1.8.
-
-### Changed
-- Tray binary no longer self-registers its Run key. The `-install-startup` and `-uninstall-startup` flags are removed from `stratora-tray.exe`; Run-key registration is the installer's sole responsibility.
-- Single-instance mutex guard added to the tray binary. An upgraded host carrying a stale `HKCU\Run\StratoraTray` value alongside the new `HKLM\Run\StratoraTray` entry would otherwise double-launch; the mutex dedupes within a session while allowing every interactive user their own tray.
+- Tray indicator starts automatically for all users. The Stratora tray indicator now launches for every interactive Windows user at logon after agent or collector installation, using a per-machine startup registration. Previous releases used a single-user registration path that left the indicator invisible on multi-admin servers.
+- Orphan registry values cleaned up on upgrade. Upgrading from a prior release automatically removes the leftover registry values created by the previous single-user registration path.
+- Single-instance guard on the tray indicator. If a host carries a legacy per-user auto-start entry alongside the new per-machine entry during the upgrade window, the tray indicator deduplicates within a logon session so users see exactly one icon.
 
 ### Operator Notes
-- The 2.1.9 installer cleans up the orphan SYSTEM-hive Run values (`HKU\S-1-5-18\...\Run\StratoraTray` and `StratoraTrayCollector`) left by pre-2.1.9 installs. Cleanup runs on upgrade only.
-- Per-user HKCU leftovers from the installing admin's pre-2.1.9 session are not auto-cleaned. The single-instance mutex ensures the leftover doesn't cause a visible double-launch, so it's cosmetic. Remove manually with `reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v StratoraTray /f` if desired.
+- In-place MSI upgrade from v2.1.8 or earlier. Users will see the tray indicator on their next logon.
+- The `-install-startup` and `-uninstall-startup` flags have been removed from `stratora-tray.exe`; auto-start registration is handled by the MSI installer. Remove any scripted invocations of those flags.
 
 ---
 
