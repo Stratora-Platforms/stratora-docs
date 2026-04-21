@@ -10,6 +10,25 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.9.1 — April 20, 2026
+
+### Bundled Components
+- Agent 2.1.9.1 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.9.1
+
+### Fixed
+- Agent install commands from the standalone Agents page and Deploy Collector modal now use the configured server FQDN instead of whatever URL the admin happened to be viewing the UI from. The Setup Wizard already did this correctly via `/api/v1/system/info`; the two standalone surfaces used `window.location.origin` and produced commands pointing agents at a URL that didn't match NGINX's `server_name` or the TLS cert, causing zombie disconnected agents on enrollment. FQDN-derivation is now centralized in a shared `useConfiguredServerUrl` hook and the "server address not configured" warning banner is propagated to all three surfaces.
+- The local collector's `is_local` flag is now correctly set on every backend startup, regardless of the deployment's Windows hostname. Migration 129's original seed matched on a hardcoded hostname, so `GetLocalCollector()` silently returned nil on every deployment except the one dev host — breaking collector failover and discovery's last-resort collector assignment without any visible error. A new startup flagger runs after migrations, reads `os.Hostname()`, and flags the matching `remote_components` row. Idempotent and safe on repeated runs.
+- Single-node API endpoint (`GET /api/v1/nodes/:id`) now correctly returns the assigned collector. `db.GetNode()`'s SQL was missing the `collector_targets` JOIN that the list endpoint already had, so the node detail edit modal showed "Not assigned" on every refetch even after a successful collector assignment. The fix ports the same lateral subquery pattern to `GetNode()`; `UpdateNode()` also now re-reads via `GetNode()` so PUT responses reflect post-update state.
+
+### Operator Notes
+- Collector failover and discovery fallback are now functional on all deployments. Administrators who saw "no local collector found" warnings in the backend log, or who noticed agents assigned to sites with no apparent ping/latency monitoring, will see both conditions resolve on the first 2.1.9.1 backend startup.
+- No schema migration in this release other than a no-op marker (migration 152). The repair runs at startup via Go code rather than SQL, so re-applying it on every boot is free.
+- v2.1.9 remains on the releases page for audit transparency but is not recommended for new deployments. Every 2.1.9.1 fix supersedes it.
+
+---
+
 ## v2.1.9 — April 19, 2026
 
 ### Bundled Components
