@@ -10,6 +10,18 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.9.2 — April 23, 2026
+
+### Bundled Components
+- Agent 2.1.9.2 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.9.2
+
+### Fixed
+- **Escalation Teams page failed to load on tenants with rotation teams** — a `pgx` v5 scan-plan gap caused the Escalation Teams page, alert configuration modal, onboarding wizard Alerts step, and on-call status API to error on any tenant whose escalation teams had a non-null rotation start date. Fixed at the database layer; wire format unchanged, no migration required.
+
+---
+
 ## v2.1.9.1 — April 20, 2026
 
 ### Bundled Components
