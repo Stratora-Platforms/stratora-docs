@@ -89,8 +89,8 @@ Each step can use one or more notification channels.
 | **Slack Webhook** | Incoming webhook URL, optional channel and username override | Available |
 | **Microsoft Teams Webhook** | Incoming webhook URL | Available |
 | **Generic Webhook** | URL and optional custom headers | Available |
-| **SMS** | Phone numbers | Planned |
-| **Voice Call** | Phone numbers | Planned |
+| **SMS**        | Phone numbers | Available — requires Twilio configuration; see [Twilio Integration](/docs/integrations/external-notifications) |
+| **Voice Call** | Phone numbers | Available — requires Twilio configuration; see [Twilio Integration](/docs/integrations/external-notifications) |
 
 ### Email
 
@@ -121,37 +121,7 @@ Before saving, use the **Test** button to send a test notification through any c
 
 ## Schedules
 
-The **schedule type** controls when the escalation team is active — i.e., when it will process alerts and send notifications.
-
-### Always
-
-Active 24 hours a day, 7 days a week. Use this for teams that should always respond.
-
-### Time-Based
-
-Active only during specific hours on specific days. Configure:
-
-| Field | Description |
-|-------|-------------|
-| Active Hours Start | Start time (e.g., 09:00) |
-| Active Hours End | End time (e.g., 17:00) |
-| Overnight Shift | Enable if the end time is on the following day (e.g., 22:00–06:00) |
-| Active Days | Which days of the week the schedule applies (Sunday–Saturday) |
-
-Alerts that fire outside the active window are held until the team becomes active.
-
-### Rotation
-
-Assigns a rotating on-call person from a roster. Configure:
-
-| Field | Description |
-|-------|-------------|
-| Rotation Period | Days per person on-call (e.g., 7 for weekly rotation) |
-| Start Date | When the rotation schedule begins |
-| Handoff Time | Time of day when on-call responsibility transfers (e.g., 08:00) |
-| Roster | Ordered list of rotation members |
-
-The system automatically calculates who is currently on-call based on the rotation period and roster position.
+<!-- Schedules section is being updated for the 2.1.10 GA release. Active hours and Time-Based scheduling behavior are being refined; see release notes when 2.1.X ships. -->
 
 ---
 
@@ -161,11 +131,36 @@ Rotation members define the on-call roster. Each member has:
 
 | Field | Description |
 |-------|-------------|
-| Position | Order in the rotation (1, 2, 3, ...) |
+| Position | Order in the rotation roster (1, 2, 3, ...) |
 | Name | Display name |
 | Email | Email address for notifications |
-| Phone | Phone number (for future SMS/voice) |
+| Phone | Phone number for SMS and voice notifications. Use E.164 format (e.g., `+18005551234`) — required by Twilio for delivery. |
 | Contact | Optional link to a [contact](./contacts.md) record |
+
+### Position vs. On-Call #N — important distinction
+
+A rotation member's **Position** is a fixed slot in the roster — it determines the rotation order, not who is currently on-call. **On-Call #1**, **On-Call #2**, etc. are *rotation-relative* targets evaluated at alert time:
+
+- **On-Call #1** = whoever is currently on-call **right now**.
+- **On-Call #2** = whoever takes over at the **next** rotation handoff.
+- **On-Call #3** = the person after that, and so on.
+
+#### Example
+
+A team has three members in roster order: Alice (Position 1), Bob (Position 2), Carol (Position 3). The rotation period is 7 days, and today Bob is on-call.
+
+| Target | Resolves To | Why |
+|--------|-------------|-----|
+| **On-Call #1** | Bob | Bob is the current on-call |
+| **On-Call #2** | Carol | Carol is next in the rotation |
+| **On-Call #3** | Alice | Rotation wraps around |
+
+Next week, after the handoff, **On-Call #1** will be Carol — not Alice — even though Alice is at Position 1 in the roster. The roster Position controls *order*; the **On-Call #N** target tracks *who's actually up* at the moment the alert fires.
+
+### Reordering and removing members
+
+- **Reordering** the roster (drag to change Position) changes who comes next in the rotation. The currently on-call member does not change immediately — the next handoff is the first time the new order takes effect.
+- **Removing** a member who is currently on-call advances the rotation: the next member in the new roster becomes On-Call #1 immediately.
 
 ### On-Call Targeting
 
@@ -173,13 +168,17 @@ Escalation step channels can target rotation members dynamically:
 
 | Target | Who Gets Notified |
 |--------|------------------|
-| **Current On-Call** | The person currently on-call |
-| **Next On-Call** | The person who will be on-call next |
-| **Previous On-Call** | The person who was most recently on-call |
-| **All On-Call** | Everyone in the rotation roster |
-| **Static** | Fixed recipients (not rotation-aware) |
+| **On-Call #1 (Current)** | Whoever is currently on-call |
+| **On-Call #2 (Next)** | Whoever takes over at the next handoff |
+| **On-Call #3, #4, ...** | Subsequent positions in the rotation cycle |
+| **All On-Call** | Every member in the roster |
+| **Specific contacts** | Fixed recipients (not rotation-aware) |
 
-This lets you build steps like: "Notify the current on-call engineer immediately, then notify the next on-call after 15 minutes if unresolved."
+This lets you build steps like: "Notify On-Call #1 immediately, then escalate to On-Call #2 after 15 minutes if unresolved."
+
+:::tip
+SMS and voice notifications require Twilio to be configured in **Settings → External Notifications → SMS & Voice**. See [Twilio Integration](/docs/integrations/external-notifications) for setup, modes, and 10DLC registration requirements.
+:::
 
 ---
 

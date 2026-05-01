@@ -17,7 +17,7 @@ Navigate to **Alerting → Contacts** and click **Add Contact**.
 |-------|----------|-------------|
 | Name | Yes | Full name of the contact |
 | Email | No | Email address for notifications |
-| Phone | No | Phone number (for future SMS/voice notifications) |
+| Phone | No | Phone number for SMS and voice notifications. Use E.164 format (e.g., `+18005551234`) — required by Twilio for delivery. |
 | Webhook URL | No | Direct webhook URL for this contact |
 | Notes | No | Free-text notes about the contact's role or responsibilities |
 
@@ -80,9 +80,5 @@ Stratora supports the following notification delivery methods, configured on [es
 | **Slack** | Incoming webhook with Block Kit formatting | Available |
 | **Microsoft Teams** | Incoming webhook with Adaptive Cards | Available |
 | **Generic Webhook** | HTTP POST with JSON payload and custom headers | Available |
-| **SMS** | Text message delivery | Planned |
-| **Voice** | Automated voice call | Planned |
-
-:::info
-SMS and voice notification channels are defined in the system and will be available in a future release.
-:::
+| **SMS** | Text message delivery via Twilio | Available — requires Twilio configuration; see [Twilio Integration](/docs/integrations/external-notifications) |
+| **Voice** | Automated voice call via Twilio | Available — requires Twilio configuration; see [Twilio Integration](/docs/integrations/external-notifications) |

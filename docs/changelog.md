@@ -169,7 +169,7 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 - Drag-and-drop reordering for rotation members (with keyboard-accessible fallback).
 - Save-time configuration warnings when rotation members lack phone/email for targeted channels.
 - Dispatch-time audit log entries when SMS/Voice notifications are skipped due to missing phone numbers.
-- SMS/Voice targeting chips (On-Call #1, All Members, Specific Contacts) now fully honored by backend dispatch.
+- SMS/Voice targeting chips (On-Call #1, All Members, Specific contacts) now fully honored by backend dispatch.
 - oncall_notify_sms / oncall_notify_voice toggles exposed in UI for rotation teams.
 - Slack/Teams channels now support ContactPicker for individual contacts alongside freeform webhook URLs.
 

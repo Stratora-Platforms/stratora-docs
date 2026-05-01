@@ -18,7 +18,7 @@ Stratora delivers alert notifications to external systems through multiple chann
 | **Microsoft Teams** | Adaptive Cards (v1.4) | Available |
 | **Generic Webhook** | JSON payload via HTTP POST | Available |
 | **SMS** | Text messages via Twilio | Available |
-| **Voice** | Automated voice calls via Twilio | Available (bidirectional mode) |
+| **Voice** | Automated voice calls via Twilio | Available |
 
 ---
 
@@ -324,6 +324,26 @@ Twilio requires toll-free number verification for production SMS volume. Free de
 
 Submit verification in the Twilio Console before production use: [Twilio Toll-Free Verification](https://help.twilio.com/articles/1260803965530)
 
+### A2P 10DLC Registration (US Long Codes)
+
+If you send SMS from a **US long code** (a standard 10-digit phone number, not toll-free and not short code), US carriers require **A2P 10DLC registration** under the carrier-imposed Application-to-Person messaging rules.
+
+:::caution
+Without 10DLC registration, US carriers will return Twilio error code **30034** ("US A2P 10DLC — Message from an Unregistered Number") and your SMS notifications will be blocked. Test SMS from the Stratora settings page will succeed (Twilio accepts the message) but recipients will not receive it.
+:::
+
+**Registration steps (one-time, per Twilio account):**
+
+1. **Register a Brand** in the Twilio Console — Brand Registration verifies your business identity. Approval typically takes 1–3 business days.
+2. **Register a Campaign** — describes the use case (e.g., "Low Volume Mixed", "Account Notifications"). Campaign approval is usually instant for low-volume use cases.
+3. **Associate your phone number** with the approved Campaign.
+
+**Detailed steps:** [Twilio: How to Register for A2P 10DLC](https://help.twilio.com/articles/1260801864489)
+
+**Toll-free numbers** (e.g., `+1800`, `+1888`, `+1877`) are exempt from 10DLC registration but require **toll-free verification** instead — see the section above.
+
+**Non-US numbers** are not subject to 10DLC. International deployments should follow the per-country sender registration rules in their target geography.
+
 ### Troubleshooting
 
 - Check backend logs for `[Twilio/SMS]`, `[Twilio/Webhook]`, `[Twilio/Sync]` prefixed lines
@@ -335,27 +355,32 @@ Submit verification in the Twilio Console before production use: [Twilio Toll-Fr
 
 ## Voice Calls
 
-Stratora can call escalation team members when an alert fires. The call uses text-to-speech to announce the alert, then prompts for a DTMF response.
+Stratora can call escalation team members when an alert fires. The call uses text-to-speech to announce the alert. Acknowledgement is handled out-of-band — see **Acknowledging a voice alert** below.
 
 ### What you hear
 
-> "Stratora alert. CRITICAL on SERVER-01, site HQ. High CPU Usage.
-> Press 1 to acknowledge. Press 2 to escalate. Press 3 to repeat this message."
+> "Stratora alert. CRITICAL severity on SERVER zero one, site HQ. High CPU Usage.
+> To acknowledge, reply ACK to the SMS notification, click the Acknowledge link in your email, or open Stratora.
+> Goodbye."
 
-### DTMF responses
+The announcement uses Amazon Polly text-to-speech. Hostnames are spelled out character-by-character so codes and short identifiers (e.g., `srv-01`, `fw-a`) come through clearly even on poor-quality audio.
 
-| Key | Action |
-|-----|--------|
-| **1** | Acknowledge the alert |
-| **2** | Escalate to the next step |
-| **3** | Repeat the message |
-| No input (10s timeout) | No action — log in to Stratora to manage the alert |
+### Acknowledging a voice alert
+
+Voice calls are **announcement-only** in this release — there is no DTMF (keypad) acknowledgement. The call is informational; to acknowledge or escalate the alert, use one of these paths:
+
+- **Reply `ACK <token>`** to the SMS notification (if SMS is also configured on the team)
+- **Click the Acknowledge link** in the email notification
+- **Open Stratora** and acknowledge the alert from the alerts page
+
+:::info
+DTMF (in-call keypad acknowledgement) is on the post-GA roadmap. It requires a small Cloudflare Worker relay to bridge Twilio's webhook callbacks to on-prem Stratora servers without exposing them to the internet. Tracked as Item 18.
+:::
 
 ### Requirements
 
-- **Bidirectional mode only** — Twilio must be able to fetch TwiML from Stratora (voice polling mode is not yet supported)
-- `server.external_url` must be set and reachable from the internet
-- Rotation member must have a phone number (E.164) and **Voice** enabled
+- Twilio integration configured (any of the three modes — `bidirectional`, `polling`, or `outbound_only`). Voice uses **inline TwiML** in the outbound call request, so it does not require Twilio to fetch a TwiML URL from Stratora and works in all three modes.
+- Rotation member must have a phone number (E.164 format) and **Voice** enabled
 
 ### Enabling voice for a team member
 

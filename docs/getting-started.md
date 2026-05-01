@@ -189,7 +189,11 @@ Once your contacts are added, click **Continue to Escalation Team** to open the 
 - **Step 2 (after delay):** Escalate to additional contacts if unacknowledged
 - Add as many steps as needed
 
-For on-call rotation teams, notification steps can target rotation positions (On-Call #1, #2, #3, etc.) instead of specific contacts. The actual recipient is resolved from the roster at alert time.
+For rotation teams, escalation steps can target rotation positions:
+- **On-Call #1** is whoever is currently on-call right now.
+- **On-Call #2** is whoever is next in line after the rotation handoff.
+
+These targets are evaluated at alert time, so the same step always notifies the right person as the rotation cycles. See [Escalation Teams → On-Call Rotation](./alerting/escalation-teams.md#on-call-rotation) for details.
 
 **Settings:** Configure repeat cycle behavior for unacknowledged alerts.
 
