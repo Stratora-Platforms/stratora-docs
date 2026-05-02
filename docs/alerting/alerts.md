@@ -31,6 +31,10 @@ stateDiagram-v2
 Previous alert states like "acknowledged" and "muted" are now **metadata flags** on active alerts, not separate states. An alert can be active, acknowledged, and muted simultaneously.
 :::
 
+### Test alerts
+
+Test alerts appear in the alerts list with a **TEST** badge. They auto-resolve five minutes after firing and are excluded from device counts, health summaries, and licensing. To send a test alert, see [Sending a test alert](./alert-configurations.md#sending-a-test-alert) in the **Alert configurations** topic.
+
 ---
 
 ## Alert Types

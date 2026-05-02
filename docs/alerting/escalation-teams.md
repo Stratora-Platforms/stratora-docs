@@ -117,6 +117,10 @@ Send a JSON payload via HTTP POST to any URL. You can add custom headers for aut
 
 Before saving, use the **Test** button to send a test notification through any channel. This verifies that webhooks, email addresses, and integrations are configured correctly.
 
+:::note
+The per-channel **Test** button on this page tests an individual channel's delivery (email recipient, webhook URL, SMS or voice number). To test that an alert configuration end-to-end fires correctly and emails the right recipients, use **Fire test alert** on the alert configuration itself. See [Sending a test alert](./alert-configurations.md#sending-a-test-alert).
+:::
+
 ---
 
 ## Schedules

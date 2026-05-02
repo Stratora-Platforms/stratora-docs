@@ -143,6 +143,32 @@ If no escalation team is assigned, the alert is still created and visible in the
 
 ---
 
+## Sending a test alert
+
+Stratora can fire a test alert against any saved alert configuration so you can confirm the alert appears in the alerts list and the configured email recipients receive a notification.
+
+To send a test alert:
+
+1. Open **Alert configurations** from the sidebar.
+2. Select the alert configuration you want to test.
+3. Click **Fire test alert**.
+4. Choose a severity (**Warning**, **Critical**, or **Resolved**) and confirm.
+
+When you fire a test alert:
+
+- A test alert appears in the alerts list with a **TEST** badge.
+- The recipients on this alert configuration receive an email. Subjects are prefixed `[TEST]` and the email body shows an orange **TEST ALERT** banner so recipients can tell at a glance the alert was fired manually.
+- The test alert auto-resolves five minutes after firing.
+- The test alert is excluded from device counts, the licensed device total, dashboard health summaries, and reports.
+
+:::tip
+To test SMS, Voice, Slack, Teams, or webhook delivery, use the **Test** button on each individual channel inside the escalation team configuration. Those tests route through the same delivery code Stratora uses for real alerts, so a successful per-channel test is a strong signal the channel is wired correctly.
+:::
+
+Test alerts require an account with the **Manage alerting** permission (administrators by default).
+
+---
+
 ## Unified View
 
 The **Alert Configurations** page shows both built-in and custom configurations in a single list. Each entry displays:
