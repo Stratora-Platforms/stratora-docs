@@ -134,6 +134,67 @@ When your subscription renews, you receive a new license file with an updated ex
 
 ---
 
+## Approaching expiry
+
+When your license is within 30 days of expiring, Stratora displays a
+blue banner across the top of every page reminding you to renew. The
+banner shows the number of days remaining and links to the License
+page where you can upload a renewed license file.
+
+The banner is dismissible per session — closing it hides it until your
+next browser session, but it will reappear on your next visit until the
+license is renewed or replaced.
+
+There is no email reminder. The banner is the only proactive notice
+Stratora provides before expiry.
+
+If you renew your license before the expiry date, upload the new
+`.lic` file on the License page. The new license takes effect
+immediately with no service restart.
+
+---
+
+## If your license file is rejected
+
+Stratora verifies your license file when it loads. If the file fails
+verification — for example, because it was modified after being signed,
+became corrupted during a backup or restore, or has the wrong format —
+Stratora rejects the file rather than silently falling back to
+Community Edition.
+
+What you will see:
+
+- A red banner labeled **License file problem** at the top of every
+  page.
+- An error message on the **License** page explaining the rejection.
+- If you previously had a valid license, your previous license remains
+  in effect. Existing monitoring continues unchanged. New nodes can
+  still be added against the previous license's limit.
+- If this is the first time Stratora is starting and there is no
+  previous license, no new nodes can be added until a valid license is
+  uploaded. Existing nodes (if any) continue to be monitored.
+
+What to do:
+
+1. Open the **License** page.
+2. Re-upload your `.lic` file. If the file was corrupted, request a
+   fresh copy from your account portal.
+3. If the rejection persists with a fresh download, contact Stratora
+   support with the rejection reason shown on the License page.
+
+Common causes of rejection:
+
+- The `.lic` file was edited after being issued.
+- The file was corrupted during transfer or storage.
+- The file is from a different signing authority (for example, a
+  development or test license used against a production server).
+- File system permissions prevent Stratora from reading the file.
+
+A missing license file is **not** a rejection — Stratora treats no
+license file as Community Edition and runs at the 100-device cap.
+
+---
+
 ## Removing a License
 
 If you need to revert to Community Edition, navigate to **Administration → License** and click **Remove License**. This:
@@ -143,6 +204,15 @@ If you need to revert to Community Edition, navigate to **Administration → Lic
 - Records the change in the [audit log](./audit-logs.md)
 
 All monitoring continues for devices within the Community limit.
+
+### Removing a license while over the Community limit
+
+If you remove your license while you have more than 100 active devices,
+Stratora reverts to Community Edition with a 100-device limit. **Your
+existing devices continue to be monitored** — Stratora does not stop
+collecting metrics or evaluating alerts. However, you cannot add new
+devices until your active device count drops below 100, either by
+deactivating devices or by uploading a new license.
 
 ---
 
