@@ -41,7 +41,7 @@ A planned maintenance event with a defined start time. Navigate to **Alerting > 
 | Scope | Yes | What to mute — a node, node group, or site |
 | Start Time | Yes | When the window begins (can be in the future) |
 | End Time | No | When the window ends (leave empty for indefinite) |
-| Recurrence | No | Repeating schedule in iCal RRULE format |
+| Recurrence | No | Repeating schedule in iCal RRULE format (see [Recurrence](#recurrence-rrule-on-scheduled-windows) below) |
 | Reason | No | Description of the maintenance activity |
 
 ![Scheduled maintenance window creation modal](/img/alerting/maintenance-scheduled-window.png)
@@ -50,30 +50,31 @@ A planned maintenance event with a defined start time. Navigate to **Alerting > 
 For automated, timezone-aware recurring suppression that drops alerts entirely (rather than muting them), use [Recurring Schedules](#recurring-schedules) instead.
 :::
 
----
+### Quick Mute
 
-## Scoping
+For fast, one-click muting, every node has a **Mute** action available from:
+- The node detail view
+- The node list (right-click or actions menu)
+- The alerts view
 
-Every maintenance window or manual mute targets a specific scope.
+Quick mute creates a manual mute with optional duration and reason. No name or schedule required.
 
-| Scope | Effect |
-|-------|--------|
-| **Node** | Suppresses alerts on a single node |
-| **Node Group** | Suppresses alerts on all nodes in the [group](../infrastructure/node-groups.md) |
-| **Site** | Suppresses alerts on all nodes in the [site](../infrastructure/sites.md) |
+You can also **bulk mute** multiple nodes at once by selecting them in the node list and choosing **Actions → Mute**.
 
-### Scope Inheritance
+### Recurrence (RRULE on scheduled windows)
 
-Mutes cascade down through the hierarchy. When a site is muted, every node in that site is effectively muted — even if the node doesn't have its own direct mute.
+Scheduled maintenance windows can repeat on a regular schedule using **iCal RRULE** format.
 
-The system checks for muting in this order:
-1. **Direct node mute** — is the specific node muted?
-2. **Node group mute** — is the node a member of a muted group?
-3. **Site mute** — does the node belong to a muted site?
+Examples:
 
-If any level matches, the node's alerts are suppressed. The mute source (direct, node group, or site) is displayed in the UI so you can see why a node is muted.
+| Pattern | RRULE |
+|---------|-------|
+| Every Tuesday at the same time | `FREQ=WEEKLY;BYDAY=TU` |
+| Second Tuesday of every month | `FREQ=MONTHLY;BYDAY=2TU` |
+| Every 2 weeks on Saturday | `FREQ=WEEKLY;INTERVAL=2;BYDAY=SA` |
+| First Sunday of each quarter | `FREQ=MONTHLY;INTERVAL=3;BYDAY=1SU` |
 
----
+For wizard-driven recurring suppression with timezone awareness, use [Recurring Schedules](#recurring-schedules) instead — they have different behavior, not just a different UI.
 
 ### How Mutes Suppress Alerts
 
@@ -90,37 +91,7 @@ This means you don't lose visibility into what happened during maintenance. Afte
 Nodes in maintenance display a **Maintenance** health status badge. This makes it clear in dashboards and node lists that alerts are being suppressed intentionally.
 :::
 
----
-
-## Recurrence
-
-Scheduled maintenance windows can repeat on a regular schedule using **iCal RRULE** format.
-
-Examples:
-
-| Pattern | RRULE |
-|---------|-------|
-| Every Tuesday at the same time | `FREQ=WEEKLY;BYDAY=TU` |
-| Second Tuesday of every month | `FREQ=MONTHLY;BYDAY=2TU` |
-| Every 2 weeks on Saturday | `FREQ=WEEKLY;INTERVAL=2;BYDAY=SA` |
-| First Sunday of each quarter | `FREQ=MONTHLY;INTERVAL=3;BYDAY=1SU` |
-
----
-
-## Quick Mute
-
-For fast, one-click muting, every node has a **Mute** action available from:
-- The node detail view
-- The node list (right-click or actions menu)
-- The alerts view
-
-Quick mute creates a manual mute with optional duration and reason. No name or schedule required.
-
-You can also **bulk mute** multiple nodes at once by selecting them in the node list and choosing **Actions → Mute**.
-
----
-
-### Ending Mutes and Maintenance Windows
+### Ending Manual Mutes and Scheduled Windows
 
 Manual mutes and scheduled maintenance windows end automatically when their end time is reached. The system checks for expired windows every **1 minute** and:
 
@@ -131,38 +102,6 @@ Manual mutes and scheduled maintenance windows end automatically when their end 
 You can also end a window early by clicking **End Now** from its detail view.
 
 For indefinite mutes (no end time), you must end them manually.
-
----
-
-## Maintenance History
-
-Every maintenance event is recorded in the **maintenance history** for auditing and review.
-
-Each history entry includes:
-
-| Field | Description |
-|-------|-------------|
-| Scope | What was muted (node, group, or site name) |
-| Type | Manual mute or scheduled maintenance |
-| Reason | The stated reason for maintenance |
-| Started At | When the window became active |
-| Ended At | When the window closed |
-| Ended By | Who ended it (or "auto-ended" if it expired) |
-| Alerts Suppressed | Count of alerts that were silenced during the window |
-
-View maintenance history from **Alerting → Maintenance → History**.
-
----
-
-## Maintenance in Node Views
-
-When a node is in maintenance (directly or via group/site inheritance), the node detail view shows:
-
-- **Maintenance badge** on the health status
-- **Mute source** — whether the mute is direct, from a node group, or from a site
-- **Mute source name** — the group or site name if inherited
-- **Mute type** — manual or scheduled maintenance
-- **Ends at** — when the mute expires (or "indefinite")
 
 ---
 
@@ -263,6 +202,67 @@ Recurring schedules and one-time maintenance windows work independently. A node 
 Always set the timezone to match the location or team responsible for the maintenance window — not necessarily the server's timezone. Stratora stores all window times in the selected timezone and handles daylight saving transitions automatically.
 
 If you manage sites across multiple regions, create separate schedules per timezone rather than trying to offset times manually.
+
+---
+
+## Common to Both Mechanisms
+
+The following behaviors apply to manual mutes, scheduled maintenance windows, and recurring schedules alike.
+
+### Scoping
+
+Every maintenance window or manual mute targets a specific scope.
+
+| Scope | Effect |
+|-------|--------|
+| **Node** | Suppresses alerts on a single node |
+| **Node Group** | Suppresses alerts on all nodes in the [group](../infrastructure/node-groups.md) |
+| **Site** | Suppresses alerts on all nodes in the [site](../infrastructure/sites.md) |
+
+Recurring schedules add a fourth option:
+
+| Scope | Effect |
+|-------|--------|
+| **Global** | Suppresses alerts on every node in the environment |
+
+#### Scope Inheritance
+
+Mutes cascade down through the hierarchy. When a site is muted, every node in that site is effectively muted — even if the node doesn't have its own direct mute.
+
+The system checks for muting in this order:
+1. **Direct node mute** — is the specific node muted?
+2. **Node group mute** — is the node a member of a muted group?
+3. **Site mute** — does the node belong to a muted site?
+
+If any level matches, the node's alerts are suppressed. The mute source (direct, node group, or site) is displayed in the UI so you can see why a node is muted.
+
+### Maintenance History
+
+Every maintenance event is recorded in the **maintenance history** for auditing and review.
+
+Each history entry includes:
+
+| Field | Description |
+|-------|-------------|
+| Scope | What was muted (node, group, or site name) |
+| Type | Manual mute or scheduled maintenance |
+| Reason | The stated reason for maintenance |
+| Started At | When the window became active |
+| Ended At | When the window closed |
+| Ended By | Who ended it (or "auto-ended" if it expired) |
+| Alerts Suppressed | Count of alerts that were silenced during the window |
+
+View maintenance history from **Alerting → Maintenance → History**.
+
+### Maintenance in Node Views
+
+When a node is in maintenance (directly or via group/site inheritance), the node detail view shows:
+
+- **Maintenance badge** on the health status
+- **Mute source** — whether the mute is direct, from a node group, or from a site
+- **Mute source name** — the group or site name if inherited
+- **Mute type** — manual or scheduled maintenance
+- **Ends at** — when the mute expires (or "indefinite")
 
 ---
 
