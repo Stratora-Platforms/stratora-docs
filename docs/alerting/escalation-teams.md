@@ -141,7 +141,7 @@ Each escalation team has a **schedule type** that controls when the team is elig
 
 The default. Choose Always Active for teams that need to handle alerts at any hour — for example, an off-hours pager team or a team whose members rotate via a separate scheduling tool that you'd rather Stratora not duplicate.
 
-<!-- ![Escalation team configured with the Always Active schedule type](/img/alerting/escalation-team-schedule-always.png) -->
+![Escalation team configured with the Always Active schedule type](/img/alerting/escalation-team-schedule-always.png)
 
 ### Time-Based
 
@@ -169,7 +169,7 @@ Dispatch resumes from the existing escalation step. If the alert was at Step 2 w
 
 Alerts that are created *during* an inactive window are immediately marked suppressed at create time, so the engine never picks them up in the gap between alert creation and the next reconciler tick.
 
-<!-- ![Escalation team rotation configured with Time-Based schedule, active days Mon–Fri, active hours 09:00–17:00](/img/alerting/escalation-team-schedule-time-based.png) -->
+![Escalation team rotation configured with Time-Based schedule, active days Mon–Fri, active hours 09:00–17:00](/img/alerting/escalation-team-schedule-time-based.png)
 
 #### Interaction with maintenance windows
 

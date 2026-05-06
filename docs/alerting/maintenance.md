@@ -44,7 +44,7 @@ A planned maintenance event with a defined start time. Navigate to **Alerting > 
 | Recurrence | No | Repeating schedule in iCal RRULE format |
 | Reason | No | Description of the maintenance activity |
 
-<!-- ![Scheduled maintenance window creation modal](/img/alerting/maintenance-scheduled-window.png) -->
+![Scheduled maintenance window creation modal](/img/alerting/maintenance-scheduled-window.png)
 
 :::tip
 For automated, timezone-aware recurring suppression that drops alerts entirely (rather than muting them), use [Recurring Schedules](#recurring-schedules) instead.
@@ -187,7 +187,7 @@ When the recurring window ends:
 Manual mutes and scheduled maintenance windows create alert instances but suppress notifications, leaving an audit trail of what occurred. Recurring schedules go further — they prevent alert instances from being created at all and resolve in-progress alerts at window-open. Both approaches suppress paging; recurring schedules leave no alert artifact to review afterward, which is by design for repeating administrative windows where you don't want a perpetually growing audit trail.
 :::
 
-<!-- ![Recurring maintenance schedule wizard, step 3 (Schedule)](/img/alerting/maintenance-recurring-wizard.png) -->
+![Recurring maintenance schedule wizard, step 3 (Schedule)](/img/alerting/maintenance-recurring-wizard.png)
 
 ### Creating a Recurring Schedule
 
