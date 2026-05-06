@@ -13,29 +13,29 @@ Stratora has two kinds of alert configurations that are managed together in a si
 
 ## Built-In Configurations
 
-Stratora ships with a set of **built-in alert configurations** that cover the most common monitoring scenarios. These are created automatically during installation and apply globally to all nodes.
+Stratora ships with a catalogue of **built-in alert configurations** that cover the most common monitoring scenarios. They span four categories — see the in-product **Alert Configurations** page for the complete current list, including thresholds and durations.
 
-| Name | Type | Metric | Condition | Warning | Critical | Duration |
-|------|------|--------|-----------|---------|----------|----------|
-| Service Stopped | Service | — | equals | — | — | Immediate |
-| Node Unreachable | Reachability | — | equals | — | — | 60 s |
-| High CPU Usage | Metric | `cpu_usage_percent` | > | 80% | 95% | 5 min |
-| High Memory Usage | Metric | `memory_usage_percent` | > | 85% | 95% | 5 min |
-| Low Disk Space | Metric | `disk_usage_percent` | > | 80% | 95% | Immediate |
-| High Disk Latency | Metric | `disk_latency_ms` | > | 20 ms | 50 ms | 5 min |
-| Interface Down | Interface | `interface_status` | equals | — | — | Immediate |
-| High Interface Errors | Metric | `interface_errors_rate` | > | 10/s | 100/s | 5 min |
+| Category | What It Monitors | Examples |
+|----------|------------------|----------|
+| **Metric** | A numeric metric value against a threshold (CPU, memory, disk, latency, etc.) | High CPU Usage, High Memory Usage, Low Disk Space, SSL Certificate Expiring |
+| **Service** | Whether a Windows or Linux service is running or stopped | Service Stopped |
+| **Reachability** | Whether the node is reachable via ping or agent heartbeat | Node Unreachable, Agent Heartbeat Lost, Collector Offline |
+| **Interface** | Whether a network interface is up or down | Interface Down, High Interface Errors |
 
 Built-in configurations:
-- Can be **enabled or disabled** but not deleted
-- Apply globally (all nodes)
-- Can be overridden per-node, per-group, or per-site using custom configurations
+- **Apply globally** — they evaluate against every node in the system.
+- **Cannot be deleted.** They can be enabled or disabled.
+- **Have a limited editing surface.** You can change description, thresholds, duration, escalation team, and the enabled toggle. Name, alert type, metric, condition, and default severity are locked. To customize a built-in beyond that — for example, to use a different metric or change the comparison direction — use **Clone** to create a custom configuration based on the built-in.
+
+:::tip First-time setup
+Three out-of-the-box configurations — **Agent Heartbeat Lost**, **Node Unreachable**, and **Service Stopped** — ship enabled but with no escalation team assigned. They will create alerts in the alerts list, but no notifications dispatch until you assign each one to an [escalation team](./escalation-teams.md). Walk through the Alert Configurations list during initial setup and assign teams to anything you want notifications for.
+:::
 
 ---
 
 ## Custom Configurations
 
-Custom alert configurations let you create your own rules or override the thresholds of a built-in configuration for a specific scope.
+Custom alert configurations let you create your own rules — or duplicate a built-in configuration with different thresholds or a different escalation team for a specific scope. Customs are additive: they evaluate alongside the built-in, not in place of it.
 
 Navigate to **Alerting → Alert Configurations** and click **Add Configuration**.
 
@@ -72,6 +72,8 @@ Navigate to **Alerting → Alert Configurations** and click **Add Configuration*
 | Equals | `=` | Service state = stopped |
 | Not equals | `!=` | Interface status != up |
 
+For metric configurations, only **greater than** and **less than** drive evaluation — the configuration editor for metric alert types reflects this. For service, reachability, and interface configurations, the condition column is metadata used for display; the underlying state-match (e.g. `service running` vs `stopped`) is determined by the alert type itself, not the condition value.
+
 ### Duration
 
 The **duration** field controls how long a condition must persist before an alert fires. This prevents transient spikes from generating noise.
@@ -94,7 +96,11 @@ Every custom configuration has a **scope** that determines which nodes it applie
 | **Node Group** | All nodes in a specific [node group](../infrastructure/node-groups.md) |
 | **Node** | A single node |
 
-When multiple configurations match the same metric on a node (e.g., a global built-in and a node-level custom override), the **most specific scope wins**. A node-level configuration takes precedence over a group-level one, which takes precedence over a site-level one, which takes precedence over a global built-in.
+Custom configurations are **additive**, not overriding. When a built-in and a custom configuration both match the same metric on a node — or when two custom configurations at different scopes both match — Stratora evaluates each one independently. Each can fire its own alert, with its own thresholds and its own escalation team.
+
+This is intentional: it lets you fan out a single condition (e.g., high CPU) to different teams at different scopes. For example, point the global built-in at a general operations team, and add a node-level custom configuration on a database server that points at the database on-call team with a stricter threshold. Both teams hear about CPU on that node; only the operations team hears about CPU elsewhere.
+
+If you want to silence a built-in on a specific node or group, **disable** the built-in (which disables it everywhere) or use [maintenance windows](./maintenance.md) to suppress alerts on that scope.
 
 ---
 
@@ -130,7 +136,9 @@ For **service** and **interface** configurations, the evaluator checks the curre
 For **reachability** configurations, the evaluator requires **3 consecutive failed checks** (30 seconds) before firing to avoid false positives from momentary network blips.
 
 :::info
-A 60-second **resolution grace period** applies to all configurations. Once a condition clears, the evaluator waits 60 seconds of sustained normal readings before resolving the alert. This prevents alerts from rapidly flapping between active and resolved states.
+A 20-second **resolution grace period** applies to most configurations. Once a condition clears, the evaluator waits 20 seconds of sustained normal readings before resolving the alert — this prevents flapping between active and resolved states.
+
+Reachability alerts (Node Unreachable, Agent Heartbeat Lost, Collector Offline) skip the grace period because they already require a multi-cycle recovery streak before they consider the node back; an additional grace period would only delay recovery without adding stability. See [Alert Response Times](./alert-response-times.md) for the per-alert-type detection and recovery latency reference.
 :::
 
 ---
@@ -157,9 +165,15 @@ To send a test alert:
 When you fire a test alert:
 
 - A test alert appears in the alerts list with a **TEST** badge.
-- The recipients on this alert configuration receive an email. Subjects are prefixed `[TEST]` and the email body shows an orange **TEST ALERT** banner so recipients can tell at a glance the alert was fired manually.
+- An email is sent to the recipients resolved through the configuration's assigned escalation team — the same recipient resolution real alerts use. Subjects are prefixed `[TEST]` and the body shows an orange **TEST ALERT** banner so recipients can tell at a glance the alert was fired manually.
 - The test alert auto-resolves five minutes after firing.
 - The test alert is excluded from device counts, the licensed device total, dashboard health summaries, and reports.
+
+If the configuration has **no escalation team assigned**, the test alert still appears in the alerts list, but no email is sent — by design. The configuration's first-step email channels are the source of truth for test recipients; with no team, there are no recipients to dispatch to. Assign an escalation team and re-fire if you wanted to validate notification routing.
+
+:::note
+**Fire test alert is a dispatch validation tool, not an audit-tracked event.** Test alert sends do not populate the notification audit log. To verify real-alert delivery history for compliance evidence, look at history generated from real alerts.
+:::
 
 :::tip
 To test SMS, Voice, Slack, Teams, or webhook delivery, use the **Test** button on each individual channel inside the escalation team configuration. Those tests route through the same delivery code Stratora uses for real alerts, so a successful per-channel test is a strong signal the channel is wired correctly.

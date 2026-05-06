@@ -5,13 +5,20 @@ title: Maintenance
 
 # Maintenance
 
-**Maintenance windows** suppress alert notifications during planned work — patching, reboots, migrations, and other activities that would otherwise trigger a flood of alerts. Alerts are still evaluated and recorded, but notifications are silenced until the window ends.
+Stratora suppresses alert notifications during planned work — patching, reboots, migrations, and other activities that would otherwise trigger a flood of alerts. **Maintenance has two distinct mechanisms**, exposed in the UI as separate tabs:
+
+| Mechanism | Tab | Use For |
+|-----------|-----|---------|
+| **Manual mutes and scheduled maintenance windows** | **Active** + **Scheduled** | One-time or short-lived suppression — patch nights, ad-hoc reboots, hardware swaps. Alerts are created and visible in the alerts list with a muted badge. |
+| **Recurring schedules** | **Recurring** | Automated, timezone-aware repeating suppression — nightly batch windows, weekly cleanup jobs. Alerts on covered nodes are silently dropped during the window, with no alert artifact left to review afterward. |
+
+These mechanisms behave differently in important ways — most notably in how they handle alert artifacts during and after the window. The sections below describe each path; the [comparison table](#mechanism-comparison) at the end summarizes the differences.
 
 ---
 
-## Types of Maintenance
+## Manual Mutes and Scheduled Maintenance Windows
 
-Stratora supports two ways to suppress alerts.
+This is the **mute** mechanism. Use it for one-shot suppression where you want alert artifacts preserved for post-event review.
 
 ### Manual Mute
 
@@ -37,9 +44,11 @@ A planned maintenance event with a defined start time. Navigate to **Alerting > 
 | Recurrence | No | Repeating schedule in iCal RRULE format |
 | Reason | No | Description of the maintenance activity |
 
-### Recurring Schedules
+<!-- ![Scheduled maintenance window creation modal](/img/alerting/maintenance-scheduled-window.png) -->
 
-For automated, timezone-aware recurring windows (e.g. "every weekday 2-4 AM"), see [Recurring Maintenance Schedules](#recurring-maintenance-schedules) below.
+:::tip
+For automated, timezone-aware recurring suppression that drops alerts entirely (rather than muting them), use [Recurring Schedules](#recurring-schedules) instead.
+:::
 
 ---
 
@@ -66,16 +75,16 @@ If any level matches, the node's alerts are suppressed. The mute source (direct,
 
 ---
 
-## How Maintenance Suppresses Alerts
+### How Mutes Suppress Alerts
 
-During a maintenance window, the alert evaluator still runs its normal 10-second cycle. When it detects a condition that would normally fire an alert:
+During a manual mute or scheduled maintenance window, the alert evaluator still runs its normal 10-second cycle. When it detects a condition that would normally fire an alert:
 
 1. The alert is **created in the database** with its normal severity and details
-2. The alert is **marked as muted** and linked to the maintenance window
-3. The **suppressed alert count** on the maintenance window is incremented
+2. The alert is **marked as muted** and linked to the mute or maintenance window
+3. The **suppressed alert count** on the window is incremented
 4. The [escalation engine](./escalation-teams.md) **skips the muted alert** — no notifications are sent
 
-This means you don't lose visibility into what happened during maintenance. After the window ends, you can review which alerts were suppressed and investigate any that remain active.
+This means you don't lose visibility into what happened during maintenance. After the window ends, you can review which alerts were muted and investigate any that remain active.
 
 :::tip
 Nodes in maintenance display a **Maintenance** health status badge. This makes it clear in dashboards and node lists that alerts are being suppressed intentionally.
@@ -111,15 +120,15 @@ You can also **bulk mute** multiple nodes at once by selecting them in the node 
 
 ---
 
-## Ending Maintenance
+### Ending Mutes and Maintenance Windows
 
-Maintenance windows end automatically when their end time is reached. The system checks for expired windows every **1 minute** and:
+Manual mutes and scheduled maintenance windows end automatically when their end time is reached. The system checks for expired windows every **1 minute** and:
 
-1. Closes the maintenance window
+1. Closes the mute or maintenance window
 2. Records the end time and reason ("auto-ended") in the maintenance history
-3. Unmutes all affected alerts
+3. **Unmutes all affected alerts** — they return to active state and the escalation engine resumes dispatch on its next cycle. If the underlying condition has cleared during the window, the alert resolves naturally; if the condition is still firing, notifications begin again from the existing escalation step.
 
-You can also end a maintenance window early by clicking **End Now** from the maintenance detail view. Alerts that are still in a firing condition will resume normal notification behavior.
+You can also end a window early by clicking **End Now** from its detail view.
 
 For indefinite mutes (no end time), you must end them manually.
 
@@ -157,13 +166,28 @@ When a node is in maintenance (directly or via group/site inheritance), the node
 
 ---
 
-## Recurring Maintenance Schedules
+## Recurring Schedules
 
-Recurring maintenance schedules let you define time windows that repeat on a regular cadence — daily, weekly, monthly, or a custom pattern. During an active window, Stratora silently drops new alerts for nodes in scope — no alert instance is created, no notification is sent, and the alert does not queue for delivery after the window ends. Alerts that were already firing before the window started continue until they naturally resolve.
+Recurring schedules let you define time windows that repeat on a regular cadence — daily, weekly, monthly, or a custom pattern. They are managed from the **Recurring** tab on the Maintenance page.
 
-:::info How recurring schedules differ from one-time windows
-One-time maintenance windows (above) create alert instances but suppress notifications. Recurring schedules go further — they prevent alert instances from being created entirely. Both approaches suppress paging; recurring schedules leave no alert artifact to review afterward.
+### How Recurring Schedules Suppress Alerts
+
+This mechanism is **not** a mute. The behavior is materially different from manual mutes and scheduled maintenance windows:
+
+- **New alerts are silently dropped.** During an active recurring window, the alert evaluator detects conditions on covered nodes but does not create an `alerts` row. There is no alert artifact to review afterward, no entry in the alerts list, and the suppressed alert count is not incremented (because no alert exists to count).
+- **Alerts already firing when the window opens are suppressed and their escalations cancelled.** When a recurring window becomes active, any active alerts on covered nodes transition to a `suppressed` state, and any in-flight escalations are cancelled. They disappear from the default alerts dashboard.
+- **No notifications dispatch on any channel.**
+
+When the recurring window ends:
+
+- Suppressed alerts are **resolved** — they do not return to active. If the underlying condition is still firing, the next evaluator cycle creates a fresh alert from scratch and starts a new escalation.
+- New alerts begin generating normally on the next evaluator cycle.
+
+:::info How recurring schedules differ from manual mutes and scheduled maintenance windows
+Manual mutes and scheduled maintenance windows create alert instances but suppress notifications, leaving an audit trail of what occurred. Recurring schedules go further — they prevent alert instances from being created at all and resolve in-progress alerts at window-open. Both approaches suppress paging; recurring schedules leave no alert artifact to review afterward, which is by design for repeating administrative windows where you don't want a perpetually growing audit trail.
 :::
+
+<!-- ![Recurring maintenance schedule wizard, step 3 (Schedule)](/img/alerting/maintenance-recurring-wizard.png) -->
 
 ### Creating a Recurring Schedule
 
@@ -239,3 +263,18 @@ Recurring schedules and one-time maintenance windows work independently. A node 
 Always set the timezone to match the location or team responsible for the maintenance window — not necessarily the server's timezone. Stratora stores all window times in the selected timezone and handles daylight saving transitions automatically.
 
 If you manage sites across multiple regions, create separate schedules per timezone rather than trying to offset times manually.
+
+---
+
+## Mechanism Comparison
+
+| Behavior | Manual Mute / Scheduled Maintenance Window | Recurring Schedule |
+|----------|--------------------------------------------|--------------------|
+| Alert created in DB during window | Yes, marked muted | No — silently dropped |
+| Visible in alerts list during window | Yes (with muted badge) | No |
+| Suppressed alert count incremented | Yes | No |
+| Alerts already firing at window open | Stay active, marked muted | Transition to suppressed; escalations cancelled |
+| Notifications during window | Suppressed | Suppressed |
+| At window close — alerts | Unmuted; resume escalation from current step | Resolved; fresh alerts created on next eval cycle if condition persists |
+| Audit artifact post-window | Full alert history with muted timeline | None — by design |
+| Best for | One-time events where post-event review matters | Repeating administrative windows where audit noise is undesirable |

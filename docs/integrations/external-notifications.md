@@ -54,18 +54,6 @@ Alert emails are rendered from customizable [email templates](./email-templates.
 - "View in Stratora" action button
 - Branded footer
 
-### Global Email Settings
-
-In addition to per-escalation-team email channels, Stratora has global notification settings that apply as a fallback when alert configurations don't specify an escalation team:
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| Email Enabled | Yes | Master switch for fallback email notifications |
-| Recipients | — | Default email addresses |
-| On Trigger | Yes | Send when an alert fires |
-| On Resolve | Yes | Send when an alert resolves |
-| On Acknowledge | No | Send when an alert is acknowledged |
-
 ---
 
 ## Slack
@@ -424,7 +412,7 @@ See [Escalation Teams](../alerting/escalation-teams.md) for full details on mult
 
 ## Notification Audit Trail
 
-All notification delivery attempts are recorded in an audit log, including:
+All real-alert notification delivery attempts are recorded in an audit log, including:
 
 - Notification type and channel
 - Delivery status (sent, failed, retried)
@@ -433,3 +421,7 @@ All notification delivery attempts are recorded in an audit log, including:
 - Escalation team and step
 
 This audit trail helps diagnose delivery issues and provides evidence of notification compliance.
+
+:::note
+**Test alerts are not audit-tracked.** When you use **Fire test alert** on an alert configuration, the dispatch goes through a one-shot validation path that does not populate the notification audit log. Use Fire test alert to confirm a configuration's recipients receive a sample message; use real-alert history for compliance evidence.
+:::

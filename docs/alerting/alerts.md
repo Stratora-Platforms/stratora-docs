@@ -56,6 +56,8 @@ Test alerts appear in the alerts list with a **TEST** badge. They auto-resolve f
 | **Warning** | A metric has crossed the warning threshold — investigate soon |
 | **Critical** | A metric has crossed the critical threshold — immediate attention needed |
 
+Production alerts use Warning or Critical. An "Info" severity exists internally (for example, in voice test announcements) but is not produced by any production alert configuration today.
+
 Severity can **escalate** during an alert's lifetime. If a metric crosses the warning threshold and then continues rising past the critical threshold, the existing alert's severity is upgraded from warning to critical without creating a duplicate.
 
 ---
@@ -168,6 +170,7 @@ Acknowledged alerts:
 - Still show in the alerts list (with an "acknowledged" badge)
 - Continue to show on node health status
 - Trigger acknowledgment notifications to the escalation team (if configured)
+- **Stop escalating** — the engine excludes acknowledged alerts from further step advancement, repeats, and resolution-time channel fan-out until the alert resolves or is un-acknowledged
 
 ---
 
@@ -186,6 +189,16 @@ Muted alerts:
 :::tip
 For broader suppression — silencing all alerts on a node, site, or group during planned work — use [maintenance windows](./maintenance.md) instead of per-alert muting.
 :::
+
+### How Stratora Suppresses Notifications
+
+Stratora has three distinct suppression mechanisms. They overlap conceptually but behave differently — knowing which one is silencing a given alert helps explain "why didn't this fire?"
+
+| Mechanism | Scope | What it suppresses | Where it's configured |
+|-----------|-------|--------------------|-----------------------|
+| **Mute** | Per-alert (manual) or per node/group/site (manual mute or scheduled maintenance window) | Notification dispatch — alert stays visible in the alerts list with a muted badge | This page (per-alert mute) and [Maintenance](./maintenance.md) (manual mute, scheduled window) |
+| **Recurring schedule** | Per node/group/site/global | Both notification dispatch *and* alert creation — covered alerts are silently dropped during the window | [Maintenance — Recurring Schedules](./maintenance.md#recurring-schedules) |
+| **Active hours** | Per escalation team | Notification dispatch — alerts assigned to a team outside its active hours are tracked but not paged | [Escalation Teams — Schedules](./escalation-teams.md#schedules) |
 
 ---
 

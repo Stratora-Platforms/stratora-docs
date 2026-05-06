@@ -37,6 +37,10 @@ sequenceDiagram
 
 The escalation engine runs on a **10-second cycle**, checking for alerts that need escalation.
 
+:::info Acknowledgment halts escalation
+Acknowledging an alert stops the escalation chain entirely. Once an alert is acknowledged, the engine excludes it from further dispatch — no more steps fire, no repeats, no resolution notifications until the alert resolves or is un-acknowledged. Re-acknowledging is idempotent. For longer-term silencing without halting future re-fires, use [muting](./alerts.md#muting) or a [maintenance window](./maintenance.md) instead.
+:::
+
 ---
 
 ## Creating an Escalation Team
@@ -125,7 +129,55 @@ The per-channel **Test** button on this page tests an individual channel's deliv
 
 ## Schedules
 
-<!-- Schedules section is being updated for the 2.1.10 GA release. Active hours and Time-Based scheduling behavior are being refined; see release notes when 2.1.X ships. -->
+Each escalation team has a **schedule type** that controls when the team is eligible to dispatch notifications. Three types are supported.
+
+| Schedule Type | When Notifications Dispatch |
+|---------------|-----------------------------|
+| **Always Active** | The team dispatches 24/7. No time-based gating. |
+| **Time-Based** | The team dispatches only during configured active hours on configured active days. Outside the window, alerts assigned to the team are still created and tracked, but no notifications are sent until the next active interval begins. |
+| **Rotation** | An on-call rotation cycles through team members on a configured cadence. Optionally combined with active hours. See [On-Call Rotation](#on-call-rotation) below. |
+
+### Always Active
+
+The default. Choose Always Active for teams that need to handle alerts at any hour — for example, an off-hours pager team or a team whose members rotate via a separate scheduling tool that you'd rather Stratora not duplicate.
+
+<!-- ![Escalation team configured with the Always Active schedule type](/img/alerting/escalation-team-schedule-always.png) -->
+
+### Time-Based
+
+Time-Based schedules dispatch only during a window you define on specific days of the week.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Active Days | Yes | One or more days of the week the schedule applies on (e.g., Monday–Friday) |
+| Active Hours Start | Yes | Start of the window (24-hour clock, in the server's local timezone) |
+| Active Hours End | Yes | End of the window. May be earlier than the start time — Stratora interprets this as an overnight window that wraps midnight |
+
+#### Behavior during inactive hours
+
+When a team is outside its active window:
+
+- **Alerts are still created.** The alert evaluator runs on its normal 10-second cycle and continues to detect conditions, create alerts, and update severities.
+- **Alerts assigned to the team are flagged as suppressed** (an internal flag separate from per-alert mute, so a single alert can be muted, suppressed, or both). The alerts list shows them; they are excluded from default UI counters where appropriate.
+- **The escalation engine skips them.** No notifications are sent on any channel — email, Slack, Teams, webhook, SMS, or voice.
+
+When the window opens — for example, when the clock crosses 09:00 on a Monday — Stratora reconciles every team's schedule once per minute. Suppressed alerts for the now-active team are unflagged and the escalation engine resumes dispatch on its next 10-second cycle. Worst-case delay between window-open and first dispatch is approximately one reconciler cycle plus one engine cycle (around 70 seconds).
+
+Dispatch resumes from the existing escalation step. If the alert was at Step 2 when the window closed, dispatch picks up at Step 2 — Stratora does not rewind to Step 1, and it does not skip ahead to a later step to compensate for the gap.
+
+#### Race window protection
+
+Alerts that are created *during* an inactive window are immediately marked suppressed at create time, so the engine never picks them up in the gap between alert creation and the next reconciler tick.
+
+<!-- ![Escalation team rotation configured with Time-Based schedule, active days Mon–Fri, active hours 09:00–17:00](/img/alerting/escalation-team-schedule-time-based.png) -->
+
+#### Interaction with maintenance windows
+
+Active hours and [maintenance](./maintenance.md) work independently. A node in maintenance is suppressed regardless of the team's schedule. A team outside its active hours is suppressed regardless of node maintenance state. If both apply, the alert remains suppressed until **both** clear.
+
+### Rotation
+
+Rotation schedules are covered in detail under [On-Call Rotation](#on-call-rotation). A rotation team can optionally enable active hours alongside the rotation — useful when the rotation should only page during business hours and a different team handles after-hours coverage.
 
 ---
 
@@ -203,6 +255,14 @@ This ensures critical alerts don't go unnoticed if the initial notifications are
 When an alert resolves, the escalation engine automatically sends **resolution notifications** to all channels that were previously notified during the alert's lifetime. This ensures everyone who was alerted knows the issue has been cleared.
 
 Resolution notifications are sent only once per channel, even if the channel was notified across multiple escalation steps.
+
+---
+
+## Symptom Suppression (Inhibition)
+
+When a node is unreachable, downstream alerts on that same node — service stopped, interface down, agent heartbeat lost — would all fire concurrently. Stratora suppresses notifications on these symptom alerts when their root cause is active on the same node. The root-cause alert (Node Unreachable) is the canonical signal; the symptoms remain in the alerts list for completeness but do not generate separate pages.
+
+The inhibition is per-notification, not per-alert: the symptom alerts still exist, can still be acknowledged or muted individually, and resolve normally when their condition clears. They simply don't add to the notification load while a more fundamental problem is already paging.
 
 ---
 

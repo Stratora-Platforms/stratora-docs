@@ -13,11 +13,13 @@ Stratora uses ICMP loss percentage over a sliding window to determine node reach
 
 | Event | Expected Time |
 |-------|--------------|
-| Detection (sustained packet loss) | ~50 seconds |
-| Recovery detection (from stable ping) | ~110 seconds |
-| Recovery detection (from power-on) | ~154 seconds (44s boot + 50s drain + 60s grace) |
+| Detection (sustained packet loss) | 60–90 seconds |
+| Recovery detection (from stable ping) | 80–110 seconds |
+| Recovery detection (from power-on) | ~120–150 seconds (boot + window decay + grace alignment) |
 
 **Detection requires sustained loss.** A single dropped packet will not trigger an alert. Loss must exceed the configured threshold (default: 5%) over the full evaluation window (default: 60 seconds).
+
+The 20-second resolution grace period applies to packet-loss threshold alerts and most other configurations. Reachability fast-path alerts (Node Unreachable, Agent Heartbeat Lost, Collector Offline) skip the grace period because they already require a multi-cycle recovery streak before considering the node back. See [Alert Configurations — Evaluation](./alert-configurations.md#evaluation) for details.
 
 ## Alert Evaluation
 
