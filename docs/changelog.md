@@ -198,6 +198,27 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 
 ---
 
+## v2.1.2 — April 12, 2026
+
+### Bundled Components
+- Agent 2.1.3 (Windows)
+- Agent 1.2.1 (Linux)
+- Collector 2.1.2
+
+### Added
+
+- **DHCP Scope Utilization for Windows DHCP servers** — Windows agents on hosts running the DHCP Server role now collect per-scope utilization metrics. Windows Server node detail pages display a Scope Utilization table showing scope name, addresses in use, free, reserved, pending, total, and percent utilization with warning / critical color coding.
+- **Two new built-in alert definitions** — DHCP Scope High Utilization (warning at 80% utilization) and DHCP Scope Exhaustion (critical at 90% utilization).
+
+### Fixed
+
+- Agent and Telegraf services auto-start after MSI upgrade with no manual intervention required.
+- Agent enrolled credentials (API key, node ID) are preserved across MSI upgrades — no re-enrollment required.
+- Telegraf now runs as a single managed service, eliminating a duplicate-process bug that could stop metrics from flowing after upgrade.
+- Resolved a race condition between agent startup and service installation that occasionally left Telegraf environment variables unwritten on first attempt.
+
+---
+
 ## v2.1.1 — April 6, 2026
 
 ### New Built-In Reports
