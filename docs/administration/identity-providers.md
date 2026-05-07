@@ -51,6 +51,8 @@ Navigate to **Administration → Identity Providers → LDAP** to configure the 
 | Email Attribute | No | LDAP attribute for email (default: `mail`) |
 | Display Name Attribute | No | LDAP attribute for display name (default: `displayName`) |
 | Group Attribute | No | LDAP attribute for group memberships (default: `memberOf`) |
+| Phone Attribute | No | LDAP attribute for the contact's primary phone (default: `telephoneNumber`). Populated into the [contact](../alerting/contacts.md)'s Phone field on sync. |
+| Mobile Attribute | No | LDAP attribute for the contact's mobile phone (default: `mobile`). Populated into the contact's Mobile field on sync. Configure separately from Phone Attribute when your directory carries both. |
 | Enabled | Yes | Master toggle to enable or disable LDAP authentication |
 
 :::tip
@@ -114,6 +116,20 @@ Navigate to **Administration → Identity Providers → OIDC** to add a provider
 | Tenant ID | Entra tenant ID — enables fetching security groups via Microsoft Graph API |
 | Group Claim | Token claim containing group memberships (default: `groups`) |
 | Use Graph API | Use Microsoft Graph API for group membership lookups (recommended when users belong to more than 200 groups) |
+
+#### Phone-Claim Mapping
+
+Stratora populates a [contact](../alerting/contacts.md)'s Phone and Mobile fields from claims returned by the OIDC ID token or, when **Use Graph API** is enabled, from Microsoft Graph user attributes. These targets are configurable so the same Stratora installation can integrate with directories that surface phone data on different claims.
+
+| Field | Description |
+|-------|-------------|
+| Phone Claim Target | Stratora contact field that the standard OIDC `phone_number` claim is populated into (default: `phone`). Set to `mobile` if your IdP returns a single mobile number on the standard phone claim. |
+| Graph Mobile Target | Stratora contact field that Microsoft Graph's `mobilePhone` attribute is populated into when Graph lookups are enabled (default: `mobile`). |
+| Graph Business Phone Target | Stratora contact field that Microsoft Graph's `businessPhones[0]` attribute is populated into when Graph lookups are enabled (default: `phone`). |
+
+When the Graph API is not in use, only Phone Claim Target applies; the Graph targets are ignored.
+
+For information about how managed-contact phone fields can be locally overridden after the initial sync, see [Local field overrides on managed contacts](../alerting/contacts.md#local-field-overrides-on-managed-contacts).
 
 ### SP-Initiated Login
 

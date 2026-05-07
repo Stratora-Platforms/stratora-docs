@@ -17,13 +17,13 @@ Before installing Stratora, ensure you have:
 
 ### 1. Download and Install
 
-Download the latest Stratora MSI installer from the latest release here: https://github.com/Stratora-Platforms/stratora-releases/releases. Run the installer on your designated monitoring server:
+Download the latest Stratora MSI installer from the latest release here: https://github.com/Stratora-Platforms/stratora-releases/releases. The release page lists a single `Stratora-Server-X.Y.Z.msi` asset — the Agent and Collector installers are bundled inside this Server MSI and do not need to be downloaded separately. Run the installer on your designated monitoring server:
 
 ```
-msiexec /i Stratora-x.x.x.msi /qn
+msiexec /i Stratora-Server-X.Y.Z.msi /qn
 ```
 
-The installer configures all required Stratora services automatically.
+Replace `X.Y.Z` with the version you downloaded. The installer configures all required Stratora services automatically.
 
 ### 2. Verify Services
 

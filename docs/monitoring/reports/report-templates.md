@@ -44,8 +44,8 @@ Stratora includes three built-in Site Health templates designed for common repor
 
 - **Time range:** 7 days
 - **Scope:** All sites
-- **Sections:** Executive Summary, Uptime & Healthy Time, Incident Analysis
-- **Use case:** Weekly digest — a concise report for regular operational check-ins
+- **Sections:** All sections included
+- **Use case:** Weekly digest — a comprehensive 7-day view for regular operational check-ins
 
 ### Quarterly Site Health Review
 

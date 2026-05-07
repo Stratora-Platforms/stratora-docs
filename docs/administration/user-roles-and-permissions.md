@@ -55,7 +55,8 @@ Read-only access to monitoring data. Viewers can see dashboards, node status, al
 | View nodes | ✅ | ✅ | ✅ |
 | Add and edit nodes | ✅ | ✅ | ❌ |
 | Delete nodes | ✅ | ❌ | ❌ |
-| View and manage node groups | ✅ | ✅ | ❌ |
+| View node groups | ✅ | ✅ | ✅ |
+| Create, edit, and delete node groups | ✅ | ✅ | ❌ |
 | View sites | ✅ | ✅ | ✅ |
 | Create, edit, and delete sites | ✅ | ✅ | ❌ |
 | View IPAM subnets and addresses | ✅ | ✅ | ✅ |
@@ -113,7 +114,7 @@ Read-only access to monitoring data. Viewers can see dashboards, node status, al
 
 | Feature | Admin | Operator | Viewer |
 |---------|:-----:|:--------:|:------:|
-| View system settings | ✅ | ✅ | ❌ |
+| View system settings | ✅ | ✅ | ✅ |
 | Modify system settings | ✅ | ❌ | ❌ |
 | Manage user accounts | ✅ | ❌ | ❌ |
 | View audit logs | ✅ | ❌ | ❌ |
@@ -121,7 +122,7 @@ Read-only access to monitoring data. Viewers can see dashboards, node status, al
 | Configure identity providers (OIDC/LDAP) | ✅ | ❌ | ❌ |
 | Manage SSL/TLS certificates | ✅ | ❌ | ❌ |
 | Manage license | ✅ | ❌ | ❌ |
-| View license status | ✅ | ✅ | ❌ |
+| View license status | ✅ | ✅ | ✅ |
 | Configure email/SMTP settings | ✅ | ❌ | ❌ |
 | Manage email templates | ✅ | ❌ | ❌ |
 

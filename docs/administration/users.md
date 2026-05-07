@@ -39,8 +39,8 @@ Read-only access. Viewers can see dashboards, nodes, alerts, and maps, but canno
 | **Infrastructure** | **Node groups** | View, manage | View, manage | View only |
 | **Infrastructure** | **Nodes** | View, create, edit, delete | View, create, edit | View only |
 | **Infrastructure** | **Sites** | View, manage | View, manage | View only |
-| **Collection** | **Agents** | Deploy, download, generate tokens | Deploy, download | — |
-| **Collection** | **Collectors** | View, manage, deploy | View, deploy | View only |
+| **Collection** | **Agents** | Deploy, download, generate tokens | Deploy, download | View only |
+| **Collection** | **Collectors** | View, manage, deploy | View only | View only |
 | **Collection** | **Credentials** | View, create, edit, delete, reveal | View (masked), attach/detach | View (masked) |
 | **Collection** | **Discovery** | View, run, manage | View, run, manage | View only |
 | **Collection** | **Enrollment tokens** | View, create, reveal, delete | View, select existing | — |
@@ -49,8 +49,8 @@ Read-only access. Viewers can see dashboards, nodes, alerts, and maps, but canno
 | **Alerting** | **Contacts** | View, manage | View, manage | View only |
 | **Alerting** | **Escalation teams** | View, manage | View, manage | View only |
 | **Alerting** | **Maintenance** | View, manage | View, manage | View only |
-| **Administration** | **License** | View, manage | View only | — |
-| **Administration** | **Settings** | View, modify | View only | — |
+| **Administration** | **License** | View, manage | View only | View only |
+| **Administration** | **Settings** | View, modify | View only | View only |
 | **Administration** | **Users** | View, manage | — | — |
 
 :::info
