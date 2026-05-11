@@ -7,19 +7,33 @@ sidebar_label: Response Times
 
 Stratora's alerting pipeline has well-defined latency characteristics at each stage. This page documents expected detection, notification delivery, and action-response times so operators can set accurate expectations for their environment.
 
-## Node Reachability (ICMP Ping)
+## Node Unreachable (Fast-Path)
 
-Stratora uses ICMP loss percentage over a sliding window to determine node reachability. This approach eliminates spurious alerts from isolated packet drops while detecting sustained failures reliably.
+The Node Unreachable alert detects total connectivity loss as quickly as one evaluation cycle — a single 100% packet-loss sample fires the alert.
 
 | Event | Expected Time |
 |-------|--------------|
-| Detection (sustained packet loss) | 60–90 seconds |
+| Detection | 20–30 seconds |
+| Recovery (Stratora contribution) | ~40 seconds after node is genuinely reachable again |
+| Recovery (Total, depending on boot speed) | 45–100 seconds |
+
+The 20–30s range is timing alignment: worst case is a node going down immediately after an evaluation cycle completes, requiring a full 10s wait for the next cycle plus up to 10s for Telegraf to collect and flush the ping data.
+
+Reachability fast-path alerts (Node Unreachable, Agent Heartbeat Lost, Collector Offline) skip the standard 20-second resolution grace period because they already require a multi-cycle recovery streak before considering the node back. See [Alert Configurations — Evaluation](./alert-configurations.md#evaluation) for details.
+
+## High Packet Loss (Threshold Alert)
+
+The High Packet Loss alert uses a rolling-average packet-loss percentage over a sliding window. It is a secondary signal for partial degradation — the Node Unreachable alert above is the primary indicator for complete connectivity loss.
+
+| Event | Expected Time |
+|-------|--------------|
+| Detection (sustained packet loss) | ~60 seconds |
 | Recovery detection (from stable ping) | 80–110 seconds |
 | Recovery detection (from power-on) | ~120–150 seconds (boot + window decay + grace alignment) |
 
-**Detection requires sustained loss.** A single dropped packet will not trigger an alert. Loss must exceed the configured threshold (default: 5%) over the full evaluation window (default: 60 seconds).
+**Detection requires sustained loss.** A single dropped packet will not trigger an alert. Loss must exceed the configured threshold (default: 5% warning, 20% critical) over the full evaluation window (default: 60 seconds).
 
-The 20-second resolution grace period applies to packet-loss threshold alerts and most other configurations. Reachability fast-path alerts (Node Unreachable, Agent Heartbeat Lost, Collector Offline) skip the grace period because they already require a multi-cycle recovery streak before considering the node back. See [Alert Configurations — Evaluation](./alert-configurations.md#evaluation) for details.
+The 20-second resolution grace period applies to packet-loss threshold alerts and most other configurations.
 
 ## Alert Evaluation
 
@@ -71,6 +85,6 @@ The ping detection window and thresholds are configurable. Defaults are tuned to
 | Parameter | Default | Notes |
 |-----------|---------|-------|
 | Loss evaluation window | 60 seconds | Shorter = faster detection, more sensitive to transient loss |
-| Alert threshold (degraded) | 5% | |
-| Alert threshold (offline) | 20% | |
+| Alert threshold (warning) | 5% | |
+| Alert threshold (critical) | 20% | |
 | Twilio poll interval | 15 seconds | Polling mode only |

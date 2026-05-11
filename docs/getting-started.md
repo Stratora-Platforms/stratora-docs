@@ -81,7 +81,7 @@ The device headroom bar shows how many of your licensed slots are in use. Node l
 Set the FQDN your users will use to reach Stratora. This must match a DNS A record pointing to the server — Stratora validates the DNS resolution live and confirms it matches the server's IP.
 
 **Certificate options:**
-- **DNS-01** *(Recommended)* — Automated Let's Encrypt certificate via DNS verification. Select your DNS provider (Cloudflare supported), enter your API token and Let's Encrypt email, then click Issue Certificate.
+- **DNS-01** *(Recommended)* — Automated Let's Encrypt certificate via DNS verification. Select your DNS provider (Cloudflare, Route 53, GoDaddy, and Namecheap supported), enter your API token and Let's Encrypt email, then click Issue Certificate.
 - **HTTP-01** — Let's Encrypt via HTTP challenge on port 80. Requires port 80 to be reachable from the internet.
 - **Self-Signed** — Generates a self-signed certificate immediately. Browsers will show a warning. You can upgrade to a trusted certificate later in Settings → SSL Certificate.
 

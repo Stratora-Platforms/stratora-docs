@@ -45,7 +45,7 @@ Read-only access. Viewers can see dashboards, nodes, alerts, and maps, but canno
 | **Collection** | **Discovery** | View, run, manage | View, run, manage | View only |
 | **Collection** | **Enrollment tokens** | View, create, reveal, delete | View, select existing | — |
 | **Alerting** | **Alert configurations** | View, edit | View, edit | View only |
-| **Alerting** | **Alerts** | View, acknowledge, mute | View, acknowledge, mute | View only |
+| **Alerting** | **Alerts** | View, acknowledge, mute, test | View, acknowledge, mute | View only |
 | **Alerting** | **Contacts** | View, manage | View, manage | View only |
 | **Alerting** | **Escalation teams** | View, manage | View, manage | View only |
 | **Alerting** | **Maintenance** | View, manage | View, manage | View only |
@@ -92,6 +92,12 @@ Admins can reset another user's password from the user detail view. When a passw
 - The user must log in with the new password
 
 Password reset is only available for **local accounts**. Users who authenticate via LDAP or OIDC manage their passwords through their identity provider.
+
+### Force Password Change
+
+Admins can require a user to change their password at next login by setting the **Force password change** flag on the user. When this flag is set, the user is locked out of every feature in Stratora until they change their password — only the change-password screen, the logout action, and the account-info endpoint remain accessible. Other API requests return `403 password_change_required` until the user completes the change. The flag clears automatically once the new password is set.
+
+The default `admin` account ships with this flag set so the initial password must be changed on first login.
 
 ### Disabling a User
 

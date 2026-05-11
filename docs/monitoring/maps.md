@@ -24,7 +24,7 @@ A topology map is a visual diagram of your infrastructure — devices, connectio
 
 | Element | Description |
 |---------|-------------|
-| **Device nodes** | Represent monitored [nodes](../infrastructure/nodes.md) — switches, servers, firewalls, etc. Show real-time health via color-coded borders (green/yellow/red/gray) |
+| **Device nodes** | Represent monitored [nodes](../infrastructure/nodes.md) — switches, servers, firewalls, etc. Show real-time health via color-coded borders (green / yellow / orange / red / purple, see below) |
 | **Labels** | Text annotations for documenting your diagram |
 | **Zones** | Rectangular grouping areas that visually organize related devices (e.g., "Server Room", "DMZ", "Core Network") |
 | **Connections** | Lines between devices representing physical or logical links, with optional interface assignment and utilization display |
@@ -47,8 +47,9 @@ Each device node on the map is linked to a monitored node. The node's border col
 
 - **Green** — healthy
 - **Yellow** — warning
-- **Red** — critical or offline
-- **Gray** — unknown
+- **Orange** — critical
+- **Red** — offline
+- **Purple** — maintenance
 
 Hover over a device to see its name, IP address, status, uptime, response time, and last-seen timestamp. Click to navigate to the node's detail page.
 

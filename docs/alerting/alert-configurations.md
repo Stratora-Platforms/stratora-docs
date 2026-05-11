@@ -106,7 +106,7 @@ If you want to silence a built-in on a specific node or group, **disable** the b
 
 ## Template-Generated Configurations
 
-[Device templates](../collection/collectors.md) can include their own alert rules. For example, the VMware vCenter template ships with rules for:
+Device templates can include their own alert rules. For example, the VMware vCenter template ships with rules for:
 
 - vCenter unreachable (100% packet loss for 3 minutes)
 - ESXi host high CPU (> 90% for 10 minutes)
@@ -133,7 +133,7 @@ For **metric-type** configurations, the evaluator:
 
 For **service** and **interface** configurations, the evaluator checks the current state directly.
 
-For **reachability** configurations, the evaluator requires **3 consecutive failed checks** (30 seconds) before firing to avoid false positives from momentary network blips.
+For **reachability** configurations, the evaluator fires on the first evaluation cycle showing 100% packet loss — typically 20–30 seconds from the moment a node becomes unreachable. The 3-cycle streak applies only when no ping data is being collected at all (for example, a Telegraf misconfiguration where the node never reports a ping sample), not to actual packet-loss readings. See [Alerts — Node Unreachable detection](./alerts.md#node-unreachable--detection) for the full timing breakdown.
 
 :::info
 A 20-second **resolution grace period** applies to most configurations. Once a condition clears, the evaluator waits 20 seconds of sustained normal readings before resolving the alert — this prevents flapping between active and resolved states.
@@ -179,7 +179,7 @@ If the configuration has **no escalation team assigned**, the test alert still a
 To test SMS, Voice, Slack, Teams, or webhook delivery, use the **Test** button on each individual channel inside the escalation team configuration. Those tests route through the same delivery code Stratora uses for real alerts, so a successful per-channel test is a strong signal the channel is wired correctly.
 :::
 
-Test alerts require an account with the **Manage alerting** permission (administrators by default).
+Firing test alerts requires the `alert:test` permission, which is granted to administrators only.
 
 ---
 

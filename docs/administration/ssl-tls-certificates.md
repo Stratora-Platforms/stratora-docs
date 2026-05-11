@@ -90,7 +90,7 @@ Stratora configures a Windows Scheduled Task to check for certificate expiry and
 | Detail | Value |
 |--------|-------|
 | Task name | `Stratora Certificate Renewal` |
-| Schedule | Daily at 3:00 AM |
+| Schedule | Daily between 3:00 AM and 7:00 AM (3:00 AM start with up to a 4-hour random delay to spread load on Let's Encrypt) |
 | Renewal threshold | 30 days before expiration |
 
 When the task runs, it checks if the current certificate expires within 30 days. If so, it re-issues the certificate using the same method that was used originally (HTTP-01 or automated DNS-01).
@@ -162,4 +162,4 @@ Stratora's web server is configured with security headers enabled by default:
 | `X-Content-Type-Options` | `nosniff` |
 | `X-XSS-Protection` | `1; mode=block` |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
-| `Content-Security-Policy` | `upgrade-insecure-requests` |
+| `Content-Security-Policy` | `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;` (see [Security Hardening](./security-hardening.md) for directive-by-directive notes) |

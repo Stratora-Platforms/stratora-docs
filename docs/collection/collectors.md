@@ -133,7 +133,7 @@ Each collector reports its health to the server, including:
 - **Resource usage** — CPU, memory, and disk utilization of the collector host
 - **Error count** — accumulated errors for troubleshooting
 
-View collector health from **Administration → Collectors** or from the site detail view.
+View collector health from **Collection → Collectors** or from the site detail view.
 
 ---
 

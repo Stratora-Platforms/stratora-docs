@@ -16,7 +16,7 @@ Every alert moves through a simple two-state lifecycle:
 ```mermaid
 stateDiagram-v2
     [*] --> Active: Condition detected
-    Active --> Active: Severity escalates (warning → critical)
+    Active --> Active: Severity changes (warning ↔ critical)
     Active --> Resolved: Condition clears for 20s
     Active --> Active: Acknowledged (stays active)
     Active --> Active: Muted (stays active)
@@ -58,7 +58,7 @@ Test alerts appear in the alerts list with a **TEST** badge. They auto-resolve f
 
 Production alerts use Warning or Critical. An "Info" severity exists internally (for example, in voice test announcements) but is not produced by any production alert configuration today.
 
-Severity can **escalate** during an alert's lifetime. If a metric crosses the warning threshold and then continues rising past the critical threshold, the existing alert's severity is upgraded from warning to critical without creating a duplicate.
+Severity can **change** during an alert's lifetime. If a metric crosses the warning threshold and then continues rising past the critical threshold, the existing alert's severity is upgraded from warning to critical without creating a duplicate. If the metric later retreats below the critical threshold while still above warning, the same alert is de-escalated back to warning. Severity changes update the active alert in place — they never create a duplicate.
 
 ---
 

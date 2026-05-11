@@ -131,10 +131,10 @@ You can also view the audit trail for a specific resource — for example, all c
 
 ## Retention
 
-Audit log entries are stored in the database indefinitely by default. Administrators can configure automatic cleanup to remove entries older than a specified number of days.
+Audit log entries are retained for **90 days by default**. Retention is configured server-side via the `audit.retention_days` setting in `config.yaml`; there is no UI control for audit log retention. The retention cleanup runs automatically on the server's scheduled maintenance cycle.
 
 :::tip
-For compliance purposes, consider your regulatory requirements before shortening audit log retention. Standards like HIPAA, SOX, and PCI DSS have specific requirements for how long audit trails must be preserved.
+For compliance purposes, consider your regulatory requirements before shortening audit log retention. Standards like HIPAA, SOX, and PCI DSS have specific requirements for how long audit trails must be preserved. Adjust `audit.retention_days` accordingly and restart the Stratora backend service for the new value to take effect.
 :::
 
 ---

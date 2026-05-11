@@ -17,7 +17,7 @@ Sites serve three purposes:
 
 ## Creating a Site
 
-Navigate to **Administration → Sites** and click **Add Site**.
+Navigate to **Infrastructure → Sites** and click **Add Site**.
 
 | Field | Required | Description |
 |-------|----------|-------------|

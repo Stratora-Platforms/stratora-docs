@@ -31,31 +31,56 @@ Each template displays:
 
 ## Built-in Templates
 
-Stratora includes three built-in Site Health templates designed for common reporting cadences:
+Stratora ships built-in templates for all six report types, grouped by reporting cadence. Each template covers all sites by default; create a custom template (see below) to scope to specific sites.
 
-### Site Health Summary
+### Site Health
 
-- **Time range:** 30 days
-- **Scope:** All sites
-- **Sections:** All sections included
-- **Use case:** Monthly health review — the go-to template for a comprehensive overview of site reliability over the past month
+| Template | Time Range | Use Case |
+|----------|------------|----------|
+| **Weekly Site Health** | 7 days | Weekly digest for regular operational check-ins |
+| **Site Health Summary** | 30 days | Monthly health review across the environment |
+| **Quarterly Site Health Review** | 90 days | Executive review and client presentations |
 
-### Weekly Site Health
+All Site Health templates include every section listed under [Sections](#sections).
 
-- **Time range:** 7 days
-- **Scope:** All sites
-- **Sections:** All sections included
-- **Use case:** Weekly digest — a comprehensive 7-day view for regular operational check-ins
+### Disk Capacity
 
-### Quarterly Site Health Review
+| Template | Time Range | Use Case |
+|----------|------------|----------|
+| **Disk Capacity (30d)** | 30 days | Monthly storage trend review and capacity planning |
+| **Disk Capacity (90d)** | 90 days | Quarterly capacity planning with projected full-dates |
 
-- **Time range:** 90 days
-- **Scope:** All sites
-- **Sections:** All sections included
-- **Use case:** Executive review — a broader view of trends and reliability for quarterly business reviews or client presentations
+### SSL Certificate Expiry
+
+| Template | Window | Use Case |
+|----------|--------|----------|
+| **SSL Expiring (30 days)** | Next 30 days | Urgent renewals |
+| **SSL Expiring (60 days)** | Next 60 days | Planning window |
+| **SSL Expiring (90 days)** | Next 90 days | Long-lead inventory |
+
+### Alert Intelligence
+
+| Template | Time Range | Use Case |
+|----------|------------|----------|
+| **Alert Intelligence (7d)** | 7 days | Weekly noise review and ACK-time trend |
+| **Alert Intelligence (30d)** | 30 days | Monthly noisy-node ranking and escalation metrics |
+
+### Availability / SLA
+
+| Template | Time Range | Use Case |
+|----------|------------|----------|
+| **Availability (Monthly)** | Calendar month | Per-site uptime, downtime, MTTR/MTBF for SLA reporting |
+| **Availability (Quarterly)** | Calendar quarter | Quarterly business review |
+
+### Top Offenders
+
+| Template | Time Range | Use Case |
+|----------|------------|----------|
+| **Top Offenders (24h)** | Last 24 hours | Daily standup — what's been noisy in the past day |
+| **Top Offenders (7d)** | 7 days | Weekly review of top resource-consuming nodes |
 
 :::info
-Built-in templates cannot be edited or deleted. If you need a variation, create a custom template with your preferred settings.
+Built-in templates cannot be edited or deleted. If you need a variation — different scope, time range, or sections — create a custom template with your preferred settings.
 :::
 
 ---
@@ -70,7 +95,7 @@ Navigate to **Reports** and click **New Template**.
 |-------|----------|-------------|
 | Name | Yes | Display name for the template (e.g., "Client ABC Monthly Report") |
 | Description | No | Notes about the template's purpose or audience |
-| Report Type | Yes | The type of report to generate (currently: Site Health) |
+| Report Type | Yes | The type of report to generate (Site Health, Disk Capacity, SSL Certificate Expiry, Alert Intelligence, Availability / SLA, or Top Offenders) |
 | Site Scope | Yes | **All sites** or select specific sites to include |
 | Time Range | Yes | Reporting period — **7 days**, **30 days**, **90 days**, or **1 year** |
 

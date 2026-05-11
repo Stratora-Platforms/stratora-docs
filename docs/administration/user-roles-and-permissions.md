@@ -91,6 +91,7 @@ Read-only access to monitoring data. Viewers can see dashboards, node status, al
 | View alerts | ✅ | ✅ | ✅ |
 | Acknowledge and escalate alerts | ✅ | ✅ | ❌ |
 | Mute alerts | ✅ | ✅ | ❌ |
+| Fire test alerts | ✅ | ❌ | ❌ |
 | View alert configurations | ✅ | ✅ | ✅ |
 | Create, edit, and delete alert rules | ✅ | ✅ | ❌ |
 | View contacts | ✅ | ✅ | ✅ |

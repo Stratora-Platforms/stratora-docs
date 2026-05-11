@@ -9,7 +9,7 @@ Each site can store photos for documentation purposes — rack photos, floorplan
 
 ## Configuring Photo Storage
 
-Before uploading photos, configure the storage path in **Administration > Settings > Site Photos**:
+Before uploading photos, in **Administration → Settings**, scroll to the **Site Photos** section and configure:
 
 - **Photo Storage Path** — A local path or UNC path where photos will be stored on the Stratora server. Examples: `C:\SitePhotos` or `\\NAS01\SitePhotos`
 - **Max Photo Size (MB)** — Maximum file size per upload (default: 10 MB)

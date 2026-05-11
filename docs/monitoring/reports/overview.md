@@ -46,15 +46,17 @@ Stratora ships with **built-in report templates** that cover common reporting ne
 
 ## Report Types
 
-| Type | Description | Status |
-|------|-------------|--------|
-| **Site Health** | Uptime, health scores, incidents, and trend analysis across your sites | Available |
-| Capacity Planning | Storage, CPU, and memory utilization trends | Coming soon |
-| Alert Summary | Alert volume, response times, and escalation metrics | Coming soon |
-| SLA Compliance | Service level tracking against defined targets | Coming soon |
+| Type | Description |
+|------|-------------|
+| **Site Health** | Uptime, health scores, incidents, and trend analysis across your sites |
+| **Disk Capacity** | Storage usage trends per monitored node with projected full dates via linear regression |
+| **SSL Certificate Expiry** | Inventory of monitored certificates with days-until-expiry and renewal urgency |
+| **Alert Intelligence** | Alert volume, severity breakdown, top noisy nodes, time-to-acknowledge, time-to-resolve |
+| **Availability / SLA** | Per-site uptime percentage, downtime totals, incident count, MTTR, MTBF |
+| **Top Offenders** | Top nodes ranked by CPU, memory, latency, and interface errors over the reporting period |
 
 :::info
-The initial release includes the **Site Health** report type. Additional report types will be added in future releases — check [Release Notes](/blog) for updates.
+All six report types are available as built-in templates and ship with Stratora. See [Report Templates](./report-templates.md) for the cadences each type covers out of the box, and create custom templates if you need different scope or time-range combinations.
 :::
 
 ---

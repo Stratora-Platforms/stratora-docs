@@ -18,18 +18,18 @@ A discovery scan runs through up to five phases in sequence. Each phase is optio
 | Phase | Signal | What It Does |
 |-------|--------|-------------|
 | **1. ICMP Ping** | Reachability | Sweeps the target range to find live hosts |
-| **2. TCP Port Scan** | Port profile | Probes common ports (22, 80, 135, 443, 445, 3389, 8080, 8443) to build a port fingerprint |
+| **2. TCP Port Scan** | Port profile | Probes a 14-port fingerprint covering web (80, 443, 8080, 8443), SMB/RPC (135, 139, 445), RDP/WinRM (3389, 5985, 5986), shell/telnet (22, 23), DNS (53), and printer (9100) |
 | **3. SNMP** | sysObjectID, sysDescr | Queries SNMP system MIB for device identity — the highest-confidence signal |
 | **4. HTTP Banner** | Server header, HTML title, TLS certificate | Probes web interfaces to identify device type from headers and certificate fields |
 | **5. DNS** | PTR record | Performs reverse DNS lookup with forward verification for hostname classification |
 
-Phases run concurrently with up to 50 probes at a time. Per-host timeouts keep scans fast: 1 second for TCP, 3 seconds for SNMP, 5 seconds for HTTP.
+Phases run concurrently with up to 30–50 probes in flight per phase. Per-host timeouts keep scans fast: 1.5 seconds for TCP, 3 seconds for SNMP, 5 seconds for HTTP.
 
 ---
 
 ## Creating a Discovery Job
 
-Navigate to **Collection → Discovery** and click **New Scan**.
+Navigate to **Collection → Discovery Jobs** and click **New Scan**.
 
 ### Target Selection
 

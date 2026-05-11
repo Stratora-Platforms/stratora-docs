@@ -197,7 +197,12 @@ The agent is strictly push-only — it establishes outbound connections to the S
 
 **DNS:** The agent must be able to resolve the Stratora server FQDN configured in `server_url`. If DNS is unavailable, use a literal IP address.
 
-**TLS:** HTTPS is mandatory. If the Stratora server uses a self-signed certificate, set `"insecure_skip_verify": true` in the agent config (Linux) or pass the equivalent flag during Windows setup. Production deployments should use a valid certificate instead.
+**TLS:** HTTPS is mandatory.
+
+- **Linux:** if the Stratora server uses a self-signed certificate, set `"insecure_skip_verify": true` in `/etc/stratora/agent.json` to suppress verification. Default is verify-on.
+- **Windows:** the Windows agent currently does not verify the server's TLS certificate regardless of validity. Production deployments should still use a valid certificate, because Linux agents and the browser-side UI do enforce verification.
+
+Production deployments should use a valid certificate instead of relying on the Windows agent's skip behavior.
 
 **HTTP/HTTPS proxy:** The current agent HTTP client is configured with an explicit `http.Transport` that does **not** honor `HTTP_PROXY` / `HTTPS_PROXY` environment variables. Deploying behind a forward proxy is not supported in this release — the agent host must have direct outbound HTTPS reachability to the Stratora server.
 

@@ -88,9 +88,12 @@ The license file is a signed JSON document containing:
 
 | Field | Description |
 |-------|-------------|
+| License ID | Unique identifier for support reference |
 | Edition | Community, Pro, or Enterprise |
 | Device limit | Maximum number of active nodes |
 | Customer name | Your organization name |
+| Customer email | Contact email associated with the subscription |
+| Trial flag | `true` for time-limited trial licenses, `false` for paid subscriptions |
 | Issued date | When the license was generated |
 | Expiration date | When the license expires |
 | Signature | Ed25519 cryptographic signature |

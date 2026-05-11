@@ -29,14 +29,14 @@ The build script is at `agent/installer/build.ps1`.
 
 ```powershell
 cd agent\installer
-.\build.ps1 -Version "2.1.0"
+.\build.ps1 -Version "2.1.9.2"
 ```
 
 **Parameters:**
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `-Version` | `2.1.0` | Version string embedded in the binary and MSI filename |
+| `-Version` | `2.1.9.2` | Version string embedded in the binary and MSI filename |
 | `-TelegrafPath` | — | Path to a `telegraf.exe` binary. If omitted, uses `bin\telegraf.exe` if present |
 | `-SkipGoBuild` | — | Skip Go compilation (use existing binaries in `bin\`) |
 | `-Clean` | — | Remove previous build artifacts before building |
@@ -72,10 +72,10 @@ The build script is at `agent-linux/build.sh`.
 
 ```bash
 cd agent-linux
-./build.sh 1.2.0
+./build.sh 1.2.1
 ```
 
-The version argument defaults to `1.2.0` if omitted.
+The version argument defaults to `1.2.1` if omitted.
 
 ### What It Builds
 
@@ -109,7 +109,7 @@ The build script is at `collector/installer/build.ps1`.
 
 ```powershell
 cd collector\installer
-.\build.ps1 -Version "2.1.0"
+.\build.ps1 -Version "2.1.9.2"
 ```
 
 **Parameters:** Same as the agent build script (`-Version`, `-TelegrafPath`, `-SkipGoBuild`, `-Clean`).
@@ -145,8 +145,8 @@ The Stratora backend serves installer downloads via unauthenticated API endpoint
 {installDir}/
 └── downloads/
     ├── StratoraAgent-2.1.0.msi          # Agent Windows MSI
-    ├── stratora-agent_1.2.0_amd64.deb   # Agent Linux DEB
-    ├── stratora-agent-1.2.0-1.x86_64.rpm # Agent Linux RPM
+    ├── stratora-agent_1.2.1_amd64.deb   # Agent Linux DEB
+    ├── stratora-agent-1.2.1-1.x86_64.rpm # Agent Linux RPM
     └── collector/
         └── StratoraCollector-2.1.0.msi  # Collector Windows MSI
 ```
@@ -184,8 +184,8 @@ $InstallDir = "C:\Stratora"  # Adjust to your install path
 
 # Agent packages
 Copy-Item agent\installer\output\StratoraAgent-2.1.0.msi "$InstallDir\downloads\"
-Copy-Item agent-linux\build\stratora-agent_1.2.0_amd64.deb "$InstallDir\downloads\"
-Copy-Item agent-linux\build\stratora-agent-1.2.0-1.x86_64.rpm "$InstallDir\downloads\"
+Copy-Item agent-linux\build\stratora-agent_1.2.1_amd64.deb "$InstallDir\downloads\"
+Copy-Item agent-linux\build\stratora-agent-1.2.1-1.x86_64.rpm "$InstallDir\downloads\"
 
 # Collector package (note: subdirectory)
 New-Item -ItemType Directory -Force "$InstallDir\downloads\collector" | Out-Null
@@ -200,13 +200,13 @@ When cutting a new release, update the version in these locations:
 
 | Component | Version Location |
 |-----------|-----------------|
-| Windows Agent | `agent/installer/build.ps1` `-Version` default (line 4) |
+| Windows Agent | `agent/installer/build.ps1` `-Version` default |
 | Windows Agent | `agent/cmd/stratora-agent/versioninfo.json` |
 | Windows Agent | `agent/cmd/stratora-tray/versioninfo.json` |
-| Linux Agent | `agent-linux/build.sh` `VERSION` default (line 12) |
+| Linux Agent | `agent-linux/build.sh` `VERSION` default |
 | Linux Agent | `agent-linux/packaging/nfpm.yaml` `version` field |
 | Linux Agent | `agent-linux/packaging/nfpm-rpm.yaml` `version` field |
-| Windows Collector | `collector/installer/build.ps1` `-Version` default (line 6) |
+| Windows Collector | `collector/installer/build.ps1` `-Version` default |
 | Windows Collector | `cmd/collector/versioninfo.json` |
 
 All build scripts accept a `-Version` / version argument that overrides the default, so you can also pass the version at build time without editing files.

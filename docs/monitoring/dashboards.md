@@ -99,6 +99,25 @@ Stratora ships with a wide range of panel types, each designed for a specific ki
 | **Divider** | Visual separator between sections of a dashboard |
 | **Spacer** | Whitespace element for layout control |
 
+### Site-Aggregation Panels
+
+These panels aggregate across multiple nodes — typically scoped to a single site — and power the auto-generated site dashboards. They can also be used on custom dashboards.
+
+| Panel | Description |
+|-------|-------------|
+| **Site Health** | Aggregated site health score with up/down/warning counts |
+| **Site Stat** | Single-stat tile for a site-level metric (e.g., nodes online, active alerts) |
+| **Health Breakdown** | Donut or bar chart of node health states (healthy / warning / critical / offline) for the scoped site |
+| **Device Type Breakdown** | Distribution of nodes by device category (switches, servers, NAS, etc.) |
+| **OS Breakdown** | Distribution of nodes by operating system family |
+| **Nodes by Site** | Per-site node count rollup — useful on multi-site dashboards |
+| **WAN Health** | WAN circuit availability and latency tile — appears on auto-dashboards when the site has WAN-circuit nodes |
+| **Top Resources** | Aggregate "top N" view across resources (CPU, memory, latency) for the scoped node set |
+| **Top Disk Utilization** | Top N disks by utilization across the scoped node set |
+| **Rack Topology** | Aggregate rack view embedded as a dashboard panel (see [Rack Diagrams](./racks.md)) |
+| **Check Config** | Built-in synthetic check / config presence panel surfaced on auto-dashboards |
+| **World Clock** | Per-location time tile for multi-region dashboards |
+
 ---
 
 ## Time Range Controls

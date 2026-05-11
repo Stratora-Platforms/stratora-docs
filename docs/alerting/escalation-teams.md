@@ -232,6 +232,19 @@ Escalation step channels can target rotation members dynamically:
 
 This lets you build steps like: "Notify On-Call #1 immediately, then escalate to On-Call #2 after 15 minutes if unresolved."
 
+### Per-Rotation-Member Test SMS / Voice
+
+To verify that each rotation member's phone number is correctly wired for SMS and voice delivery, the rotation member list provides per-member **Send Test SMS** and **Send Test Voice** buttons. These tests dispatch directly to the selected member's phone field — independent of the per-channel `Test` buttons on the escalation step (which test the channel's wiring, not a specific roster member's number).
+
+Each per-member test:
+
+- Resolves the SMS or voice phone field assigned to that rotation member at the time the button is clicked
+- Routes the dispatch through the same Twilio code path real alerts use
+- Surfaces success or failure inline on the member row — including the Twilio error code when delivery fails (e.g., 401 / ApiError 20003 for an invalid SID/token, 30034 for an unregistered A2P 10DLC sender)
+- Does **not** create an alert in the alerts list and does **not** trigger the escalation engine
+
+Use the per-member tests during initial setup to confirm every member's number is reachable, and after any phone-number edit to confirm the change took effect. The escalation step's per-channel `Test` button remains the right tool for validating the channel's wiring (correct SID/token, correct webhook configuration, etc.).
+
 :::tip
 SMS and voice notifications require Twilio to be configured in **Settings → External Notifications → SMS & Voice**. See [Twilio Integration](/docs/integrations/external-notifications) for setup, modes, and 10DLC registration requirements.
 :::

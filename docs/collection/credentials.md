@@ -27,7 +27,7 @@ Credentials are managed centrally and attached to [nodes](../infrastructure/node
 
 ## Creating and Managing Credentials
 
-Navigate to **Administration → Credentials** and click **Add Credential**.
+Navigate to **Collection → Credentials** and click **Add Credential**.
 
 Each credential has:
 

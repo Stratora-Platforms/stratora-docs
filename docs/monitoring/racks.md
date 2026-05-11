@@ -75,9 +75,10 @@ Every device in the rack displays a health-colored border that updates automatic
 | Color | Health State |
 |-------|-------------|
 | **Green** | Healthy |
-| **Yellow** | Warning / degraded |
-| **Red** | Critical or offline |
-| **Orange** | Maintenance |
+| **Yellow** | Warning |
+| **Orange** | Critical |
+| **Red** | Offline |
+| **Purple** | Maintenance |
 
 Hover over a device to see its name, U position range, and current health status. Click to navigate directly to the node's detail page.
 
