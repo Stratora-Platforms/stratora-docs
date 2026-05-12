@@ -34,13 +34,15 @@ changelog in the Stratora source repository.
 
 ---
 
-## v2.1.10 — May 11, 2026
+## v2.1.10 / v2.1.11 — May 11–12, 2026
 
 ### Security
 
 **Agent endpoint authentication.** Heartbeat and status endpoints now require authenticated agent components. Previously, requests to these endpoints were accepted from any caller knowing a node identifier — a value that appears in admin URLs, notification payloads, and audit logs and is not designed to be confidential. The previous behavior could allow an attacker to suppress reachability alerts, modify node identity fields, or discover internal system endpoints. 2.1.10 closes this gap by requiring agents to authenticate every heartbeat and status request.
 
 This is a security fix. We recommend upgrading promptly.
+
+**v2.1.11 follow-up (May 12, 2026).** A subsequent v2.1.11 release improves upgrade reliability for collector hosts running the bundled agent. Under the v2.1.10 upgrade path, the bundled agent on a collector host could lose its enrollment state during a Collector MSI upgrade and need to re-enroll manually. v2.1.11 closes this gap so the bundled agent's enrollment survives upgrades transparently. **v2.1.11 is the recommended starting point for new deployments and for upgrades from 2.1.9.x or earlier.**
 
 ### What's new
 
@@ -81,27 +83,29 @@ This is a security fix. We recommend upgrading promptly.
 
 ### Upgrading
 
-**This release contains a breaking change for agent communication.** After upgrading the Stratora server to 2.1.10, agents running pre-2.1.10 builds will no longer be able to send heartbeats. They must be upgraded to 2.1.10 (Windows) or 1.2.2 (Linux) before they can resume reporting.
+**This release contains a breaking change for agent communication.** After upgrading the Stratora server, agents running pre-2.1.10 builds will no longer be able to send heartbeats. They must be upgraded to 2.1.11 (Windows or Linux) before they can resume reporting.
 
 Recommended upgrade order:
 
-1. Install the new Stratora server (`Stratora-Server-2.1.10.msi`). The server will start enforcing the new authentication requirement immediately.
+1. Install the new Stratora server (`Stratora-Server-2.1.11.msi`). The server will start enforcing the new authentication requirement immediately.
 2. Expect existing agents to start showing as `Agent heartbeat lost` in the Alerts view. This is the expected operational signal that enforcement is active.
 3. Roll out the new agent installers to your hosts:
-   - Windows hosts: `StratoraAgent-2.1.10.msi`
-   - Linux hosts (Debian/Ubuntu): `stratora-agent_1.2.2_amd64.deb`
-   - Linux hosts (RHEL/Rocky/Alma): `stratora-agent-1.2.2-1.x86_64.rpm`
-4. Hosts running both the Stratora collector and a standalone agent (the bundled-agent pattern) need both `StratoraCollector-2.1.10.msi` and `StratoraAgent-2.1.10.msi`.
+   - Windows hosts: `StratoraAgent-2.1.11.msi`
+   - Linux hosts (Debian/Ubuntu): `stratora-agent_2.1.11_amd64.deb`
+   - Linux hosts (RHEL/Rocky/Alma): `stratora-agent-2.1.11-1.x86_64.rpm`
+4. Collector hosts: install `StratoraCollector-2.1.11.msi`. The Collector MSI also includes the bundled agent for that host; do not install `StratoraAgent-2.1.11.msi` separately on a collector host.
 5. As each agent upgrades, the `Agent heartbeat lost` alert for that host will auto-resolve within one heartbeat cycle (approximately 10 seconds).
 
 The 2.1.10 server includes a database migration that runs automatically on first startup. The migration backfills internal data required by the new authentication check. No manual operator action is required for the migration itself.
 
+**Linux Agent version numbering.** Starting with this release, the Linux Agent version moves to the same number as the Server, Windows Agent, and Collector. The Linux Agent jumps from 1.2.2 directly to 2.1.11 — this is an intentional version realignment for lockstep clarity, not a major rewrite. Functionally, Linux Agent 2.1.11 is a successor to 1.2.2 and the upgrade path is a normal `dpkg`/`rpm` upgrade (no epoch declaration needed).
+
 ### Bundled Components
 
-- Stratora Server 2.1.10
-- Stratora Agent 2.1.10 (Windows)
-- Stratora Agent 1.2.2 (Linux)
-- Stratora Collector 2.1.10
+- Stratora Server 2.1.11
+- Stratora Agent 2.1.11 (Windows)
+- Stratora Agent 2.1.11 (Linux)
+- Stratora Collector 2.1.11
 
 ---
 
