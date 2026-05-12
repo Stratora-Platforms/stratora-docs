@@ -34,6 +34,77 @@ changelog in the Stratora source repository.
 
 ---
 
+## v2.1.10 — May 11, 2026
+
+### Security
+
+**Agent endpoint authentication.** Heartbeat and status endpoints now require authenticated agent components. Previously, requests to these endpoints were accepted from any caller knowing a node identifier — a value that appears in admin URLs, notification payloads, and audit logs and is not designed to be confidential. The previous behavior could allow an attacker to suppress reachability alerts, modify node identity fields, or discover internal system endpoints. 2.1.10 closes this gap by requiring agents to authenticate every heartbeat and status request.
+
+This is a security fix. We recommend upgrading promptly.
+
+### What's new
+
+**Active-hours suppression on Time-Based escalation schedules.** Alerts firing outside a team's configured active hours are tracked but not dispatched. When the active window opens, dispatch resumes from the existing step — no rewind, no skip.
+
+**Voice notifications use inline TwiML.** Voice alert calls no longer make an outbound fetch for call instructions, which removes a public DNS dependency and simplifies on-premises deployments.
+
+**Hostname pronunciation in voice announcements.** Voice alerts now announce node identifiers character-by-character (e.g., "D-E-V-zero-one" instead of "devzeroone"), so on-call responders can write them down without replaying the message.
+
+**Mobile phone field on contact records.** Contacts can now record both a primary phone and a mobile phone, separately addressable for SMS and voice routing.
+
+**Per-rotation-member phone source selection.** Schedule tab now exposes per-member control over which phone number a given rotation member should be reached on (primary, mobile, or an override).
+
+**Target-type-aware Slack, Teams, and Email dispatch.** Alert channel dispatch now selects the correct delivery shape based on the target type, so the same alert flows correctly to a Slack channel webhook, a Teams workflow, or an email distribution list.
+
+**Multi-channel test dispatch.** The "Test alert" flow now exercises all configured channels (SMS, voice, email, chat) for an escalation team in a single test, with per-channel result reporting.
+
+**Warning badge for alerts with no escalation team.** Built-in and custom alerts that haven't been assigned to an escalation team now surface a visible warning in the Alerts UI, so the assignment gap is discoverable before an incident.
+
+**Rotation correctness improvements.** Schedule rotation handoffs now respect a 20-second grace window during on-call pill transitions, eliminating a class of spurious "on-call swap" alerts at handoff time.
+
+**Per-rotation-member test SMS and voice.** Each rotation member on an escalation team's schedule now has dedicated test SMS and test voice buttons, with result feedback per member rather than per team.
+
+### Fixed
+
+- Collector failover incorrectly mutated agent and HTTP node target types under retry storms.
+- User setting writes intermittently corrupted JSON values stored in the user_settings table.
+- Test alert dispatch now flows through the same engine as production alerts, so test results reflect real production behavior.
+- Invalid license files are now rejected with a clear error rather than silently falling back to a degraded license tier.
+- License expiry now uses wall-clock time consistently across the platform.
+- Built-in alerts cannot be edited or deleted, with the UI reflecting the locked state correctly.
+- Customer-visible queries now exclude test and system nodes, preventing internal test data from appearing in customer dashboards.
+- Escalation step repeat intervals are now honored correctly — alerts re-dispatch on the configured cadence, not the default.
+- Current on-call display now correctly reflects schedule handoff windows.
+- Audit log entries now capture the authenticated user for actions taken through the API.
+- The condition operator picker is now a single control, replacing the previous two-dropdown design that allowed inconsistent state.
+- The Test Alert modal now uses the same wizard pattern as the rest of the application.
+
+### Upgrading
+
+**This release contains a breaking change for agent communication.** After upgrading the Stratora server to 2.1.10, agents running pre-2.1.10 builds will no longer be able to send heartbeats. They must be upgraded to 2.1.10 (Windows) or 1.2.2 (Linux) before they can resume reporting.
+
+Recommended upgrade order:
+
+1. Install the new Stratora server (`Stratora-Server-2.1.10.msi`). The server will start enforcing the new authentication requirement immediately.
+2. Expect existing agents to start showing as `Agent heartbeat lost` in the Alerts view. This is the expected operational signal that enforcement is active.
+3. Roll out the new agent installers to your hosts:
+   - Windows hosts: `StratoraAgent-2.1.10.msi`
+   - Linux hosts (Debian/Ubuntu): `stratora-agent_1.2.2_amd64.deb`
+   - Linux hosts (RHEL/Rocky/Alma): `stratora-agent-1.2.2-1.x86_64.rpm`
+4. Hosts running both the Stratora collector and a standalone agent (the bundled-agent pattern) need both `StratoraCollector-2.1.10.msi` and `StratoraAgent-2.1.10.msi`.
+5. As each agent upgrades, the `Agent heartbeat lost` alert for that host will auto-resolve within one heartbeat cycle (approximately 10 seconds).
+
+The 2.1.10 server includes a database migration that runs automatically on first startup. The migration backfills internal data required by the new authentication check. No manual operator action is required for the migration itself.
+
+### Bundled Components
+
+- Stratora Server 2.1.10
+- Stratora Agent 2.1.10 (Windows)
+- Stratora Agent 1.2.2 (Linux)
+- Stratora Collector 2.1.10
+
+---
+
 ## v2.1.9.2 — April 23, 2026
 
 ### Bundled Components
