@@ -13,6 +13,8 @@ Sites serve three purposes:
 2. **Collector assignment** — each site has a preferred collector, so nodes added to a site automatically get polled by the right collector in the right network
 3. **Network documentation** — sites contain network definitions (CIDRs, VLANs, gateways) that feed into [IPAM](./ipam.md) and discovery scans
 
+![Sites list — sortable table showing each site's health score, 24h trend, networks, node counts, and preferred collector](/img/infrastructure/sites-overview-list.png)
+
 ---
 
 ## Creating a Site
@@ -30,8 +32,6 @@ Navigate to **Infrastructure → Sites** and click **Add Site**.
 :::tip
 If you set a **preferred collector** on the site, new nodes added to that site will automatically be assigned to that collector. This is the easiest way to ensure remote-site nodes are polled by the correct local collector.
 :::
-
-![Site creation form](./img/site-create.png)
 
 ---
 
@@ -77,7 +77,7 @@ The site health view shows a summary with counts of healthy, degraded, critical,
 - **World Map** — if latitude/longitude are set, sites appear on the map with color-coded health
 - **Site detail view** — full breakdown of node health within the site
 
-{/* ![Site health overview](./img/site-health.png) */}
+![Site health overview — sortable table showing each site's health score, node counts, and 24h trend](/img/infrastructure/sites-overview-list.png)
 
 ---
 
@@ -119,6 +119,34 @@ Clicking any site opens the site detail page, which provides a complete view of 
 | **Alerts** | Active and recently resolved alerts for nodes at this site |
 | **Reports** | Shortcuts to run site-scoped Site Health and Disk Capacity reports |
 | **Photos** | Site photo gallery (see [Site Photos](./site-photos)) |
+
+### Overview tab
+
+![Site detail — Overview tab with health score, 24h health history, IPAM networks, and node/type breakdowns](/img/infrastructure/site-detail-overview.png)
+
+### Nodes tab
+
+![Site detail — Nodes tab listing all devices at this site with health, type, IP, and last-seen](/img/infrastructure/site-detail-nodes.png)
+
+### Topology tab
+
+![Site detail — Topology tab with a site-scoped topology map](/img/infrastructure/site-detail-topology.png)
+
+### Racks tab
+
+![Site detail — Racks tab with rack diagrams for this site](/img/infrastructure/site-detail-racks.png)
+
+### Alerts tab
+
+![Site detail — Alerts tab showing active alerts at this site](/img/infrastructure/site-detail-alerts.png)
+
+### Reports tab
+
+![Site detail — Reports tab with shortcuts to run site-scoped Site Health and Disk Capacity reports](/img/infrastructure/site-detail-reports.png)
+
+### Photos tab
+
+![Site detail — Photos tab with site photo gallery and upload zone](/img/infrastructure/site-detail-photos.png)
 
 ### Networks
 
