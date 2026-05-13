@@ -7,7 +7,7 @@ title: Rack Diagrams
 
 Rack diagrams give you a visual representation of your physical equipment racks with live health overlays. Place monitored devices into rack positions to create an accurate picture of what's installed where — and see at a glance when something goes wrong.
 
-{/* ![Rack diagram view](./img/rack-diagram.png) */}
+![Rack diagrams page — multi-site list of racks with per-rack U height, device count, and site assignment](/img/monitoring/rack-diagram.png)
 
 ---
 

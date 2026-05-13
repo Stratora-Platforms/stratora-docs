@@ -5,6 +5,8 @@ title: Dashboards
 
 # Dashboards
 
+![Stratora dashboard home — infrastructure brief, nodes-by-site rollup, top resources, and recent activity panels](/img/monitoring/dashboard-home.png)
+
 Dashboards are the primary way you view and interact with monitoring data in Stratora. Each dashboard is a grid of **panels** — charts, gauges, tables, and specialized visualizations — that display real-time and historical metrics for your infrastructure.
 
 Stratora has two kinds of dashboards:
@@ -22,7 +24,7 @@ The dashboard builder uses a three-panel layout:
 2. **Center grid** — the dashboard canvas where panels are arranged, resized, and repositioned
 3. **Panel settings** — configure the selected panel's data source, thresholds, colors, and display options
 
-{/* ![Dashboard builder](./img/dashboard-builder.png) */}
+![Dashboard builder — three-pane edit mode with the Add Panels sidebar (Shared Components + per-node component categories), center grid, and Save controls](/img/monitoring/dashboard-builder.png)
 
 ### Edit vs. View Mode
 

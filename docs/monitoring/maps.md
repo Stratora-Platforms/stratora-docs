@@ -5,6 +5,8 @@ title: Maps
 
 # Maps
 
+![Maps page — list view showing network and world maps with element/pin counts, site assignment, and last-modified timestamps](/img/monitoring/maps-list.png)
+
 Stratora provides two types of interactive maps for visualizing your infrastructure:
 
 - **Topology maps** — logical network diagrams showing how devices connect, with live status overlays
@@ -18,7 +20,7 @@ Both map types use the same **three-panel builder pattern** as dashboards: a lef
 
 A topology map is a visual diagram of your infrastructure — devices, connections, and logical groupings laid out on a canvas with real-time health overlays.
 
-{/* ![Topology map view](./img/topology-map.png) */}
+![Topology map — device nodes with health-colored borders, group zones, and connections](/img/monitoring/topology-map.png)
 
 ### What's on the Canvas
 
@@ -87,7 +89,7 @@ Connections represent links between devices. They support:
 
 A world map shows your [sites](../infrastructure/sites.md), maps, and dashboards as pins on a geographic view, with live health status. World maps use dark-themed OpenStreetMap tiles — no external account or API key required.
 
-{/* ![World map view](./img/world-map.png) */}
+![World map — geographic site pins on dark-themed OpenStreetMap tiles, with color-coded health status](/img/monitoring/world-map.png)
 
 ### Pin Link Types
 
