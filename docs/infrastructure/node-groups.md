@@ -28,7 +28,7 @@ Navigate to **Infrastructure → Node Groups** and click **Add Group**.
 
 Each group gets a colored badge that appears next to nodes in lists, detail views, and dashboards — making it easy to visually identify group membership at a glance.
 
-{/* ![Node groups list](./img/node-groups.png) */}
+![Node groups list — group names with descriptions and member counts](/img/infrastructure/node-groups.png)
 
 ---
 

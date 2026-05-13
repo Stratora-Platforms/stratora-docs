@@ -11,7 +11,7 @@ Every node belongs to a [site](./sites.md) and is assigned a device template tha
 
 ---
 
-![Nodes list](./img/nodes.png)
+![Nodes list — sortable table showing name, IP, type, site, health, and last-seen for all monitored nodes](/img/infrastructure/nodes-list.png)
 
 ## Node Types
 
@@ -73,8 +73,6 @@ Agent-enrolled nodes automatically detect installed roles and services. For exam
 ## Node Detail View
 
 Click any node to open its detail view. The layout adapts based on the device template.
-
-![Node detail view](./img/node-detail.png)
 
 ### What You See
 
