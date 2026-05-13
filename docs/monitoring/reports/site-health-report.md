@@ -31,7 +31,7 @@ The global values are averages across all included sites. Per-site breakdowns ap
 **Uptime** and **Healthy Time** measure different things. A site can have 99.9% uptime (it was almost never fully offline) but only 85% healthy time (individual nodes had issues, though the site as a whole stayed up). Both metrics are important — uptime tracks availability, healthy time tracks full operational health.
 :::
 
-{/* ![Executive summary page](./img/report-executive-summary.png) */}
+![Site Health Report — executive summary page with health score, uptime, healthy time, incidents, and a per-site overview table](/img/monitoring/reports/report-executive-summary.png)
 
 ---
 
@@ -52,7 +52,7 @@ The heatmap provides a visual timeline of site status over the reporting period.
 
 The heatmap makes it easy to spot patterns — recurring degradation at specific times, prolonged outages, or the impact of maintenance windows.
 
-{/* ![Health heatmap](./img/report-heatmap.png) */}
+![Site Health Report — heatmap grid showing per-site health across the report time range](/img/monitoring/reports/report-executive-summary.png)
 
 ---
 
@@ -128,7 +128,7 @@ Each site's health score is charted across the reporting period in weekly interv
 
 This section helps you answer the question: "Are things getting better or worse?"
 
-{/* ![Trend analysis chart](./img/report-trend-analysis.png) */}
+![Site Health Report — per-site detail page with health trend and per-node status table](/img/monitoring/reports/report-trend-analysis.png)
 
 ---
 
@@ -149,4 +149,4 @@ The final section ranks all included sites by reliability, giving you a quick vi
 Use the cross-site comparison in client-facing reports to highlight strong-performing sites while identifying locations that need attention. The ranked format makes it easy for non-technical stakeholders to understand relative performance.
 :::
 
-{/* ![Cross-site comparison](./img/report-cross-site-comparison.png) */}
+![Site Health Report — cross-site comparison table ranking sites by uptime, healthy time, and incidents](/img/monitoring/reports/report-cross-site-comparison.png)
