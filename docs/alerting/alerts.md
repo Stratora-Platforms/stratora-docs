@@ -5,6 +5,8 @@ title: Alerts
 
 # Alerts
 
+![Alerts list — active alerts with severity, escalation team, node, condition, age, and acknowledge/escalate actions](/img/alerting/alerts-active-list.png)
+
 An **alert** is a notification that something needs attention — a threshold has been crossed, a service has stopped, or a node has gone offline. Alerts are created automatically by the [alert evaluator](./alert-configurations.md) and flow through the escalation system to notify the right people.
 
 ---
@@ -30,6 +32,8 @@ stateDiagram-v2
 :::info
 Previous alert states like "acknowledged" and "muted" are now **metadata flags** on active alerts, not separate states. An alert can be active, acknowledged, and muted simultaneously.
 :::
+
+![Alert detail modal — full dispatch history with email, SMS, voice, and webhook channels alongside the lifecycle and related alerts](/img/alerting/alert-detail-modal.png)
 
 ### Test alerts
 
