@@ -65,7 +65,7 @@ All six report types are available as built-in templates and ship with Stratora.
 
 Navigate to **Reports** in the sidebar to view your report templates, generate new reports, and download previous runs.
 
-{/* ![Reports page](./img/reports-overview.png) */}
+![Reports page — list of templates with type, source, schedule, last-run timestamp, and run-now actions](/img/monitoring/reports/reports-overview.png)
 
 ---
 

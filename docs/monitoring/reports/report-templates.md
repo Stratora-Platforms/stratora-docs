@@ -25,7 +25,7 @@ Each template displays:
 | **Time Range** | Reporting period (7d, 30d, 90d, or 1y) |
 | **Last Run** | When the template was last used to generate a report |
 
-{/* ![Report templates list](./img/report-templates-list.png) */}
+![Report templates list — built-in and custom templates with schedule status](/img/monitoring/reports/reports-overview.png)
 
 ---
 
@@ -117,7 +117,7 @@ Choose which sections to include in the generated report. Each section adds spec
 For executive audiences, start with **Executive Summary**, **Health Heatmap**, and **Cross-Site Comparison**. For operational teams, include all sections to get full node-level detail.
 :::
 
-{/* ![New template form](./img/report-template-create.png) */}
+![Create Report Template form — name, description, report type, time range, sections, schedule, and site scope](/img/monitoring/reports/report-template-create.png)
 
 ---
 
