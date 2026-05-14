@@ -45,7 +45,29 @@ Acknowledging an alert stops the escalation chain entirely. Once an alert is ack
 
 ## Creating an Escalation Team
 
-Navigate to **Alerting → Escalation Teams** and click **Add Team**.
+Navigate to **Alerting → Escalation Teams** and click **Add Team**. The create-team modal is a five-step wizard:
+
+### Step 1 — Team Details
+
+![Escalation Team Wizard, Step 1 — Team Details with Name, Description, and Enabled toggle](/img/alerting/escalation-team-step-1-details.png)
+
+### Step 2 — Schedule
+
+![Escalation Team Wizard, Step 2 — Schedule type selection (Always Active / Time-Based / On-Call Rotation)](/img/alerting/escalation-team-step-2-schedule.png)
+
+See [Schedules](#schedules) below for full details on each schedule type.
+
+### Step 3 — Notification Steps
+
+![Escalation Team Wizard, Step 3 — Notification Steps with per-step channel selection (Email, Slack, Teams, Webhook, SMS, Voice)](/img/alerting/escalation-team-step-3-notifications.png)
+
+### Step 4 — Settings
+
+![Escalation Team Wizard, Step 4 — Settings with repeat-escalation-cycle toggle](/img/alerting/escalation-team-step-4-settings.png)
+
+### Step 5 — Review
+
+![Escalation Team Wizard, Step 5 — Review with summary of all configured steps before creation](/img/alerting/escalation-team-step-5-review.png)
 
 ### Team Fields
 
