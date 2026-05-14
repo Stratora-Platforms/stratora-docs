@@ -16,6 +16,28 @@ These mechanisms behave differently in important ways — most notably in how th
 
 ---
 
+## Maintenance Tabs
+
+The Maintenance page surfaces four tabs that map to the lifecycle stages of a maintenance window.
+
+### Active
+
+![Maintenance — Active tab with currently-in-progress windows](/img/alerting/maintenance-active.png)
+
+### Scheduled
+
+![Maintenance — Scheduled tab with future windows queued to start](/img/alerting/maintenance-scheduled.png)
+
+### Recurring
+
+![Maintenance — Recurring tab with repeating schedules (weekly / daily / cron pattern)](/img/alerting/maintenance-recurring.png)
+
+### History
+
+![Maintenance — History tab with past maintenance windows and start/end timestamps](/img/alerting/maintenance-history.png)
+
+---
+
 ## Manual Mutes and Scheduled Maintenance Windows
 
 This is the **mute** mechanism. Use it for one-shot suppression where you want alert artifacts preserved for post-event review.
