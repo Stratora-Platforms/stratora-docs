@@ -5,6 +5,8 @@ title: License
 
 # License
 
+![License page — current edition, monitored device count, customer name, expiration, license ID, instance ID, and admin Manage actions](/img/administration/license.png)
+
 Stratora uses a file-based licensing model with **Ed25519 cryptographic signatures** for tamper-proof offline validation. No license server or internet connection is required — the license is verified entirely on your Stratora server using a public key embedded in the application.
 
 ---

@@ -5,6 +5,8 @@ title: Data Retention
 
 # Data Retention
 
+![Data Retention settings — metric retention period, query inaccessibility, and forced-compaction controls](/img/administration/data-retention.png)
+
 Stratora stores time-series metric data in [VictoriaMetrics](https://victoriametrics.com/). The **data retention** settings control how long this data is kept — balancing storage costs, query performance, and compliance requirements.
 
 ---

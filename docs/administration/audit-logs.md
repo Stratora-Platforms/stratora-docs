@@ -5,6 +5,8 @@ title: Audit Logs
 
 # Audit Logs
 
+![Audit Logs — timestamp, user, action, resource, IP, and user-agent for every significant action](/img/administration/audit-logs.png)
+
 The **audit log** records every significant action in Stratora — who did what, when, and from where. It provides a tamper-evident trail for security reviews, compliance audits, and operational troubleshooting.
 
 ---

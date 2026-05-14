@@ -5,6 +5,8 @@ title: Settings
 
 # Settings
 
+![Settings — display preferences (Temperature Unit) and Site Photos storage configuration](/img/administration/settings.png)
+
 The **Settings** page provides global configuration options that affect the Stratora platform.
 
 Navigate to **Administration → Settings** to view and modify these options.

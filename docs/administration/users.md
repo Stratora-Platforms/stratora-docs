@@ -5,6 +5,8 @@ title: Users
 
 # Users
 
+![Users page — list of admin / operator / viewer accounts with role, status, auth method, and last login](/img/administration/users.png)
+
 The **Users** page lets administrators manage who can access Stratora and what they can do. Users can be created locally or provisioned automatically from [LDAP or OIDC identity providers](./identity-providers.md).
 
 ---

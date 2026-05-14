@@ -6,6 +6,8 @@ sidebar_position: 6
 
 # Diagnostics
 
+![Diagnostics — Server / Database / VictoriaMetrics / Collectors / Agents / Alerts / License status cards](/img/administration/diagnostics.png)
+
 The Diagnostics page provides a real-time summary of your Stratora server's health and configuration, and lets you download a support bundle to share with Stratora support when troubleshooting.
 
 ## Accessing Diagnostics
