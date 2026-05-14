@@ -5,6 +5,8 @@ title: IPAM
 
 # IPAM
 
+![IPAM — Supernets and subnets with per-subnet CIDR, VLAN, site, gateway, DHCP flag, and IP-utilization bars](/img/infrastructure/ipam.png)
+
 Stratora includes a built-in **IP Address Management (IPAM)** module for tracking IP address space across your infrastructure. It organizes address blocks into a hierarchy of supernets and subnets, tracks individual IP allocations, monitors utilization, and integrates with discovery scanning to keep records up to date.
 
 ---
