@@ -23,6 +23,8 @@ Local accounts are managed in [Users](./users.md). For directory-integrated envi
 
 ## LDAP / Active Directory
 
+![Identity Providers — LDAP / Active Directory tab with server configuration and group-to-role mapping](/img/administration/identity-providers-ldap.png)
+
 Stratora integrates with LDAP-compatible directories, including Microsoft Active Directory, for centralized authentication. Users sign in with their directory credentials — Stratora never stores their password.
 
 ### How It Works
@@ -81,6 +83,8 @@ Roles are re-evaluated on every login, so changes to group memberships in Active
 ---
 
 ## OIDC Single Sign-On
+
+![Identity Providers — OIDC / SSO tab with provider configuration, Entra ID redirect URI, and SSO entry URL](/img/administration/identity-providers-oidc.png)
 
 Stratora supports OpenID Connect (OIDC) for single sign-on with cloud identity providers. It has been validated with **Microsoft Entra ID** (Azure AD) and follows the standard Authorization Code flow with PKCE.
 

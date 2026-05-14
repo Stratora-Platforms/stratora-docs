@@ -5,6 +5,8 @@ title: SSL / TLS Certificates
 
 # SSL / TLS Certificates
 
+![SSL / TLS Certificate — current certificate, expiration, Let's Encrypt provider configuration, and auto-renewal toggle](/img/administration/ssl-certificate.png)
+
 Stratora serves all traffic over HTTPS. On a fresh install, a self-signed certificate is generated automatically — **zero configuration required**. From there, you can upgrade to a trusted certificate via Let's Encrypt automation or manual upload.
 
 ---
