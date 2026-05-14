@@ -5,6 +5,8 @@ title: Email Templates
 
 # Email Templates
 
+![Email Templates — Branding Settings (company name, primary color, logo, footer) plus per-template list with Edit and Preview affordances](/img/integrations/email-templates.png)
+
 **Email templates** control the content and appearance of alert notification emails sent by Stratora. Every alert email — triggered, resolved, or test — is rendered from a customizable HTML template with support for dynamic variables, branding, and live preview.
 
 ---
@@ -106,6 +108,8 @@ Navigate to **Administration → Email Templates** to edit templates.
 
 ### Editing a Template
 
+![Email template edit modal — Subject and HTML body fields with variable autocomplete](/img/integrations/email-template-edit.png)
+
 1. Select the template you want to customize (Alert Triggered, Alert Resolved, or Test Email)
 2. Edit the **subject line** and/or **HTML body**
 3. Use **Preview** to see how the rendered email looks with sample data
@@ -140,6 +144,8 @@ Set the **Stratora Base URL** to your server's public-facing address so that "Vi
 ## Preview and Testing
 
 ### Preview
+
+![Email template preview modal — rendered HTML with sample variable substitution](/img/integrations/email-template-preview.png)
 
 Click **Preview** on any template to see it rendered with sample data. The preview uses realistic placeholder values (a sample server name, IP, alert summary, and timestamps) so you can see exactly how the email will look in a recipient's inbox.
 

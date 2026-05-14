@@ -24,6 +24,8 @@ Stratora delivers alert notifications to external systems through multiple chann
 
 ## Email (SMTP)
 
+![External Notifications — Email / SMTP tab with host, port, encryption, credentials, and From address](/img/integrations/external-notifications-email.png)
+
 Email notifications use your organization's SMTP server to deliver HTML-formatted alert emails.
 
 ### SMTP Configuration
@@ -58,6 +60,8 @@ Alert emails are rendered from customizable [email templates](./email-templates.
 
 ## Slack
 
+![External Notifications — Slack & Teams tab with per-channel webhook URLs and test buttons](/img/integrations/external-notifications-slack-teams.png)
+
 Slack notifications are delivered via [incoming webhooks](https://api.slack.com/messaging/webhooks) using Slack's Block Kit format.
 
 ### Configuration
@@ -88,6 +92,8 @@ Use the **Test** button when configuring an escalation step channel to send a te
 ---
 
 ## Microsoft Teams
+
+![External Notifications — Slack & Teams tab (shared with Slack) with per-channel webhook URLs and test buttons](/img/integrations/external-notifications-slack-teams.png)
 
 Teams notifications are delivered via [incoming webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) using the **Adaptive Cards v1.4** format for rich, interactive messages.
 
@@ -128,6 +134,8 @@ Use the **Test** button to send a test Adaptive Card to your Teams channel and v
 ---
 
 ## Generic Webhooks
+
+![External Notifications — Webhooks tab with per-target URL configuration and test-payload action](/img/integrations/external-notifications-webhooks.png)
 
 Generic webhooks send a JSON payload via HTTP POST to any URL, enabling integration with ticketing systems, automation platforms, PagerDuty, custom dashboards, or any system that accepts webhook callbacks.
 
@@ -203,6 +211,8 @@ A successful test confirms the URL is reachable and returns an HTTP 2xx response
 ---
 
 ## SMS (Twilio)
+
+![External Notifications — SMS & Voice tab with Twilio configuration (Account SID, Auth Token, From number, mode selection)](/img/integrations/external-notifications-sms-voice.png)
 
 Stratora sends SMS alert notifications and receives ACK/Escalate replies via Twilio. Bring your own Twilio account — Community, Pro, and Enterprise editions are all supported.
 
@@ -342,6 +352,8 @@ Without 10DLC registration, US carriers will return Twilio error code **30034** 
 ---
 
 ## Voice Calls
+
+![External Notifications — SMS & Voice tab (shared with SMS) with Twilio configuration](/img/integrations/external-notifications-sms-voice.png)
 
 Stratora can call escalation team members when an alert fires. The call uses text-to-speech to announce the alert. Acknowledgement is handled out-of-band — see **Acknowledging a voice alert** below.
 
