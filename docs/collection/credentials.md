@@ -5,6 +5,8 @@ title: Credentials
 
 # Credentials
 
+![Credential vault — SNMP, SSH, VMware, WMI, and S3 credential entries with masked secrets and per-credential audit trail access](/img/collection/credentials.png)
+
 The **credential vault** stores the authentication secrets Stratora needs to monitor your infrastructure — SNMP communities, API passwords, SSH keys, and more. All secrets are encrypted at rest with AES-256-GCM and are never stored in plain text.
 
 Credentials are managed centrally and attached to [nodes](../infrastructure/nodes.md) as needed. This keeps secrets out of device templates and makes rotation straightforward — update a credential once and every node using it gets the new value automatically.

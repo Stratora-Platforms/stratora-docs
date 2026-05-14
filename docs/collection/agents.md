@@ -6,6 +6,8 @@ sidebar_position: 1
 
 # Agents
 
+![Agents list — deployed Linux and Windows agents with health, version, host, and last-checkin](/img/collection/agents.png)
+
 The **Stratora Agent** is a lightweight service installed on your monitored endpoints (Windows and Linux servers). It collects system metrics — CPU, memory, disk, network, and running services — and reports them back to the Stratora server. Agents use an embedded Telegraf instance for metric collection and communicate with the server over HTTPS.
 
 Unlike SNMP-based monitoring (which is polled by a [collector](./collectors.md)), agents **push** metrics from the host itself. This gives you deeper OS-level visibility and works well for servers behind firewalls or in network segments where inbound SNMP polling isn't practical.

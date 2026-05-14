@@ -5,6 +5,8 @@ title: Collectors
 
 # Collectors
 
+![Collectors list — local and remote collectors with site assignment, status, and last-heartbeat](/img/collection/collectors.png)
+
 A **collector** is the component that polls your infrastructure and sends metrics back to the Stratora server. Collectors use an embedded [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) instance for metric collection — the Stratora server generates Telegraf configurations from your device templates and delivers them to each collector automatically.
 
 ---

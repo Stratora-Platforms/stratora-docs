@@ -5,6 +5,8 @@ title: Enrollment
 
 # Enrollment
 
+![Enrollment tokens — list of active enrollment tokens with name, scope, expiry, and one-time-reveal status](/img/collection/enrollment.png)
+
 Enrollment is how [collectors](./collectors.md) and agents register with the Stratora server. It uses a **token-based flow** — you create a temporary enrollment token in the UI, then pass it to the installer. The component uses the token to register and receives a unique, permanent API key for ongoing authentication.
 
 This design keeps deployment simple (one shareable token for a batch of installs) while maintaining security (each component gets its own isolated API key).

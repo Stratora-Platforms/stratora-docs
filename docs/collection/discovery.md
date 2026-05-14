@@ -5,6 +5,8 @@ title: Discovery
 
 # Discovery
 
+![Discovery Jobs — list of past scans with target subnet, devices found / total, SNMP count, completion time, and status](/img/collection/discovery.png)
+
 Network discovery scans your subnets to find devices, identify what they are, and match them to the right monitoring template — so you can bring infrastructure into Stratora without manual configuration.
 
 Discovery uses a **multi-signal fingerprinting engine** that combines SNMP, port scans, HTTP banners, DNS, and MAC address analysis to classify devices with high confidence.
@@ -107,6 +109,8 @@ After a scan completes, each discovered device shows:
 - **Status** — whether the device is already monitored, newly discovered, or ignored
 
 ### Reviewing and Importing
+
+![Discovery scan results — per-device fingerprint detail (sysObjectID, sysDescr match, port profile, classification confidence) for an imported scan](/img/collection/discovery-scan-results.png)
 
 From the results view:
 
