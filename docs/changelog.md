@@ -34,6 +34,83 @@ changelog in the Stratora source repository.
 
 ---
 
+## v2.1.12 — May 14, 2026
+
+### What's new
+
+**Outbound notification delivery tracking.** SMS and voice alerts
+now show a live delivery state in the Alert Detail view's
+Dispatches panel: each notification appears as `Sent`, `Delivered`,
+or `Undelivered`, and undelivered messages surface the carrier's
+error code and explanation in place. This closes a class of silent
+failures where Stratora's UI would mark an alert dispatch as
+successful (the message was accepted by the carrier), but the
+recipient never actually received it — most commonly seen on US
+Twilio accounts that have not yet completed A2P 10DLC carrier
+registration, where the message is silently dropped at the
+carrier level and the recipient sees nothing. With v2.1.12, this
+shows up immediately in the Alert Detail view so on-call responders
+and operators can diagnose without digging through Twilio logs.
+
+The delivery-state check runs outbound from your Stratora server
+and does not require any public webhook endpoint, so it works in
+on-prem and air-gapped-style deployments without additional
+network configuration.
+
+### Fixed
+
+- **License page now visible to all roles authorized to view it.**
+  Previously, the `/license` page enforced an admin-only check at
+  the route level even though Operator and Viewer roles are
+  authorized to view license details. Operators and Viewers can
+  now reach the page; license upload and removal remain admin-only.
+- **Alert summary formatting.** Threshold values, current values,
+  and units in alert summaries now render consistently across the
+  in-app Alert Detail view, the Alert Configuration list, the
+  Dashboard gauges, and the email / Slack / Teams notification
+  bodies. No more mixed precision or missing unit suffixes between
+  the in-app surface and the notification body for the same alert.
+- **Setup Wizard step counter.** The "Step N of M" indicator in
+  the Setup Wizard now matches the actual step count.
+- **World Map pin count.** The summary text alongside the World
+  Map view now matches the actual count of pinned sites displayed
+  on the map.
+- **License page first-load reliability.** Resolves a rare
+  client-side rendering error that could appear on a slow license
+  fetch at first load. The page now loads reliably under any
+  load timing.
+- **Linux Agent rpm upgrade reliability.** Linux Agent upgrades
+  installed via `rpm` (Rocky, RHEL, Alma) now restart the agent
+  service automatically as part of the upgrade. Previously, the
+  new agent binary was placed on disk during the rpm upgrade but
+  the running service continued executing the previous binary
+  until the host was rebooted or the service was manually
+  restarted. Debian/Ubuntu hosts using `.deb` packages were
+  unaffected.
+
+### Upgrading
+
+This is a routine point release with no breaking changes from
+v2.1.11. Standard upgrade path:
+
+1. Install `Stratora-Server-2.1.12.msi` on your Stratora server.
+2. Upgrade agents on your hosts as scheduled:
+   - Windows hosts: `StratoraAgent-2.1.12.msi`
+   - Linux hosts (Debian/Ubuntu): `stratora-agent_2.1.12_amd64.deb`
+   - Linux hosts (RHEL/Rocky/Alma): `stratora-agent-2.1.12-1.x86_64.rpm`
+3. Collector hosts: install `StratoraCollector-2.1.12.msi`. The
+   bundled agent on a collector host is upgraded as part of the
+   Collector MSI — do not install `StratoraAgent-2.1.12.msi`
+   separately on a collector host.
+
+### Bundled Components
+
+- Agent 2.1.12 (Windows)
+- Agent 2.1.12 (Linux)
+- Collector 2.1.12
+
+---
+
 ## v2.1.10 / v2.1.11 — May 11–12, 2026
 
 ### Security
