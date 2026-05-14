@@ -5,6 +5,8 @@ title: Alert Configurations
 
 # Alert Configurations
 
+![Alert Configurations — built-in catalogue with metric / service / reachability / interface categories, severity thresholds, and per-row Edit action](/img/alerting/alert-configurations.png)
+
 An **alert configuration** is a rule that tells Stratora when to fire an alert — which metric to watch, what condition to check, and what thresholds constitute a warning or critical state.
 
 Stratora has two kinds of alert configurations that are managed together in a single unified view.

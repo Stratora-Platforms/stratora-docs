@@ -35,6 +35,10 @@ Previous alert states like "acknowledged" and "muted" are now **metadata flags**
 
 ![Alert detail modal — full dispatch history with email, SMS, voice, and webhook channels alongside the lifecycle and related alerts](/img/alerting/alert-detail-modal.png)
 
+The alerts list can be filtered by state to focus on resolved history when reviewing past incidents:
+
+![Alerts list filtered to Resolved — historical alerts with severity, node, condition, age, and resolution timestamp](/img/alerting/alerts-list-resolved.png)
+
 ### Test alerts
 
 Test alerts appear in the alerts list with a **TEST** badge. They auto-resolve five minutes after firing and are excluded from device counts, health summaries, and licensing. To send a test alert, see [Sending a test alert](./alert-configurations.md#sending-a-test-alert) in the **Alert configurations** topic.

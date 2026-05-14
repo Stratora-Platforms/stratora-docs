@@ -5,6 +5,8 @@ title: Contacts
 
 # Contacts
 
+![Contacts directory — name, email, phone numbers, per-contact webhook URLs, and notes for alert recipients](/img/alerting/contacts.png)
+
 **Contacts** are the people and groups who receive alert notifications. A contact record stores a person's name, email addresses, phone numbers, and per-contact webhook URLs — providing a central directory that [escalation teams](./escalation-teams.md) and on-call rotations can reference.
 
 ---
