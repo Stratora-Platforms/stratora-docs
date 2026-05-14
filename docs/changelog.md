@@ -8,32 +8,6 @@ sidebar_position: 2
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
-## About this changelog
-
-This page describes customer-visible changes per release: new
-features, fixed behavior, breaking changes, and upgrade considerations.
-It is the canonical reference for "what changed for me as a Stratora
-operator." Commit-level developer detail (migration numbers, internal
-function names, build-tool notes) lives in the engineering changelog
-inside the Stratora source repository and is not mirrored here.
-
-### Bundled Components — coverage note
-
-Lockstep tracking of the Agent (Windows), Agent (Linux), and Collector
-versions bundled inside each Server MSI was introduced at **v2.1.2**.
-Every release entry from v2.1.2 onward includes an explicit
-**Bundled Components** footer enumerating the three component versions
-shipped with that Server release.
-
-The two earlier customer-facing entries — **v2.1.1** and **v2.1.0** —
-pre-date this tracking convention and do not carry a Bundled Components
-footer. The Agent and Collector binaries those releases shipped may not
-match the Server version exactly. If you need the exact pre-v2.1.2
-component triple for a historical audit, consult the engineering
-changelog in the Stratora source repository.
-
----
-
 ## v2.1.12 — May 14, 2026
 
 ### What's new
