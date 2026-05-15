@@ -8,6 +8,21 @@ sidebar_position: 2
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.1.14 — May 15, 2026
+
+### Fixed
+
+- **Agent registration site assignment.** Agents enrolling on a
+  Stratora server now correctly inherit the site assignment from
+  the IPAM subnet they live on. Previously, when more than one
+  site existed, an agent installed without an explicit site
+  override could be assigned to the wrong site (alphabetically-
+  first by site name), requiring manual reassignment after
+  enrollment. Customers on single-site deployments, and customers
+  who passed an explicit site override during agent install, were
+  unaffected. This is the agent-side parallel of the Setup Wizard
+  fix shipped in v2.1.13.
+
 ## v2.1.13 — May 15, 2026
 
 ### Fixed
