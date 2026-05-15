@@ -8,6 +8,27 @@ sidebar_position: 2
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.1.13 — May 15, 2026
+
+### Fixed
+
+- **Setup Wizard device-to-site assignment.** Devices discovered by the
+  wizard now correctly inherit the site assignment from the IPAM
+  subnet they live on. Previously, when more than one site existed,
+  the wizard could assign discovered devices to the wrong site
+  (alphabetically-first by site name), requiring manual reassignment
+  after wizard completion.
+- **Per-site node counts on the Home dashboard.** Empty sites
+  (with no nodes assigned) now correctly show a total of 0.
+  Previously, empty sites could display a total of 1 with no
+  matching nodes in any status category — a cosmetic count
+  discrepancy with no underlying data issue.
+
+### Bundled Components
+- Agent 2.1.13 (Windows)
+- Agent 2.1.13 (Linux)
+- Collector 2.1.13
+
 ## v2.1.12 — May 14, 2026
 
 ### What's new
