@@ -8,6 +8,27 @@ sidebar_position: 2
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.1.16 — May 18, 2026
+
+### Fixed
+
+- **Agent-enrolled hosts now receive network-path probing from their
+  site's preferred collector.** When you install the Stratora Agent
+  on a host and approve it (either manually from the approval queue
+  or automatically via a bootstrap enrollment token), Stratora now
+  assigns the host to the site's preferred collector for ICMP
+  reachability monitoring. Previously, agent-enrolled hosts showed
+  "-" in the Response and Collector columns of the Nodes UI because
+  no probe assignment was created. The agent's own OS metrics (CPU,
+  memory, disk, services, uptime) were unaffected — only the
+  collector-observed network metrics were missing. Routine version
+  upgrades preserve existing collector assignments unchanged.
+
+### Bundled Components
+- Agent 2.1.16 (Windows)
+- Agent 2.1.16 (Linux)
+- Collector 2.1.16
+
 ## v2.1.15 — May 16, 2026
 
 ### Fixed
