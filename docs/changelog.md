@@ -8,6 +8,26 @@ sidebar_position: 2
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.1.15 — May 16, 2026
+
+### Fixed
+
+- **Agent and Collector uninstallers now clean configuration files.**
+  Uninstalling the Stratora Agent or Stratora Collector with
+  `msiexec /x` (or via Add/Remove Programs) now correctly removes
+  the agent's `config.json` and runtime log files, ensuring a
+  subsequent fresh install starts from a clean state. Previously,
+  these files persisted on disk after uninstall, which could cause
+  a subsequent fresh install to silently drop the enrollment token
+  passed at install time, leaving the agent unable to connect.
+  Routine version upgrades continue to preserve existing
+  configuration — unchanged from v2.1.14.
+
+### Bundled Components
+- Agent 2.1.15 (Windows)
+- Agent 2.1.15 (Linux)
+- Collector 2.1.15
+
 ## v2.1.14 — May 15, 2026
 
 ### Fixed
