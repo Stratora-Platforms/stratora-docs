@@ -69,9 +69,7 @@ How alerts reach the people who need to know.
 
 See [External notifications](/docs/integrations/external-notifications) for setup of each channel.
 
-:::tip Acknowledge alerts without logging in
-Email, Microsoft Teams, and Slack notifications each include a single-use signed link — your on-call engineers can acknowledge or escalate an alert with one click, straight from the notification. SMS alerts use a short reply syntax — reply to the alert to acknowledge or escalate without logging in. Either way, no Stratora login required.
-:::
+Email, Microsoft Teams, and Slack notifications link directly to the alert in Stratora — your on-call engineers land on the right context with one click and can acknowledge or escalate from there. SMS notifications use a short reply syntax that authorizes the action via the inbound webhook, so engineers can ack from their phone without opening the UI.
 
 ### Infrastructure and inventory
 
