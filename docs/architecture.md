@@ -1,8 +1,14 @@
+---
+title: Architecture
+sidebar_label: Architecture
+sidebar_position: 100
+---
+
 # Stratora Architecture
 
 ## Overview
 
-Stratora is a distributed infrastructure monitoring platform designed for manufacturing IT environments and MSPs. It follows a central-server architecture with remote collectors and agents, deployed on-premises to support OT/IT network segmentation.
+Stratora is a distributed infrastructure monitoring platform built for operators running IT and OT environments. It follows a central-server architecture with remote collectors and agents, deployed on-premises to support segmented networks.
 
 ---
 
@@ -12,7 +18,7 @@ Stratora is a distributed infrastructure monitoring platform designed for manufa
 graph TB
     Browser["Browser"]
 
-    subgraph Server["STRATORA SERVER (e.g. DJN-DC-DEV01)"]
+    subgraph Server["Central Server"]
         NGINX["NGINX\n:443 / :80"]
         Backend["Backend API (Gin)\n:8080"]
         PG["PostgreSQL\n:5432"]
@@ -32,7 +38,7 @@ graph TB
         end
     end
 
-    subgraph Remote["REMOTE COLLECTOR (e.g. DJN-DC-DEV04)"]
+    subgraph Remote["Remote Site Collector"]
         RC["StratoraCollector\n+ stratora-collector-telegraf"]
         RA["StratoraAgent\n+ stratora-agent-telegraf"]
     end
@@ -78,7 +84,7 @@ graph TB
 | Metric ingest | HTTPS POST | `/api/v1/ingest/influx` (InfluxDB line protocol) | 10s flush | `X-API-Key` |
 | Component enrollment | HTTPS POST | `/api/v1/components/register` | Once (at install) | Enrollment token |
 | Discovery scans | Internal (server goroutine) | N/A | On demand | N/A |
-| Frontend API | HTTPS | `/api/v1/*` | On demand | Session cookie / JWT |
+| Frontend API | HTTPS | `/api/v1/*` | On demand | Session cookie |
 | PromQL queries | Internal HTTP | VictoriaMetrics `:8428/api/v1/query*` | On demand | N/A (localhost) |
 
 ---
@@ -92,7 +98,7 @@ sequenceDiagram
     participant API as Backend API
     participant DB as PostgreSQL
 
-    MSI->>Bin: Install with SERVER_URL + ENROLLMENT_TOKEN
+    MSI->>Bin: Install with SERVERURL + ENROLLTOKEN
     Bin->>Bin: Read config.json (no api_key yet)
     Bin->>API: POST /api/v1/components/register<br/>enrollment_token + hostname + component_type
     API->>DB: Check for existing component (hostname + type)
@@ -186,10 +192,10 @@ sequenceDiagram
 
 | Service Name | Binary | Purpose | Runs On |
 |-------------|--------|---------|---------|
-| `StratoraBackend` | backend.exe | Go/Gin API server | Server only |
+| `StratoraBackend` | stratora-backend.exe | Go/Gin API server | Server only |
 | `StratoraNginx` | nginx.exe | HTTPS reverse proxy + static files | Server only |
 | `StratoraVictoriaMetrics` | victoria-metrics.exe | Time-series database | Server only |
-| `postgresql-x64-17` | pg_ctl.exe | PostgreSQL metadata database | Server only |
+| `StratoraPostgreSQL` | pg_ctl.exe | PostgreSQL metadata database | Server only |
 | `StratoraCollector` | collector.exe | Manages collector Telegraf lifecycle | Server + remote collectors |
 | `stratora-collector-telegraf` | telegraf.exe | SNMP/ICMP/vSphere polling | Server + remote collectors |
 | `StratoraAgent` | stratora-agent.exe | Manages agent Telegraf lifecycle | All monitored Windows servers |
@@ -238,7 +244,7 @@ Discovery scans run **server-side only** as goroutines using the `gosnmp` librar
 7. Results stored in `discovered_devices` table
 8. Admin imports discovered devices into monitoring (auto-assigns first approved collector)
 
-**Current limitation:** Remote collectors have no discovery capability. Subnets only reachable from a remote collector's network cannot be scanned. This is a planned enhancement — the collector would poll a discovery job queue and execute scans locally.
+**Current limitation:** Discovery scans currently run only from the central Server. Subnets reachable only from a remote Collector's network can't be scanned directly today. This is on the [roadmap](/docs/intro#where-stratora-is-heading) — discovery from remote Collectors is one of the capabilities we're actively investing in.
 
 ---
 
@@ -302,7 +308,7 @@ All metrics flow through the **authenticated backend ingest proxy**. VictoriaMet
 All components on one machine. Suitable for small environments (< 100 nodes), development, and proof of concept.
 
 ### Distributed Collectors
-Backend centralized, collectors deployed at remote sites. Suitable for multi-site deployments, IT/OT network segmentation, and scale-out metric collection. Verified in production with DJN-DC-DEV01 (local) + DJN-DC-DEV04 (remote).
+Backend centralized, collectors deployed at remote sites. Suitable for multi-site deployments, IT/OT network segmentation, and scale-out metric collection.
 
 ### High Availability (Planned)
 - Backend clustering with shared PostgreSQL

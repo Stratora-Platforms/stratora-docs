@@ -1,6 +1,6 @@
 ---
 sidebar_label: Changelog
-sidebar_position: 2
+sidebar_position: 110
 ---
 
 # Changelog

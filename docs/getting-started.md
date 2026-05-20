@@ -1,17 +1,25 @@
+---
+title: Getting Started
+sidebar_label: Getting Started
+sidebar_position: 20
+---
+
 # Getting Started with Stratora
 
 This guide walks you through installing Stratora and setting up monitoring for your infrastructure. The built-in Setup Wizard handles most of the configuration automatically — you'll go from installation to live dashboards in under 10 minutes.
 
+Already running Stratora? See [Upgrading Stratora](/docs/administration/upgrading-stratora) for the in-place upgrade procedure.
+
 ## Prerequisites
 
-Before installing Stratora, ensure you have:
+Before installing, you'll need:
 
-- **Windows Server 2019 or 2022** (recommended)
-- **4 CPU cores minimum**
-- **16 GB RAM minimum**
-- **200 GB disk** on C:\ (recommended)
-- **Network access** to the subnets you intend to monitor (ICMP, SNMP UDP/161)
-- **SNMP credentials** for your network devices (community strings for v2c, or username/auth/priv for v3)
+- **Windows Server 2016 or later** (64-bit) with 4 CPU cores, 16 GB RAM, and 200 GB of disk
+- **Outbound HTTPS** from each monitored host to this server
+- **SNMP credentials** for any network devices you plan to monitor
+- **Local administrator** privileges to run the installer
+
+Need network port specifics, host firewall rules, or device-side SNMP configuration? See the full [Prerequisites](/docs/prerequisites/overview).
 
 ## Installation
 

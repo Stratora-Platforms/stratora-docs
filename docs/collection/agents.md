@@ -22,6 +22,8 @@ Unlike SNMP-based monitoring (which is polled by a [collector](./collectors.md))
 | Ubuntu / Debian | `.deb` | Ubuntu 24.x; Debian 12 (Bookworm), Debian 13 (Trixie) |
 | RHEL / Rocky / Alma | `.rpm` | RHEL 9.x; Rocky 8.x, 9.x |
 
+Per-platform prerequisites — firewall rules, supported distributions, and what to enable before deploying the agent — are documented in [Windows hosts](/docs/prerequisites/windows-hosts) and [Linux hosts](/docs/prerequisites/linux-hosts).
+
 ---
 
 ## Deploying Agents

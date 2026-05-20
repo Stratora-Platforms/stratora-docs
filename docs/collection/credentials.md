@@ -11,6 +11,8 @@ The **credential vault** stores the authentication secrets Stratora needs to mon
 
 Credentials are managed centrally and attached to [nodes](../infrastructure/nodes.md) as needed. This keeps secrets out of device templates and makes rotation straightforward — update a credential once and every node using it gets the new value automatically.
 
+Looking for guidance on configuring SNMP on the device side — which version to enable, ACL rules, and what Stratora reads? See [SNMP Devices](/docs/prerequisites/snmp-devices).
+
 ---
 
 ## Credential Types
