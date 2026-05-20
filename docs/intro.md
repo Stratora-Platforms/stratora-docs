@@ -8,7 +8,7 @@ sidebar_position: 10
 
 ## What Stratora is
 
-Stratora is an on-premises infrastructure monitoring platform built for the operators who keep IT and OT environments running — with built-in alerting, escalation, and visualization. We built Stratora because we lived through the pain of fragmented monitoring stacks, noisy alerts, and dashboards that look impressive but answer nothing when things break. We focus on clarity over clutter, signal over noise, and speed over complexity.
+Stratora is an on-premises infrastructure monitoring platform built for the operators who keep IT and OT environments running — with built-in alerting, escalation, and visualization. We built Stratora because we lived through the pain of fragmented monitoring stacks, noisy alerts, and dashboards that look impressive but answer nothing when things break. We focus on clarity over clutter, signal over noise, and speed over complexity. Built for the person on call at 2AM — not the person presenting dashboards in a meeting.
 
 ## What it's for
 
@@ -38,15 +38,15 @@ What Stratora watches and how it gets the data.
 
 ### Visualization and dashboards
 
-Live dashboards generated from the data Stratora already has — no separate dashboarding tool to wire up.
+Stratora generates the visualizations you need without forcing you to build them from scratch — and keeps them current as your infrastructure changes.
 
-- The [Home dashboard](/docs/monitoring/home) — your daily-driver overview, with the platform's health score, an Infrastructure Brief that triages what needs attention, recommended next actions, per-site breakdowns, and top-resource utilization
-- Per-node and per-site [dashboards](/docs/monitoring/dashboards), generated automatically from the templates assigned to each device
-- Interactive [network topology maps](/docs/monitoring/maps) with auto-generated per-site topology that syncs as nodes are added or removed
-- [Rack diagrams](/docs/monitoring/racks) — place monitored devices into rack positions and see health per U-slot at a glance
-- A world map view showing your sites geographically, color-coded by site health — accessible from the same [Maps](/docs/monitoring/maps) surface
+- The [Home dashboard](/docs/monitoring/home) — your daily-driver overview, with the platform's health score, an Infrastructure Brief that triages what needs attention, recommended next actions, per-site breakdowns, and top-resource utilization.
+- Per-node and per-site [dashboards](/docs/monitoring/dashboards) are generated automatically from the templates assigned to each device. No dashboard building required, and they stay in sync as nodes are added, removed, or change state.
+- [Network topology maps](/docs/monitoring/maps) start with an auto-populated layout — every node already placed on the canvas, sorted into dynamic zones by type (network switches, access points, Windows servers, Linux servers, and so on). You can drill into any node directly from the map, watch status update in real time, and customize the layout with real connections labeled by the monitored interface. Your customizations persist; the underlying zone and status data keeps updating beneath them.
+- [Rack diagrams](/docs/monitoring/racks) show your devices in their physical U-slot positions, with health-state coloring per slot. You place each device once; from there, Stratora keeps the rack current — devices that get decommissioned drop off the diagram automatically rather than lingering as ghost entries.
+- A world map view shows your sites geographically, color-coded by site health. Sites you've defined appear on the map automatically once they have coordinates set; sites you remove disappear from the map without leaving stale markers.
 
-### Alerting and on-call operations
+### Incident response and on-call orchestration
 
 Alerting that ships ready to use. No empty rule engine to populate before the first alert fires.
 
