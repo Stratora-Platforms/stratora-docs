@@ -18,9 +18,9 @@ Unlike SNMP-based monitoring (which is polled by a [collector](./collectors.md))
 
 | Platform | Installer | Tested Versions |
 |----------|-----------|-----------------|
-| Windows Server / Desktop | MSI (x64) | Windows Server 2019, 2022; Windows 10/11 |
-| Ubuntu / Debian | `.deb` | Ubuntu 24.x; Debian 12 (Bookworm), Debian 13 (Trixie) |
-| RHEL / Rocky / Alma | `.rpm` | RHEL 9.x; Rocky 8.x, 9.x |
+| Windows Server / Desktop | MSI (x64) | Windows Server 2016, 2019, 2022, 2025; Windows 10, 11 |
+| Ubuntu / Debian | `.deb` | Ubuntu 22.04 LTS, 24.04 LTS; Debian 12 (Bookworm), Debian 13 (Trixie) |
+| RHEL / Rocky / Alma | `.rpm` | RHEL 9.x; Rocky 8.x, 9.x; AlmaLinux 9.x |
 
 Per-platform prerequisites — firewall rules, supported distributions, and what to enable before deploying the agent — are documented in [Windows hosts](/docs/prerequisites/windows-hosts) and [Linux hosts](/docs/prerequisites/linux-hosts).
 
