@@ -68,6 +68,16 @@ Toggle between front and rear views of the rack. Devices placed on the rear face
 
 ---
 
+## Inside a rack
+
+Open any rack to see its full visualization — devices in their U-slot positions, slot numbers on the rack frame, front/rear toggle, and a side panel with rack details (height, device count, used/free U, location).
+
+![Rack detail view — 42U Main Office rack populated with 12 devices in their U-slot positions, slot numbering visible on the rack frame, front/rear toggle, and a side panel with rack details (height, device count, used vs free U, location)](/img/monitoring/racks-rack-detail.png)
+
+The rack visualization shows where every device sits in the physical equipment cabinet at a glance. Each placed device displays its name, U size, and a health-colored border so you can spot trouble without leaving the diagram.
+
+---
+
 ## Live Status Overlay
 
 Every device in the rack displays a health-colored border that updates automatically (every 30 seconds):
@@ -80,7 +90,9 @@ Every device in the rack displays a health-colored border that updates automatic
 | **Red** | Offline |
 | **Purple** | Maintenance |
 
-Hover over a device to see its name, U position range, and current health status. Click to navigate directly to the node's detail page.
+Hover over a device to see its name, U position range, and current health status. Click a device to navigate directly to its node detail page — the full per-node dashboard with metric panels, alert history, and configuration.
+
+![Node detail page reached by clicking a device in the rack — full per-node dashboard with metric panels, alert history, and configuration, opened for the firewall placed in Rack A1](/img/monitoring/racks-device-detail.png)
 
 ---
 
