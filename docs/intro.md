@@ -24,7 +24,7 @@ Stratora is built around three components: a central **Server** that hosts the U
 
 ## What ships today
 
-Stratora ships ready to monitor on day one. The platform covers the operational workflows teams rely on — collection, visualization, alerting, on-call coordination, integrations, infrastructure inventory, and access control — without requiring you to assemble them from separate tools.
+Stratora is operational on day one. It unifies collection, visualization, alerting, on-call coordination, integrations, infrastructure inventory, and access control into a single platform — eliminating the need to assemble separate tools. From detection to escalation to resolution, Stratora handles the full lifecycle of infrastructure operations in one system.
 
 ### Monitoring and collection
 
