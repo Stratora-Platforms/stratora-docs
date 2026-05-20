@@ -71,9 +71,21 @@ Lists all subnets with utilization bars showing how much of the address space is
 
 Click a subnet to drill into its address list, DHCP ranges, and utilization details.
 
+![IPAM Subnets tab — list view showing CIDR, name, site assignment, utilization bar, and per-subnet IP counts](/img/infrastructure/ipam-subnets-list.png)
+
+Clicking a subnet opens its detail view with the address list, DHCP ranges, and utilization breakdown.
+
+![IPAM subnet detail — address list for the selected subnet with per-address status, hostname, MAC address, and last-seen timestamp](/img/infrastructure/ipam-subnet-detail.png)
+
 ### Addresses Tab
 
 A searchable, filterable table of all tracked IP addresses across all subnets. Filter by subnet, status, site, or search by IP/hostname.
+
+![IPAM Addresses tab — IP inventory across all subnets with status (Active / Inactive / Reserved / Available), hostname, MAC address, vendor, subnet membership, and linked node](/img/infrastructure/ipam-addresses-list.png)
+
+Click the edit icon on any row to open the address detail surface, where you can review and update hostname, MAC address, notes, and status.
+
+![IPAM address detail — Edit IP Address modal showing hostname, MAC address, notes, and status (Active / Inactive / Reserved / Available) fields](/img/infrastructure/ipam-address-detail.png)
 
 ---
 

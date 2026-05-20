@@ -10,6 +10,8 @@ The Home page is Stratora's daily-driver overview — the first surface you see 
 
 ## What's on the page
 
+![Stratora Home dashboard — Infrastructure Brief hero, Nodes by Site, Top Resources, Platform Activity, Collectors, and Quick Actions panels in a single overview](/img/monitoring/home-overview.png)
+
 ### Status counters (top bar)
 
 The status counters in the top bar — visible on every page in Stratora, not just Home — show how many monitored nodes are currently **Critical**, **Degraded**, **Offline**, **Maintenance**, and **Healthy**. The counters update on the same cadence as the rest of the page (~10 seconds). Click any counter to open the Nodes list filtered to that status — useful when you want to immediately see which devices are flagged.
@@ -24,21 +26,31 @@ The hero card on the Home page is the **Infrastructure Brief** — a one-screen 
 
 If everything is healthy the brief reads "ALL CLEAR" and the gauge shows 100%. When that's not the case, the bullets tell you what to look at first.
 
+![Infrastructure Brief card — health score gauge on the left, three status donuts on the right (Critical, Degraded, Offline), with triage bullets summarizing the most consequential issues](/img/monitoring/home-infrastructure-brief.png)
+
 ### Recommended Actions
 
 When Stratora detects actionable items — pending agents waiting for approval, unbound IPAM subnets, a credential about to expire, a discovery job that finished and has importable devices — they surface in the **Recommended Actions** card. The card only appears when there are actions to recommend. Each item links straight to the relevant page in Stratora.
+
+![Recommended Actions card — surfaces actionable items detected by Stratora with direct links to the relevant page](/img/monitoring/home-recommended-actions.png)
 
 ### Nodes by Site
 
 The **Nodes by Site** table breaks down node counts per site, columned by status (Healthy, Degraded, Critical, Offline, Discovering, Maintenance, Total). Click any site name to open its per-site dashboard with the same context preserved. Empty sites show zeros across the row — useful when you've defined a site but haven't imported any nodes yet.
 
+![Nodes by Site table — per-site rollup with status columns (Healthy, Degraded, Critical, Offline, Discovering, Maintenance) and a Total column](/img/monitoring/home-nodes-by-site.png)
+
 ### Top Resources
 
 The **Top Resources** card shows the three most utilized resources across the deployment: top **CPU Usage**, top **Memory Usage**, and top **Bandwidth**. Each column lists the top three nodes for that metric. Click any node to open its detail page.
 
+![Top Resources card — three columns side by side showing the most-utilized nodes by CPU, Memory, and Bandwidth](/img/monitoring/home-top-resources.png)
+
 ### Platform Activity
 
 The **Platform Activity** card surfaces recent significant events from the audit log — node approvals, credential changes, alert acknowledgments, user actions. This is your at-a-glance record of "what's been happening on Stratora" without having to navigate to the full Audit Logs page. The full log lives at [Audit Logs](/docs/administration/audit-logs).
+
+![Platform Activity card — recent audit-log events including node approvals, credential changes, and user actions](/img/monitoring/home-platform-activity.png)
 
 ### Quick Actions
 
@@ -47,6 +59,8 @@ The **Quick Actions** card gives you single-click shortcuts to the most common w
 ### Collectors
 
 The **Collectors** card lists every registered [Collector](/docs/collection/collectors) with its name, status (Online / Offline / Stale), last heartbeat age, and current target count. Click any collector to open its detail view. Use this card to verify your collection fleet is healthy before relying on the metrics it produces.
+
+![Collectors card — registered collectors with name, status, last heartbeat age, and assigned target count](/img/monitoring/home-collectors.png)
 
 ### Recent Activity
 

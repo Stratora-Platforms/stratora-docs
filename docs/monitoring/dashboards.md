@@ -5,7 +5,7 @@ title: Dashboards
 
 # Dashboards
 
-![Stratora dashboard home — infrastructure brief, nodes-by-site rollup, top resources, and recent activity panels](/img/monitoring/dashboard-home.png)
+![Per-node dashboard — auto-generated panels for a Windows Server node showing CPU, memory, disk, network throughput, services, and event log panels](/img/monitoring/dashboards-node-overview.png)
 
 Dashboards are the primary way you view and interact with monitoring data in Stratora. Each dashboard is a grid of **panels** — charts, gauges, tables, and specialized visualizations — that display real-time and historical metrics for your infrastructure.
 
@@ -128,6 +128,8 @@ Every dashboard has a **global time range selector** in the header. When you cha
 
 Available presets range from **5 minutes** to **7 days**. Individual panels can optionally override the global range if needed.
 
+![Time-range picker — dropdown open showing Last 5 minutes / 15 minutes / 1 hour / 6 hours / 24 hours / 7 days / 30 days presets](/img/monitoring/dashboards-time-range-picker.png)
+
 ---
 
 ## Auto-Generated Dashboards
@@ -170,6 +172,8 @@ When you create a site, Stratora automatically generates a fully-configured moni
 - **Storage Capacity** is available in the component picker for custom dashboards but is not included in the auto-generated template
 
 **Read-only:** Auto-generated site dashboards are read-only and display an "Auto-Generated" badge. Click **Clone & Edit** to create a customizable copy.
+
+![Per-site dashboard — auto-generated overview for a site showing key metrics, topology, health breakdown, and top-by-resource panels](/img/monitoring/dashboards-site-overview.png)
 
 ---
 
