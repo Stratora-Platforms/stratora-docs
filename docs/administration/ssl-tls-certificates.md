@@ -5,7 +5,7 @@ title: SSL / TLS Certificates
 
 # SSL / TLS Certificates
 
-![SSL / TLS Certificate — current certificate, expiration, Let's Encrypt provider configuration, and auto-renewal toggle](/img/administration/ssl-certificate.png)
+![SSL / TLS Certificates page — Current Certificate card showing domain, issuer, expiration with days-remaining badge, valid-from date, SHA-256 fingerprint, and certificate chain status](/img/administration/ssl-tls-certificates-page.png)
 
 Stratora serves all traffic over HTTPS. On a fresh install, a self-signed certificate is generated automatically — **zero configuration required**. From there, you can upgrade to a trusted certificate via Let's Encrypt automation or manual upload.
 
@@ -29,6 +29,8 @@ The self-signed certificate is suitable for initial setup and internal use. Brow
 Stratora includes a bundled ACME client ([win-acme](https://www.win-acme.com/)) for automated certificate issuance and renewal from Let's Encrypt.
 
 Navigate to **Administration → SSL / TLS Certificates** to configure.
+
+![Let's Encrypt section — client-ready status, domain and email fields, HTTP-01 / DNS-01 challenge selector, Request Certificate button, and the Auto-Renewal toggle showing the next scheduled check and managed certificates list](/img/administration/ssl-tls-letsencrypt-section.png)
 
 ### HTTP-01 Challenge
 
@@ -83,6 +85,8 @@ For fully automated issuance and renewal, configure one of the supported DNS pro
 
 DNS provider credentials are encrypted at rest with AES-256-GCM.
 
+![DNS Provider section — configured provider card showing name, type chip, and active status, with an Add Provider button to add additional providers](/img/administration/ssl-tls-dns-provider.png)
+
 ---
 
 ## Automatic Renewal
@@ -99,6 +103,16 @@ When the task runs, it checks if the current certificate expires within 30 days.
 
 You can enable or disable automatic renewal from the SSL / TLS settings page.
 
+### Renewal History
+
+Stratora records every renewal attempt — both scheduled and operator-initiated — and surfaces the most recent attempts inline on the SSL / TLS settings page. Each entry shows when the attempt happened, the outcome (success, failure, or skipped), and the error category if the renewal failed. The history is useful both as a daily confirmation that renewals are working and as a diagnostic surface when they aren't.
+
+![Renewal History card — five most-recent renewal attempts inline, each showing event type, target, timestamp with relative time, and outcome badge (success, failure, or skipped); failure entries show the error category and message](/img/administration/ssl-tls-renewal-history.png)
+
+The **View all** link opens the audit log filtered to renewal events, showing the full history beyond the most-recent five.
+
+![Audit log filtered to ACME Renewal events — full renewal history table showing time, user, action, resource, and details columns; renewal-history entries include the underlying win-acme history date and outcome; migration entries show the configuration migration result](/img/administration/ssl-tls-renewal-history-full.png)
+
 ---
 
 ## Manual Certificate Upload
@@ -106,6 +120,8 @@ You can enable or disable automatic renewal from the SSL / TLS settings page.
 If you manage certificates externally (purchased from a CA, issued by an internal PKI, etc.), you can upload them directly.
 
 Navigate to **Administration → SSL / TLS Certificates** and click **Upload Certificate**.
+
+![Upload Certificate form — PEM / PKCS12 format selector, Choose File inputs for certificate, private key, and optional chain file, with Validate Certificate and Upload & Apply action buttons](/img/administration/ssl-tls-upload-certificate.png)
 
 ### PEM Format
 
