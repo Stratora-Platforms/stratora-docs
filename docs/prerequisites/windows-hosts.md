@@ -32,17 +32,20 @@ The agent makes outbound HTTPS connections only:
 
 For the full Server-side port matrix, see [Network](/docs/prerequisites/network).
 
-## Network — inbound to the host (when monitored by a Collector)
+## Network — ICMP Echo Request for reachability checks
 
-If you also want a Collector to ping the host for the Response column on the Nodes list, the host needs to accept ICMP Echo Request inbound from each assigned Collector's IP.
+Stratora pings every node from its assigned site Collector to populate the Response column on the Nodes list and to drive node reachability state. By default, this Collector is the Stratora Server itself; remote sites use whichever Collector you've assigned to that site.
 
-Default Windows Server firewall **blocks** inbound ICMP Echo Request. Enable the rule with:
+The default Windows Server firewall **blocks** inbound ICMPv4 Echo Request. Enable the built-in rule on each monitored host:
 
 ```powershell
-Get-NetFirewallRule -Name 'FPS-ICMP4-ERQ-In' | Set-NetFirewallRule -Enabled True -Profile Any
+Get-NetFirewallRule -Name 'FPS-ICMP4-ERQ-In' |
+  Set-NetFirewallRule -Enabled True -Profile Any
 ```
 
-Without this rule, the agent will enroll and push metrics correctly, but the Response column on the Nodes list will stay empty.
+For fleet-wide enablement via Group Policy: `Computer Configuration → Policies → Windows Settings → Security Settings → Windows Firewall with Advanced Security → Inbound Rules` → enable **File and Printer Sharing (Echo Request - ICMPv4-In)**.
+
+Without this rule, the agent will enroll and push metrics correctly, but the host will appear unreachable on the Nodes list — the Response column stays empty and reachability-based alerts may fire.
 
 ## WMI prerequisites (only if monitoring Windows hosts via WMI from a Collector)
 

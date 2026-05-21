@@ -36,9 +36,13 @@ The agent makes outbound HTTPS connections only:
 
 For the full Server-side port matrix, see [Network](/docs/prerequisites/network).
 
-## Network — inbound to the host (when monitored by a Collector)
+## Network — ICMP Echo Request for reachability checks
 
-If you also want a Collector to ping the host for the Response column on the Nodes list, the host needs to accept ICMP Echo Request inbound from each assigned Collector's IP. Most Linux distributions accept ICMP Echo Request by default; verify with your distribution's firewall tool — `firewalld`, `ufw`, or `iptables` — that nothing is blocking it.
+Stratora pings every node from its assigned site Collector to populate the Response column on the Nodes list and to drive node reachability state. By default, this Collector is the Stratora Server itself; remote sites use whichever Collector you've assigned to that site.
+
+Most Linux distributions accept inbound ICMP Echo Request by default. If you've hardened the host firewall, verify with your distribution's tooling — `firewalld`, `ufw`, or `iptables` — that `echo-request` is still permitted.
+
+Without ICMP reachability, the agent will enroll and push metrics correctly, but the host will appear unreachable on the Nodes list — the Response column stays empty and reachability-based alerts may fire.
 
 ## SELinux and AppArmor
 

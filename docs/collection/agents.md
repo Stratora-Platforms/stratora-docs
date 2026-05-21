@@ -24,6 +24,10 @@ Unlike SNMP-based monitoring (which is polled by a [collector](./collectors.md))
 
 Per-platform prerequisites — firewall rules, supported distributions, and what to enable before deploying the agent — are documented in [Windows hosts](/docs/prerequisites/windows-hosts) and [Linux hosts](/docs/prerequisites/linux-hosts).
 
+:::caution Before deploying — check per-host prerequisites
+The default Windows Server firewall blocks inbound ICMP Echo Request, which makes monitored hosts appear unreachable on the Nodes list even when the agent is healthy. Enable the rule per [Windows hosts → ICMP Echo Request](/docs/prerequisites/windows-hosts#network--icmp-echo-request-for-reachability-checks) before deploying agents to a Windows fleet. Linux hosts typically allow ICMP by default — see [Linux hosts](/docs/prerequisites/linux-hosts#network--icmp-echo-request-for-reachability-checks) if you've hardened `firewalld`, `ufw`, or `iptables`.
+:::
+
 ---
 
 ## Deploying Agents
