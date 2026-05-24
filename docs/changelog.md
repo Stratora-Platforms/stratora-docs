@@ -8,6 +8,38 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.2.0 — May 24, 2026
+
+### Added
+
+- **Syslog Destinations — audit log forwarding to external SIEM.** Stratora can now
+  forward every audit event (sign-ins, configuration changes, alert
+  acknowledgments, license operations, and more) to an external syslog
+  destination in real time. Configure destinations from **Settings →
+  Syslog Destinations** using a 4-step wizard. Supports Splunk, Elastic,
+  Graylog, and any RFC-compliant syslog receiver over UDP, TCP, or
+  TCP+TLS, in RFC 5424 (modern) or RFC 3164 (legacy) format. See
+  [Audit Log Forwarding Overview](/docs/integrations/syslog-destinations/)
+  for the full setup walkthrough and per-SIEM integration guides.
+- **Three-state passive health classification** (Healthy / Failing /
+  Unknown) on every destination, derived from shipping outcomes only.
+  Destinations that haven't shipped events recently because the system
+  is quiet remain Healthy — health reflects shipping reliability, not
+  event volume.
+- **Rich health tooltip** surfaces last-shipped time, last-failure
+  message, and shipped/dropped counters on hover. Replaces the prior
+  browser-default tooltip.
+- **Failing-destination banner** at the top of every page when any
+  destination is in Failing state. Admin-only; click "View destinations"
+  to identify which destination needs attention. Dismissible per page
+  view.
+
+### Bundled Components
+
+- Agent 2.2.0 (Windows)
+- Agent 2.2.0 (Linux)
+- Collector 2.2.0
+
 ## v2.1.16 — May 18, 2026
 
 ### Fixed
