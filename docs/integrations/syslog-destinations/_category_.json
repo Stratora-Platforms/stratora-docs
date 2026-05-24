@@ -1,0 +1,8 @@
+{
+  "label": "Syslog Destinations",
+  "position": 30,
+  "link": {
+    "type": "doc",
+    "id": "integrations/syslog-destinations/index"
+  }
+}
