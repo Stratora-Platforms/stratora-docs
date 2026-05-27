@@ -8,6 +8,38 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.2.1 — May 27, 2026
+
+### Fixed
+
+- **Setup Wizard Step 6 (Deploy Agents) now displays the correct Agent
+  versions.** The Windows and Linux tab labels previously showed stale
+  versions (`v2.1.5` / `v1.2.1`) regardless of which Server release was
+  installed. The wizard now sources these labels from the running
+  Server build and correctly displays `Windows v2.2.1` / `Linux v2.2.1`
+  on this release.
+
+### Added
+
+- The `/api/v1/system/info` API endpoint now returns `agent_windows_version`,
+  `agent_linux_version`, and `collector_version` alongside the existing
+  server `version` field. Existing API consumers are unaffected — the
+  response is a superset of the v2.2.0 payload. This enables future
+  surfaces (such as a Bundled Components badge on the Agents or
+  Collectors pages) to display the same canonical version data without
+  additional API calls.
+
+### Bundled Components
+
+- Agent 2.2.1 (Windows)
+- Agent 2.2.1 (Linux)
+- Collector 2.2.1
+
+### Upgrade Notes
+
+In-place upgrade from v2.2.0 is supported via the included Server MSI.
+No database migrations are introduced. No configuration changes required.
+
 ## v2.2.0 — May 24, 2026
 
 ### Added
