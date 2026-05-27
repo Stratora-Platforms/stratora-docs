@@ -124,7 +124,7 @@ This step is skippable if you plan to monitor agent-based devices only.
 
 ### Step 6: Agents
 
-![Setup Wizard — Step 6: Agents (Windows)](/img/wizard/SCR-20260412-njry.png)
+![Setup Wizard — Step 6: Agents (Windows)](/img/getting-started/setup-wizard-step-6-agents-windows.png)
 
 Deploy Stratora agents to Windows and Linux servers for deep OS-level monitoring (CPU, memory, disk, services, processes).
 
@@ -135,7 +135,7 @@ Deploy Stratora agents to Windows and Linux servers for deep OS-level monitoring
 
 **Linux tab:**
 
-![Setup Wizard — Step 6: Agents (Linux)](/img/wizard/SCR-20260412-njzg.png)
+![Setup Wizard — Step 6: Agents (Linux)](/img/getting-started/setup-wizard-step-6-agents-linux.png)
 
 **Agents enroll automatically and begin reporting metrics within seconds (typically under 60).** This step is skippable — you can deploy agents later.
 
