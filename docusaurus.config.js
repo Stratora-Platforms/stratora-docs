@@ -64,6 +64,14 @@ const config = {
 
   themes: ['@docusaurus/theme-mermaid'],
 
+  scripts: [
+    {
+      src: 'https://static.cloudflareinsights.com/beacon.min.js',
+      defer: true,
+      'data-cf-beacon': '{"token": "c5ec2ca2fb5447198c41abe02f029ad9"}',
+    },
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
