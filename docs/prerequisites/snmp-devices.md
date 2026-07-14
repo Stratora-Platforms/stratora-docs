@@ -44,6 +44,10 @@ These vendors ship with validated templates and full alert coverage. Devices in 
 | Virtualization | VMware vCenter Server, VMware ESXi Host |
 | Servers (via the Stratora Agent — listed here for completeness) | Windows Server, Linux distributions per [Linux hosts](/docs/prerequisites/linux-hosts) |
 
+:::note ESXi and vCenter
+For vSphere, vCenter inventory and per-host/VM utilization come from the **vSphere API**, not SNMP — see [Virtualization prerequisites](/docs/prerequisites/virtualization). SNMP applies to the **per-host enrichment layer** (each ESXi host onboarded as a VMware Host node for memory overcommit and host-alert attribution); ESXi ships with **SNMP disabled**, so enable it per host (`esxcli system snmp set --enable true`) before onboarding.
+:::
+
 ## Generic templates
 
 Stratora ships generic templates for hosts and services that don't fit a vendor template:

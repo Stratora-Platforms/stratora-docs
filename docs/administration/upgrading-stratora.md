@@ -27,6 +27,10 @@ This page covers in-place upgrades for an existing Stratora deployment moving to
 
 The in-place upgrade preserves everything: sites, IPAM bindings, wizard-imported nodes, agent rows, user accounts, certificate configuration, dashboards, and all alerting state. You do not need to re-run the Setup Wizard.
 
+:::note New in this release: virtualization monitoring
+Virtualization monitoring (VMware vSphere/vCenter, Proxmox VE, Hyper-V) is a **new capability** — there is no prior-version state to migrate, so it starts empty after the upgrade. That is expected, not a data-loss symptom. To use it, **onboard your hypervisors** after upgrading via the guided add-paths — see [Virtualization](../collection/virtualization.md).
+:::
+
 ## If something looks wrong
 
 **A Stratora service didn't restart cleanly.** Open the Services console (`services.msc`) and confirm each Stratora service is in the Running state. If any are stopped, check the Windows Event Log under Application for the service name to find the failure reason.

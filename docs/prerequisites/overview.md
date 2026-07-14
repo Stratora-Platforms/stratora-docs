@@ -14,7 +14,9 @@ Stratora is designed to install with minimal preparation — most environments a
 |---|---|---|
 | Windows or Linux servers | The Stratora Agent on each host | [Network](/docs/prerequisites/network), [Windows hosts](/docs/prerequisites/windows-hosts) and/or [Linux hosts](/docs/prerequisites/linux-hosts) |
 | Network switches, firewalls, access points, or NAS | A Stratora Collector polling via SNMP | [Network](/docs/prerequisites/network), [SNMP devices](/docs/prerequisites/snmp-devices) |
-| VMware vCenter or ESXi hosts | A Stratora Collector using the vSphere API | [Network](/docs/prerequisites/network) |
+| VMware vCenter or ESXi hosts | A Stratora Collector using the vSphere API | [Network](/docs/prerequisites/network), [Virtualization](/docs/prerequisites/virtualization) |
+| Proxmox VE hosts or clusters | A Stratora Collector using the Proxmox VE API | [Network](/docs/prerequisites/network), [Virtualization](/docs/prerequisites/virtualization) |
+| Microsoft Hyper-V hosts | The Stratora Agent on each host (self-reports the role) | [Windows hosts](/docs/prerequisites/windows-hosts), [Virtualization](/docs/prerequisites/virtualization) |
 | HTTP/HTTPS endpoints or generic pingable hosts | A Stratora Collector running HTTP/ICMP probes | [Network](/docs/prerequisites/network) |
 
 ## Common ground for every deployment

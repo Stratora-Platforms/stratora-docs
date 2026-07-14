@@ -21,12 +21,12 @@ The status counters in the top bar — visible on every page in Stratora, not ju
 The hero card on the Home page is the **Infrastructure Brief** — a one-screen triage that combines:
 
 - **The Health Score gauge** — the platform's overall health percentage. See [Health score methodology](#health-score-methodology) below for how it's calculated.
-- **Three status donuts** — proportional counts of Critical, Degraded, and Healthy nodes across the deployment.
+- **The Node Status donut** — a proportional breakdown of nodes by health state (Healthy, Degraded, Critical, and Offline, plus Discovering or Maintenance when any nodes are in those states). Click a segment to jump to the matching nodes.
 - **Triage bullets** — short text callouts highlighting the most consequential issues right now (sites with the most critical nodes, the noisiest alerting categories, recent state changes).
 
 If everything is healthy the brief reads "ALL CLEAR" and the gauge shows 100%. When that's not the case, the bullets tell you what to look at first.
 
-![Infrastructure Brief card — health score gauge on the left, three status donuts on the right (Critical, Degraded, Offline), with triage bullets summarizing the most consequential issues](/img/monitoring/home-infrastructure-brief.png)
+![Infrastructure Brief card — health score gauge on the left, a Node Status donut on the right showing nodes by health state, with triage bullets summarizing the most consequential issues](/img/monitoring/home-infrastructure-brief.png)
 
 ### Recommended Actions
 

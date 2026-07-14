@@ -47,6 +47,19 @@ If SNMP fails:
 4. **The pending approval queue is at Infrastructure → Nodes, filtered by Approval Status = Pending.** The approve action is per-row on the Nodes list; there is no separate Pending Agents page.
 5. Approve the row. The Response, Collector, and Uptime columns populate on the same row once the next probe cycle completes.
 
+## Verifying hypervisor reachability from the Collector
+
+Before onboarding a hypervisor, confirm the Collector can reach its API or SNMP port (see [Virtualization prerequisites](/docs/prerequisites/virtualization)):
+
+```powershell
+# vCenter / ESXi (vSphere API)
+Test-NetConnection <vcenter-or-esxi> -Port 443
+# Proxmox VE API
+Test-NetConnection <proxmox-host> -Port 8006
+```
+
+For an ESXi host you're adding as a VMware Host node, also confirm SNMP (161/UDP) is enabled and reachable. A failed connection means a firewall or routing issue between the Collector and the platform — resolve it before importing.
+
 ## Verifying outbound HTTPS from a monitored host
 
 From the monitored host:

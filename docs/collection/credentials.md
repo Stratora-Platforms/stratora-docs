@@ -22,6 +22,7 @@ Looking for guidance on configuring SNMP on the device side — which version to
 | **SNMPv2c** | Community string | Network device polling (switches, firewalls, NAS, APs) |
 | **SNMPv3** | Username, security level, auth/privacy protocols and passwords, context name | Secure SNMP polling with authentication and encryption |
 | **VMware API** | Username, password, SSL verification option | vCenter and ESXi monitoring via vSphere API |
+| **Proxmox VE API Token** | Token ID (`user@realm!name`), token secret; use a cluster-wide token | Proxmox VE host and cluster monitoring via the PVE API |
 | **WMI** | Username, password, domain | Windows device monitoring via WMI |
 | **SSH** | Username, password or private key, passphrase | Linux device monitoring |
 | **S3 / MinIO** | Access key, secret key, region, endpoint | S3-compatible storage monitoring |

@@ -240,6 +240,7 @@ As your environment grows:
 - **Run discovery scans** from **Collection → Discovery Jobs** for ad-hoc network scanning
 - **Schedule recurring scans** from **Infrastructure → IPAM** to automatically detect new devices
 - **Deploy agents** to additional servers using an enrollment token from **Collection → Enrollment API**
+- **Onboard hypervisors** (VMware vSphere/vCenter, Proxmox VE, Hyper-V) via the guided add-paths — see [Virtualization](/docs/collection/virtualization)
 
 ### Monitoring Configuration
 

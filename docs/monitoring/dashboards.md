@@ -175,6 +175,23 @@ When you create a site, Stratora automatically generates a fully-configured moni
 
 ![Per-site dashboard — auto-generated overview for a site showing key metrics, topology, health breakdown, and top-by-resource panels](/img/monitoring/dashboards-site-overview.png)
 
+### Virtualization Dashboards
+
+When you onboard a hypervisor, Stratora generates a **per-platform virtualization dashboard** for it automatically — and removes it when you remove the last node of that platform. No configuration required.
+
+**Lifecycle:**
+- A platform dashboard is created when the first node of that platform (VMware vSphere, Proxmox VE, or Hyper-V) is onboarded, and removed when the last one is deleted (add-on-import / remove-on-delete).
+- Sites that run virtualization also get a **site-level virtualization section** folded into the site view.
+
+**What the panels show:**
+- **VMs** with their **run-state** (running / stopped), using the canonical status indicators
+- **Hosts** — health, CPU, memory, and (for vSphere) memory overcommit
+- **Datastores** — capacity and usage, including **thin-provisioning** headroom
+- **vCPU and capacity rollups** across the platform
+- A cross-platform **Summary** when a site runs more than one hypervisor platform
+
+The vCenter appliance's own node detail adds the [management-plane rosters](../infrastructure/nodes.md#virtualization-node-detail) (managed hosts, cross-host VMs, datastores). See [Virtualization](../collection/virtualization.md) for onboarding.
+
 ---
 
 ## Creating a Custom Dashboard

@@ -81,6 +81,10 @@ The alert evaluator runs every **10 seconds**. Each cycle:
 5. **Existing alert, condition cleared** — waits for the 20-second grace period, then resolves
 6. **Node health updated** — recalculates and updates the health status on any node whose alerts changed
 
+:::info Alerts are preserved during a metrics-source outage
+Resolution requires **confirmed** normal data — never just missing data. If the metrics source itself becomes unreachable (a collector or VictoriaMetrics outage), an empty query result means "no data," not "condition cleared," so Stratora **does not resolve** existing alerts for that cycle — it preserves them until real data confirms the condition has actually cleared. You won't lose sight of a filling datastore or a degraded array because a collector briefly blinked. New conditions and severity changes still evaluate normally; only resolution is held.
+:::
+
 ### Deduplication
 
 Each alert has a unique **alert key** that prevents duplicates. Only one active alert can exist per node for a given alert key. If the evaluator detects the same condition that already has an active alert, it skips creation.

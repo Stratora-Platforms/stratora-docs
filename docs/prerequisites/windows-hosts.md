@@ -8,6 +8,10 @@ sidebar_position: 30
 
 Prerequisites for Windows hosts that you'll monitor with the Stratora Agent.
 
+:::note Hyper-V hosts
+A **Hyper-V host is just a Windows host** running the Stratora Agent — the agent self-reports the Hyper-V role and its host/VM virtualization data appears automatically. There is no separate Hyper-V credential or API to configure; follow the Windows prerequisites on this page. See [Virtualization prerequisites](/docs/prerequisites/virtualization) and [Adding Virtualization Hosts](/docs/collection/virtualization#hyper-v-agent-based).
+:::
+
 ## Supported Windows versions
 
 The Stratora Agent supports the following 64-bit Windows versions:

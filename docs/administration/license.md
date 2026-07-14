@@ -52,6 +52,9 @@ The following do **not** count:
 - IP addresses discovered by IPAM scanning that haven't been imported as nodes
 - Nodes that have been deactivated or removed from monitoring
 - Discovery scan results that haven't been imported
+- **Guest VMs shown in virtualization inventory** — the VMs, hosts, and datastores listed on a hypervisor's dashboards are inventory, not nodes; they do not count unless you separately onboard one as its own monitored node
+
+**Hypervisors count as the nodes you onboard.** Each hypervisor you add is a node and counts once — a vCenter Server Appliance, a Proxmox VE host, or an ESXi host onboarded as a VMware Host node. A complete vSphere setup (the vCenter plus each ESXi host as a VMware Host node) therefore counts as the vCenter node plus one node per ESXi host; the VMs themselves do not count.
 
 The active node count is displayed on the license page alongside your limit so you always know where you stand.
 

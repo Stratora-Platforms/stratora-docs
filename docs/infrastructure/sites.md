@@ -112,7 +112,7 @@ Clicking any site opens the site detail page, which provides a complete view of 
 | Tab | Content |
 |-----|---------|
 | **Overview** | Health score, 24h health history, site details, IPAM networks, node health breakdown, device type breakdown |
-| **Dashboard** | Auto-generated site dashboard with live metrics panels |
+| **Dashboard** | Auto-generated site dashboard with live metrics panels — including a virtualization section when the site runs hypervisors (see [Dashboards](../monitoring/dashboards.md#virtualization-dashboards)) |
 | **Nodes** | All nodes at this site — health status, type, IP address, last seen |
 | **Topology** | Network topology map scoped to this site |
 | **Racks** | Rack diagrams for this site |

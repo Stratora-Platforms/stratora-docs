@@ -22,11 +22,16 @@ Every node belongs to a [site](./sites.md) and is assigned a device template tha
 | Network Switch | SNMP | Cisco Catalyst, Cisco SG300/CBS, Ubiquiti UniFi |
 | Firewall | SNMP | Palo Alto PA series |
 | Storage (NAS/SAN) | SNMP | Synology, QNAP |
-| VMware ESXi Host | SNMP | ESXi 6.x/7.x/8.x hosts |
-| VMware vCenter | vSphere API | vCenter Server Appliance |
+| vCenter Server Appliance | vSphere API | VMware vCenter — full inventory + management-plane view |
+| VMware Host | SNMP | ESXi hosts — per-host enrichment (memory overcommit + host-alert attribution) |
+| Proxmox VE | Proxmox VE API | Proxmox VE hosts and clusters (one cluster-wide token) |
 | Wi-Fi Controller / AP | SNMP | Aruba Instant APs |
 | HTTP/HTTPS Endpoint | HTTP | Web apps, APIs, public URLs |
 | Ping | ICMP | Any IP-reachable device |
+
+:::note Virtualization node types
+Onboard hypervisors through the guided add-paths — see [Virtualization](../collection/virtualization.md). **Hyper-V** hosts are **Windows Server** nodes: install the Stratora Agent and it self-reports the Hyper-V role (there is no separate Hyper-V node type). For **vSphere**, onboard the **vCenter Server Appliance** for inventory and add each ESXi host as a **VMware Host** node for host-level alerts and memory overcommit.
+:::
 
 ---
 
@@ -91,11 +96,21 @@ Click any node to open its detail view. The layout adapts based on the device te
 | Network Switch | Port status grid, CPU, per-interface traffic (TX/RX), interface errors |
 | Firewall | Management/data-plane CPU, active sessions, throughput, connections/sec, HA state |
 | NAS/Storage | Disk health, RAID status, volume capacity, temperature, read/write IO |
-| VMware ESXi | CPU/memory, VM count, datastore usage, per-vmnic throughput |
-| VMware vCenter | Cluster resources, top VMs by CPU/memory, datastore usage, VM latency |
+| vCenter Server Appliance | Managed hosts, VMs (with run-state), datastores, per-host CPU/memory/network — the management-plane view |
+| VMware Host (ESXi) | Host CPU/memory, memory overcommit, VM count, datastore usage, per-vmnic throughput |
+| Proxmox VE | Cluster health, guests, storage, capacity |
 | Wi-Fi Controller / AP | Connected clients by SSID, radio utilization, AP memory/CPU |
 | HTTP/HTTPS | Response time, HTTP status code, availability percentage, SSL certificate expiry |
 | Ping | Response time (min/avg/max), packet loss |
+
+### Virtualization node detail
+
+Hypervisor nodes carry platform-specific rosters on their detail view:
+
+- **vCenter Server Appliance** — a **managed-hosts roster** (each ESXi host with connection state and VM count; hosts you've also onboarded as VMware Host nodes link straight to their own detail), a **cross-host VM roster** (every managed VM with run-state, guest OS, and uptime), and a **datastores** table (capacity and thin-provisioning headroom). See [Virtualization](../collection/virtualization.md#vcenter-management-plane-node-view).
+- **Proxmox VE and Hyper-V** — guests, storage, and cluster panels for the platform.
+
+VM and host run-state uses the same **canonical at-a-glance status indicators** as everything else in Stratora — a stopped VM reads the same way a down switch does.
 
 ---
 
@@ -109,7 +124,7 @@ Every node has a health status that reflects its current state. Status is evalua
 | **Healthy** | Node is reachable and all metrics are within normal thresholds |
 | **Warning** | Node is reachable but one or more metrics have crossed a warning threshold |
 | **Critical** | Node is reachable but one or more metrics have crossed a critical threshold |
-| **Offline** | No data received for 5+ minutes (unreachable) |
+| **Offline** | The node is unreachable — no ping reply. Detected fast by the Node Unreachable alert (~30 seconds), not a multi-minute staleness window |
 | **Maintenance** | Node is in a scheduled or manual maintenance window (alerts suppressed) |
 
 :::info

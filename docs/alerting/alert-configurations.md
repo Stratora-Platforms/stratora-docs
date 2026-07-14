@@ -143,6 +143,10 @@ A 20-second **resolution grace period** applies to most configurations. Once a c
 Reachability alerts (Node Unreachable, Agent Heartbeat Lost, Collector Offline) skip the grace period because they already require a multi-cycle recovery streak before they consider the node back; an additional grace period would only delay recovery without adding stability. See [Alert Response Times](./alert-response-times.md) for the per-alert-type detection and recovery latency reference.
 :::
 
+:::info Metric-source outage: alerts are preserved, not resolved
+Step 5 resolves an alert only on **confirmed** normal data. If the metric source is unreachable for a cycle (a collector or VictoriaMetrics outage), an empty result is treated as "no data," not "condition cleared" — Stratora skips resolution and **preserves** existing alerts until real data returns. Capacity and health alerts survive a monitoring blip rather than clearing spuriously. New conditions and severity changes still evaluate; only resolution is held.
+:::
+
 ---
 
 ## Escalation Team Assignment

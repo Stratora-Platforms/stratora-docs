@@ -94,6 +94,10 @@ Discovery can classify a wide range of infrastructure:
 - **Printers** — HP, Epson, Brother, Canon, Xerox
 - **Other** — IoT controllers, web servers, and more
 
+:::note Hypervisors and virtualization onboarding
+Discovery classifies **VMware ESXi**, **vCenter**, and **Proxmox VE** as their own hypervisor node types and routes them through the credentialed import (below) — the guided add-path described in [Virtualization](./virtualization.md). **Hyper-V** hosts are classified as **Windows Servers**; the Hyper-V role is surfaced by the [Stratora Windows Agent](./agents.md), not by network fingerprinting. (Hyper-V *VMs* are recognized by their Microsoft virtual MAC as Virtual Machines.)
+:::
+
 ---
 
 ## Discovery Results
@@ -123,6 +127,10 @@ During import, Stratora automatically:
 - Populates system fields from SNMP data
 - Assigns the node to the site associated with the target subnet
 - Links the node to the site's preferred collector
+
+:::tip Onboarding a hypervisor from discovery
+When the selected device is a classified hypervisor (vCenter, ESXi, or Proxmox VE), the import binds the matching credential — a **VMware API** or **Proxmox VE API Token** (validated against the host on the spot), or an **SNMP** credential for an ESXi VMware Host — and starts the platform probe. You can pick an existing stored credential or create one inline. See [Virtualization](./virtualization.md) for the complete per-platform setup.
+:::
 
 Devices you don't want to monitor can be marked as **Ignored** so they don't clutter future scan results.
 

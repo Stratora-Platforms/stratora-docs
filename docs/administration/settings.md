@@ -28,6 +28,17 @@ This is a global setting that applies to all users. Changes take effect immediat
 
 ---
 
+## Site Photos Storage
+
+Controls where uploaded [site photos](../infrastructure/site-photos.md) are stored on the Server and how large each upload can be.
+
+| Option | Description |
+|--------|-------------|
+| **Photo Storage Path** | Server-side directory where site photo files and generated thumbnails are written |
+| **Max Photo Size (MB)** | Upper bound on the size of a single uploaded photo |
+
+---
+
 ## Related Settings Pages
 
 Additional configuration is available on dedicated pages within the Administration section:

@@ -46,6 +46,7 @@ Agents are push-only. They never listen for inbound traffic. They also do not ho
 | Collector | Any monitored device | ICMP Echo Request | Reachability and latency probes (the Response column on the Nodes list) |
 | Collector | SNMP-monitored device | 161 / UDP | SNMP polling (v2c and v3) |
 | Collector | vCenter or ESXi host | 443 / TCP (HTTPS) | vSphere API |
+| Collector | Proxmox VE host | 8006 / TCP (HTTPS) | Proxmox VE API |
 | Collector | HTTP / HTTPS endpoint | 80 / TCP or 443 / TCP | Endpoint monitoring |
 
 ## What Stratora does not do

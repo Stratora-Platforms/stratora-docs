@@ -30,9 +30,10 @@ Stratora is operational on day one. It unifies collection, visualization, alerti
 
 What Stratora watches and how it gets the data.
 
-- Multi-protocol coverage: SNMP (v2c and v3), ICMP, the Stratora Agent for Windows and Linux, the vSphere API for vCenter and ESXi, and WMI or SSH for hosts polled from a [Collector](/docs/collection/collectors)
+- Multi-protocol coverage: SNMP (v2c and v3), ICMP, the Stratora Agent for Windows and Linux, the vSphere API for VMware vCenter and ESXi, the Proxmox VE API, and WMI or SSH for hosts polled from a [Collector](/docs/collection/collectors)
 - Auto-discovery: scan your network by ICMP, TCP, and SNMP; fingerprint devices by sysObjectID against the [template library](/docs/prerequisites/snmp-devices); bulk-import the results — see [Discovery](/docs/collection/discovery)
 - Validated device templates for major switch, firewall, access-point, NAS, and virtualization vendors, plus generic templates for ping, HTTP/HTTPS endpoints, and WAN circuits
+- **Virtualization monitoring** across VMware vSphere/vCenter, Proxmox VE, and Microsoft Hyper-V — hypervisors are detected and onboarded through the guided add-paths (setup wizard, IPAM subnet scan, or network discovery, each binding a stored credential), and every platform gets an auto-generated dashboard of hosts, VMs with run-state, datastores, and capacity — see [Virtualization](/docs/collection/virtualization)
 - Lightweight [Agents](/docs/collection/agents) for Windows Server 2016+ and the major modern Linux distributions, with auto-registration and admin approval
 - A centralized [credentials vault](/docs/collection/credentials) for SNMP, SSH, WMI, vSphere, and S3/Azure credentials — AES-256-GCM at rest, with key-rotation support
 
@@ -103,7 +104,6 @@ Operator-friendly access control with first-class identity-provider integration.
 
 What ships today covers the core operational workflows teams rely on. We're actively investing in additional coverage:
 
-- **Microsoft Hyper-V and Proxmox VE monitoring** — extending today's vCenter and ESXi coverage to the other hypervisors operators run.
 - **Cisco Meraki support** — first-class support for Meraki MS switches, MR access points, and MX appliances, validated against live hardware.
 - **Veeam Backup & Replication monitoring** — bringing backup-job health into the same alerting and dashboards your infrastructure already lives in.
 - **Network discovery from remote collectors** — discovery and credentialed probing local to each collector, so segmented networks don't pay a round-trip to the central server.

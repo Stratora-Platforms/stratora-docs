@@ -151,7 +151,7 @@ You can also override the collector assignment on individual nodes if needed.
 
 Collectors use Telegraf as their collection engine. Stratora manages Telegraf entirely — you never need to edit Telegraf configs by hand. The server:
 
-- Generates input plugins based on device templates (SNMP, ping, WMI, vSphere API, HTTP checks)
+- Generates input plugins based on device templates (SNMP, ping, WMI, vSphere API, Proxmox VE API, HTTP checks)
 - Configures the output plugin to send metrics to the Stratora ingest endpoint with the collector's API key
 - Injects node-level tags (node ID, node name) so every metric is traceable back to its source
 - Sets collection intervals per target (10 seconds default, 60 seconds for NAS devices, 300 seconds for vCenter)

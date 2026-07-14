@@ -182,7 +182,7 @@ sequenceDiagram
 | vCenter vSphere API | 300s | VMware API rate limits |
 | SSL certificate checks | 300s | Certificates don't change frequently |
 | Config debounce window | 5s | Batch rapid changes |
-| Node unreachable threshold | 300s | Industry standard (5 min) |
+| Node unreachable detection | ~30s worst-case | Ping fast-path: 30s loss window + 10s eval cycle, 0s grace |
 | Alert evaluator cycle | 10s | Real-time alerting |
 | Frontend refetch interval | 10s | Dashboard freshness |
 
@@ -226,7 +226,7 @@ sequenceDiagram
 | Healthy | Node reachable, no threshold breaches | Alert evaluator | Successful data collection |
 | Warning | Node reachable, metric threshold warning | Alert evaluator | Warning-level alert active |
 | Critical | Node reachable, metric threshold critical | Alert evaluator | Critical-level metric alert active |
-| Offline | Node unreachable for 5+ minutes | Alert evaluator | Reachability alert (node_unreachable, agent_heartbeat) |
+| Offline | Node unreachable — detected in ~30s by Node Unreachable (agent nodes: Agent Heartbeat Lost, ~60s) | Alert evaluator | Reachability alert (node_unreachable, agent_heartbeat) |
 | Maintenance | Planned maintenance window | Admin | Manual or scheduled |
 
 ---

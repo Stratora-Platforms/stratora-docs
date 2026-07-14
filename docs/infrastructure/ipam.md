@@ -173,6 +173,7 @@ IPAM and [discovery scanning](../collection/discovery.md) work together:
 - **Discovery populates IPAM** — when a discovery scan finds live hosts, their IP addresses are automatically upserted into the IPAM address table with status, hostname, and last-seen timestamps
 - **IPAM feeds discovery targets** — you can run discovery scans scoped to IPAM subnets, supernets, or entire sites
 - **Stale address detection** — addresses that haven't been seen in a configurable number of hours can be flagged as stale, helping you identify decommissioned devices or changed IPs
+- **Hypervisor onboarding** — a subnet scan classifies discovered hypervisors (vCenter, ESXi, Proxmox VE) and surfaces them for one-click, credentialed onboarding; the results refresh automatically when the scan completes. See [Virtualization](../collection/virtualization.md)
 
 :::tip
 Run periodic discovery scans against your IPAM subnets to keep address records current. This ensures utilization numbers stay accurate and stale records are surfaced.

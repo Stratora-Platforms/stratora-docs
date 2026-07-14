@@ -293,6 +293,12 @@ Resolution notifications are sent only once per channel, even if the channel was
 
 ---
 
+## Recipient Coverage
+
+When a step notifies an on-call channel, Stratora surfaces **every intended recipient** — including any that could not be reached. If an on-call target has no usable contact method for the channel (for example, a rotation member with no phone number on an SMS step), that recipient is reported as **skipped** rather than silently dropped. Skipped recipients appear in the notification's delivery record and in the alert's notification history, so there are no silent gaps in who was — and wasn't — paged. The channel's dispatch is unchanged; this is visibility only.
+
+---
+
 ## Symptom Suppression (Inhibition)
 
 When a node is unreachable, downstream alerts on that same node — service stopped, interface down, agent heartbeat lost — would all fire concurrently. Stratora suppresses notifications on these symptom alerts when their root cause is active on the same node. The root-cause alert (Node Unreachable) is the canonical signal; the symptoms remain in the alerts list for completeness but do not generate separate pages.
