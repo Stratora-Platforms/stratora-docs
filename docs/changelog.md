@@ -8,6 +8,31 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.4.0 — July 14, 2026
+
+### Bundled Components
+- Agent 2.4.0 (Windows)
+- Agent 2.4.0 (Linux)
+- Collector 2.4.0
+
+Virtualization monitoring across your whole stack. Stratora now discovers and monitors VMware vSphere, vCenter, Proxmox VE, and Hyper-V as first-class infrastructure — and folds them into your existing site views automatically. Add a hypervisor through discovery, an IPAM scan, or the setup wizard, and its hosts, VMs, datastores, and virtualization dashboards appear as part of the site's operational context. Whether a site runs VMware, Hyper-V, Proxmox, or all three, Stratora incorporates it automatically.
+
+### What's new
+
+- **vSphere / vCenter / Proxmox VE / Hyper-V discovery and monitoring**, onboarded through any add path (discovery, IPAM scan, setup wizard) with a 30-minute time-to-value.
+- **Auto-generated per-platform and site virtualization dashboards** — VMs with run-state, hosts, datastores (with thin-provisioning visibility), vCPU/capacity rollups — created when you add a hypervisor and cleaned up when you remove it.
+- **vCenter management-plane node view**: managed ESXi hosts, VMs, and datastores in one place.
+- **VM and host status** now use the same at-a-glance indicators as the rest of Stratora.
+- **Network topology maps** that lay out cleanly and center on load.
+
+### Reliability & security hardening
+
+- **Capacity and health alerts are preserved during a monitoring-source outage** instead of clearing — you won't lose sight of a filling datastore or a degraded array because a collector blinked.
+- **On-call escalations now surface every recipient**, including any that couldn't be reached — no silent gaps in coverage.
+- **Tightened credential handling** on collector configuration.
+
+**Upgrading:** in-place upgrade from v2.2.1. Existing monitored infrastructure is preserved.
+
 ## v2.2.1 — May 27, 2026
 
 ### Fixed
