@@ -8,6 +8,19 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.4.1 — July 14, 2026
+
+### Bundled Components
+- Agent 2.4.1 (Windows)
+- Agent 2.4.1 (Linux)
+- Collector 2.4.1
+
+### Fixed
+
+- **Node search returning an error is fixed.** Searching or filtering the node list by name, address, manufacturer, or OS now works correctly. Node search was affected platform-wide in v2.4.0; the base node list was unaffected.
+
+**Upgrading:** in-place upgrade from v2.4.0 (or v2.2.1). No database changes. Existing monitored infrastructure is preserved.
+
 ## v2.4.0 — July 14, 2026
 
 ### Bundled Components
