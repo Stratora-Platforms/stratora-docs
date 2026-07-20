@@ -67,12 +67,23 @@ For fully automated issuance and renewal, configure one of the supported DNS pro
 
 **Supported DNS providers:**
 
-| Provider | Credentials Required |
-|----------|---------------------|
-| **Cloudflare** | API Token (with Zone:DNS:Edit permission) |
-| **AWS Route 53** | Access Key ID, Secret Access Key, and optionally a Hosted Zone ID |
-| **GoDaddy** | API Key and API Secret |
-| **Namecheap** | API User, API Key, and Client IP (must be whitelisted in Namecheap dashboard) |
+| Provider | Status | Credentials Required |
+|----------|--------|---------------------|
+| **Namecheap** | Validated | API User, API Key, and Client IP (must be whitelisted in Namecheap dashboard) |
+| **Cloudflare** | Supported | API Token (with Zone:DNS:Edit permission) |
+| **AWS Route 53** | Supported | Access Key ID, Secret Access Key, and optionally a Hosted Zone ID |
+| **GoDaddy** | Supported | API Key and API Secret |
+
+:::info Provider status — validate before production
+- **Validated** — verified end-to-end with a real Let's Encrypt certificate. **Namecheap** is validated.
+- **Supported** — the integration is implemented and tested, but a live certificate has not been issued through it in every environment. **Cloudflare**, **AWS Route 53**, and **GoDaddy** are Supported; validate in your environment before relying on them in production.
+
+Per-provider notes:
+
+- **AWS Route 53** — the AWS CLI is bundled with Stratora, so no separate installation is required. The IAM credentials need Route 53 record-change permissions.
+- **GoDaddy** — requires a GoDaddy account eligible for API access. GoDaddy restricts production API keys to accounts with 10+ domains, a reseller / Discount Domain Club plan, or a paid tier; ineligible accounts receive a clear "not eligible for API access" error.
+- **Namecheap** — requires API access enabled and this server's public IP allowlisted in the Namecheap dashboard.
+:::
 
 **To set up automated DNS-01:**
 
