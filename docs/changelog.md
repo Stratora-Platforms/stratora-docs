@@ -8,6 +8,36 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.4.2 — August 01, 2026
+
+### Bundled Components
+- Agent 2.4.2 (Windows)
+- Agent 2.4.2 (Linux)
+- Collector 2.4.2
+
+Stratora 2.4.2 is a maintenance and hardening release with in-app update awareness, streamlined bug reporting, and dependency currency.
+
+### Added
+
+- **In-app update notifications** — admins see a banner and an About-page indicator when a newer Stratora release is available, with release notes viewable in-app.
+- **Report an Issue** — a one-click link from Diagnostics opens a pre-filled GitHub issue with version context (no identifying data), streamlining support requests.
+- **Info alert severity** — a new low-severity, non-paging tier for informational alerts.
+
+### Changed
+
+- Bundled runtime components (PostgreSQL, NGINX, VictoriaMetrics, Telegraf, and others) updated to current stable versions, pinned and checksummed, with a published SBOM.
+- Security hardening across authentication, licensing, secret storage, and collector configuration.
+
+### Fixed
+
+- **Virtualization** — accurate guest rosters (stable-key enrichment, reaping of removed VMs) and corrected memory reporting for powered-off guests.
+- **Alerting** — reliable on-call escalation routing, clearer notification diagnostics, and no false alerts during metric-source disruptions.
+- **Scope & counts** — consistent site and fleet node counts, and correct site attribution for virtual machines.
+- **Interface & topology** — accurate port counts across switch types, topology layout fixes, dashboard count consistency, and a nav banner display fix.
+- **Installer** — reliable installation on clean/minimal Windows Server environments (now bundles the required runtime components).
+
+**Upgrading:** in-place upgrade from v2.4.1 (or v2.2.1). Existing monitored infrastructure is preserved.
+
 ## v2.4.1 — July 14, 2026
 
 ### Bundled Components
