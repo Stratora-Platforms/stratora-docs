@@ -8,6 +8,26 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.4.3 — August 17, 2026
+
+### Bundled Components
+- Agent 2.4.3 (Windows)
+- Agent 2.4.3 (Linux)
+- Collector 2.4.3
+- PostgreSQL 17.10
+- VictoriaMetrics 1.147.0
+- NGINX 1.30.4
+- Telegraf 1.39.1
+
+Stratora 2.4.3 is a security and integrity release that corrects the bundled database version so every install runs the intended, current PostgreSQL 17.10.
+
+### Fixed
+
+- **PostgreSQL 17.10 on every install.** A packaging defect in 2.4.2 left installations running the older PostgreSQL 17.5 even though the release materials stated 17.10 — on both fresh installs and in-place upgrades. 2.4.3 corrects the packaging so the intended 17.10 database is actually shipped and applied on both paths, and adds a build-time check so the bundled database version can no longer silently drift. PostgreSQL 17.6–17.10 carry upstream bug and security fixes; upgrading brings the database current, and your software inventory or security scanner will report PostgreSQL 17.10 afterward. Your data is preserved — the database is stopped cleanly, updated, and brought back on 17.10 automatically, with no manual steps or data migration.
+
+**Upgrading:** in-place upgrade from v2.4.2. Existing monitored infrastructure is preserved, and 2.4.2 installs move to PostgreSQL 17.10 automatically as part of the upgrade.
+
+
 ## v2.4.2 — August 01, 2026
 
 ### Bundled Components
