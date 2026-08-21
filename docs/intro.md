@@ -51,7 +51,7 @@ Stratora generates the visualizations you need without forcing you to build them
 
 Alerting that ships ready to use. No empty rule engine to populate before the first alert fires.
 
-- A tested library of [built-in alerts](/docs/alerting/alert-configurations) — reachability, CPU, memory, disk, interface errors, certificate expiry, agent heartbeat lost, collector offline — plus custom alert definitions when you need them
+- A tested library of [built-in alerts](/docs/alerting/alert-configurations) — reachability, CPU, memory, disk, interface errors, certificate expiry, agent heartbeat lost, collector offline — plus custom alert definitions when you need them. Each alert evaluates on the devices that supply its metric; see [device coverage](/docs/prerequisites/snmp-devices#what-the-built-in-alerts-cover) for which families that is
 - [Escalation teams](/docs/alerting/escalation-teams) with three schedule types: Always Active for 24/7 coverage, Time-Based for active-hours rotations, and On-Call Rotation that cycles through team members on a configured cadence
 - Per-rotation-member [contact channels](/docs/alerting/contacts) — each on-call engineer carries their own email, SMS, Slack webhook, and Teams webhook details. Escalation channels can dynamically target "current on-call" instead of static recipients
 - Scheduled and recurring [maintenance windows](/docs/alerting/maintenance) that suppress alerts during planned changes

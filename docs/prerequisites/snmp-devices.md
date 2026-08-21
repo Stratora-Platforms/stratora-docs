@@ -33,7 +33,7 @@ On each device you intend to monitor:
 
 ## Vendors supported today
 
-These vendors ship with validated templates and full alert coverage. Devices in these families are auto-classified during discovery.
+These vendors ship with templates validated against real hardware. Devices in these families are auto-classified during discovery. See [what the built-in alerts cover](#what-the-built-in-alerts-cover) below for which alert families apply.
 
 | Category | Vendor / product family |
 |---|---|
@@ -47,6 +47,17 @@ These vendors ship with validated templates and full alert coverage. Devices in 
 :::note ESXi and vCenter
 For vSphere, vCenter inventory and per-host/VM utilization come from the **vSphere API**, not SNMP — see [Virtualization prerequisites](/docs/prerequisites/virtualization). SNMP applies to the **per-host enrichment layer** (each ESXi host onboarded as a VMware Host node for memory overcommit and host-alert attribution); ESXi ships with **SNMP disabled**, so enable it per host (`esxcli system snmp set --enable true`) before onboarding.
 :::
+
+## What the built-in alerts cover
+
+Every monitored device gets reachability alerting: device unreachable, packet loss, and response time. The network device families above additionally get SNMP interface monitoring — per-interface throughput, plus interface **error-rate** alerting — and per-family alerts where the platform exposes the data: NAS volume and RAID state on Synology and QNAP, host memory overcommit and datastore capacity on VMware.
+
+Two qualifications in the current release:
+
+- **Palo Alto PA Series** — the PA template does not currently collect interface error counters, so interface-error alerting does not apply to PA devices. Reachability alerting and interface throughput monitoring are unaffected.
+- **Interface discards** — discard counters are collected on a subset of device families; discard-based alerting applies only where a device's template collects those counters.
+
+The [built-in alert library](/docs/alerting/alert-configurations) lists every alert. Each alert evaluates only on devices whose template collects the underlying metric — seeing an alert in the library does not by itself mean it applies to every device family.
 
 ## Generic templates
 
