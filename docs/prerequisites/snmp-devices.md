@@ -31,18 +31,14 @@ On each device you intend to monitor:
 - A read-only community (for SNMPv2c) is sufficient — Stratora never writes via SNMP.
 - For SNMPv3, configure a read-only user with one of the authentication and privacy protocols Stratora supports. See [Credentials](/docs/collection/credentials) for the full protocol list.
 
-## Vendors supported today
+## Devices supported today
 
-These vendors ship with templates validated against real hardware. Devices in these families are auto-classified during discovery. See [what the built-in alerts cover](#what-the-built-in-alerts-cover) below for which alert families apply.
+For the full list — including **how each device is recognized during discovery** and **what alerting applies** — see **[Supported Devices](/docs/supported-devices)**. That page is generated from Stratora's own validation records, so it reflects exactly what ships, per model.
 
-| Category | Vendor / product family |
-|---|---|
-| Switches | Cisco Catalyst (IOS), Cisco SG300 / CBS350, Ubiquiti UniFi Switch |
-| Access points | Aruba Instant |
-| Firewalls / appliances | Palo Alto Networks PA Series |
-| Storage / NAS | Synology DiskStation, QNAP |
-| Virtualization | VMware vCenter Server, VMware ESXi Host |
-| Servers (via the Stratora Agent — listed here for completeness) | Windows Server, Linux distributions per [Linux hosts](/docs/prerequisites/linux-hosts) |
+Two things it makes explicit that a flat vendor list cannot:
+
+- **Recognition** — whether a device is found automatically on a scan. Most families are auto-recognized, but not all. For example, classic-IOS **Cisco Catalyst** collection works, yet no discovery fingerprint exists for it yet, so it is **added manually** rather than found on a scan — a known, closable gap.
+- **Validation basis** — whether a template was verified against a real physical device (**Validated**), against a captured firmware replay with no live device (**Replay-validated**), or is authored from vendor MIB documentation and not yet verified (**MIB-derived**). Many families are not yet hardware-validated.
 
 :::note ESXi and vCenter
 For vSphere, vCenter inventory and per-host/VM utilization come from the **vSphere API**, not SNMP — see [Virtualization prerequisites](/docs/prerequisites/virtualization). SNMP applies to the **per-host enrichment layer** (each ESXi host onboarded as a VMware Host node for memory overcommit and host-alert attribution); ESXi ships with **SNMP disabled**, so enable it per host (`esxcli system snmp set --enable true`) before onboarding.

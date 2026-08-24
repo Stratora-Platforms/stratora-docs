@@ -32,7 +32,7 @@ What Stratora watches and how it gets the data.
 
 - Multi-protocol coverage: SNMP (v2c and v3), ICMP, the Stratora Agent for Windows and Linux, the vSphere API for VMware vCenter and ESXi, the Proxmox VE API, and WMI or SSH for hosts polled from a [Collector](/docs/collection/collectors)
 - Auto-discovery: scan your network by ICMP, TCP, and SNMP; fingerprint devices by sysObjectID against the [template library](/docs/prerequisites/snmp-devices); bulk-import the results — see [Discovery](/docs/collection/discovery)
-- Validated device templates for major switch, firewall, access-point, NAS, and virtualization vendors, plus generic templates for ping, HTTP/HTTPS endpoints, and WAN circuits
+- Built-in device templates for major switch, firewall, access-point, NAS, and virtualization vendors, plus generic templates for ping, HTTP/HTTPS endpoints, and WAN circuits — see [Supported Devices](/docs/supported-devices) for per-vendor recognition and validation status
 - **Virtualization monitoring** across VMware vSphere/vCenter, Proxmox VE, and Microsoft Hyper-V — hypervisors are detected and onboarded through the guided add-paths (setup wizard, IPAM subnet scan, or network discovery, each binding a stored credential), and every platform gets an auto-generated dashboard of hosts, VMs with run-state, datastores, and capacity — see [Virtualization](/docs/collection/virtualization)
 - Lightweight [Agents](/docs/collection/agents) for Windows Server 2016+ and the major modern Linux distributions, with auto-registration and admin approval
 - A centralized [credentials vault](/docs/collection/credentials) for SNMP, SSH, WMI, vSphere, and S3/Azure credentials — AES-256-GCM at rest, with key-rotation support
