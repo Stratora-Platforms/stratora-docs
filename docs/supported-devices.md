@@ -30,7 +30,7 @@ Servers are **enrolled** through the Stratora Agent rather than scanned; vCenter
 
 ## A note on environmental alerting
 
-**Environmental alerting (temperature, fan, PSU) is not currently available on any SNMP template.** Where a device exposes those sensors, Stratora does not yet collect them in a usable form. If you monitor a warm closet or need PSU/fan failure alerts today, plan around this limitation.
+Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller. It is **not** available on network-device templates (switches, routers, firewalls, access points): where those devices expose sensors, Stratora does not yet collect them in a usable form. If you need environmental alerts on network gear today, plan around this limitation.
 
 ## Device matrix
 
@@ -59,6 +59,8 @@ Servers are **enrolled** through the Stratora Agent rather than scanned; vCenter
 | Wireless Controller | Ruckus/CommScope | SmartZone | Auto-recognized (unverified) | **MIB-derived** | Reachability · Interface |
 | NAS / Storage | QNAP | NAS | Auto-recognized | **Validated** | Reachability · Interface · Disk temperature · RAID / volume status |
 | NAS / Storage | Synology | DiskStation | Auto-recognized | **Validated** | Reachability · Interface · Disk temperature · RAID / volume status |
+| Server BMC (out-of-band) | Dell | iDRAC | Auto-recognized (unverified) | **MIB-derived** | Reachability · Temperature · Fan · PSU · PSU redundancy · Disk/RAID · Memory |
+| Server BMC (out-of-band) | HPE | iLO | Auto-recognized (unverified) | **MIB-derived** | Reachability · Temperature · Fan · PSU · PSU redundancy · Disk/RAID · Memory |
 | Hypervisor (VMware ESXi) | VMware | ESXi | Auto-recognized | **Validated** | Reachability · Interface · Memory overcommit · Datastore capacity |
 | Hypervisor mgmt (vCenter) | VMware | vCenter Server | API-connected | **Validated** | Reachability · Memory overcommit · Datastore capacity |
 | Server | Any (OS-based) | Linux Server | Enrolled (agent) | **Validated** | Reachability · CPU · Memory · Disk · Network · Service state |
@@ -66,6 +68,6 @@ Servers are **enrolled** through the Stratora Agent rather than scanned; vCenter
 | Generic | — | HTTP Check | Any host | **Validated** | HTTP/HTTPS status · SSL-certificate expiry · Reachability |
 | Generic | — | ICMP Ping | Any host | **Validated** | Reachability (device down, packet loss, response time) |
 | Generic | — | WAN Circuit | Any host | **Validated** | Latency · jitter · packet loss (Reachability) |
-| Out-of-band mgmt | HPE iLO · Dell iDRAC · IPMI / Redfish | — | — | **Not supported** | — |
+| Out-of-band (IPMI · Redfish) | non-SNMP BMCs (Supermicro · Lenovo · Cisco · generic) | — | — | **Not supported** | Dell iDRAC + HPE iLO are supported over SNMP (rows above). IPMI is a deliberate exclusion for security reasons; Redfish is on the roadmap |
 
 Every row is derived from a device template's validation record. Hyper-V, Proxmox, and Nutanix are monitored through their own agent/API collectors rather than an SNMP template, so they are covered separately, not in this SNMP-oriented matrix.
