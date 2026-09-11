@@ -8,6 +8,66 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.4.4 — September 11, 2026
+
+### Bundled Components
+- Agent 2.4.4 (Windows)
+- Agent 2.4.4 (Linux)
+- Collector 2.4.4
+- PostgreSQL 17.10
+- VictoriaMetrics 1.147.0
+- NGINX 1.30.4
+- Telegraf 1.39.1
+
+Stratora 2.4.4 adds out-of-band server monitoring for Dell iDRAC and HPE iLO, a published per-device compatibility matrix, and five new network and environmental alerts — plus consistency and correctness fixes across memory reporting, the alert builder, and dashboards.
+
+### Out-of-band server monitoring (new)
+
+Monitor Dell iDRAC and HPE iLO service processors over SNMP — server health without an agent on the host or access to the OS. A new **Out-of-Band Management** device category auto-recognizes iDRAC and iLO controllers and builds a full dashboard: overall health rollup, temperature probes (each named by its location — inlet, exhaust, CPU), fans, power supplies and PSU redundancy, physical disks/RAID, and memory modules.
+
+Environmental alerting ships as **built-in alerts keyed on the controller's own health status** (normal / fault), not user-set thresholds — the BMC reports each sensor's own good/bad state, so there is no custom temperature threshold to set on BMC readings, and BMC alerts are not built through the custom alert picker.
+
+Monitoring is over SNMP only. IPMI is a deliberate exclusion for security reasons; Redfish support is on the roadmap.
+
+### Device compatibility matrix
+
+The Supported Devices page now states, per device, how far each template has been validated — real hardware, real-capture replay, or MIB-derived. It is the authoritative answer to "is my device supported, and how confirmed is it": a MIB-derived template was built from vendor documentation and not yet confirmed against physical equipment. Check it before relying on a device class in production.
+
+### New built-in alerts
+
+Five network and environmental alerts ship enabled (they appear in Alert History; assign an escalation team to page on them). Each names the affected component, not just the node:
+
+- **Network Device CPU High** — SNMP switches, firewalls, and access points (Cisco SG300, Palo Alto, Aruba Instant at launch).
+- **Access Point Memory High** — worst AP in an Aruba Instant cluster, named.
+- **Disk High Temperature** — hottest NAS disk (QNAP, Synology), named.
+- **PSU / Fan Failure** and **Fan Stopped** — Synology and QNAP chassis sensors, failed component named.
+
+These fire only on device families validated for each metric; unvalidated families don't fire and are labeled as such rather than showing empty charts. The compatibility matrix (above) is the current list of what's validated.
+
+### Action required — re-check memory alert thresholds (Windows and Linux)
+
+Memory readings are now consistent across platforms: every memory surface (panels, alerts, reports) computes physical RAM in use — (total minus available) over total — on Windows and Linux alike. Thresholds themselves are unchanged; only the underlying reading moved, and it moved in **opposite directions** by platform, so both need a look after upgrading:
+
+- **Linux — readings are now higher, and alerts can fire that didn't before.** The previous Linux figure understated true usage on some distributions (Debian by ~6 points, Ubuntu by ~7). On those nodes memory now reads higher, so a node sitting just under a threshold can cross it on upgrade **with no config change** — a Warning or Critical you didn't have before. Re-check your Linux memory thresholds so the new alerts are ones you actually want.
+- **Windows — readings are now lower, and alerts will fire less often.** The previous Windows figure overstated usage by 5–18 points, so some nodes drop from Critical to Warning. If you tuned Windows thresholds against the old (inflated) reading, lower them to preserve the same intent.
+
+### Improvements & fixes
+
+- **Every metric in the custom alert builder now resolves to a live query.** Previously most of the dropdown options referenced metrics the engine couldn't evaluate, so alerts built from them never fired. Every option now maps to a real metric, with clearer names (Response Time in seconds, Disk Busy Time, Interface Errors, Interface Utilization). Existing alerts on renamed metrics are migrated automatically where unambiguous; any that need your review are flagged in the builder.
+- **Storage RAID and BMC status now read in words** (e.g. "Fault", "Redundant") instead of raw numbers in dashboard tables.
+- **Merging dashboard panels is more predictable.** Combined multi-node panels resolve live at render, so corrections propagate without manual repair; a panel whose source has no data now says so instead of vanishing silently.
+- **Device-type labels are consistent** across the app ("Wi-Fi Access Point", "Storage SAN/NAS").
+- **Interface Utilization** is now available on access points, firewalls, ESXi hosts, and NAS devices, and ignores implausible vendor-reported link speeds that previously made the reading unusable.
+
+### Known issues
+
+- **Alert text shows a numeric status code for hardware faults.** A fired temperature/fan/PSU alert names the component but renders its status as a number (e.g. "(fan): 2.0") in the alert summary, while the dashboard shows the word ("Fault"). Both built-in and custom alerts are affected. A fix is targeted for an upcoming alerting release.
+- **An alert scoped to a whole group, site, or globally may include device types the metric can't measure** — those members simply never fire. (An alert scoped to a single device of the wrong type is now rejected when you save it.) Scope alerts to the device types the metric applies to.
+- **FortiGate VPN tunnel panel shows "No ports found."** The VPN tunnel panel specifically does not populate; this does **not** affect the rest of FortiGate monitoring — interfaces, CPU, and memory all work. It is a known issue, pre-existing since a March 2026 release and under investigation, not a regression in 2.4.4.
+
+**Upgrading:** in-place upgrade from v2.4.3. Existing monitored infrastructure, dashboards, and settings are preserved.
+
+
 ## v2.4.3 — August 17, 2026
 
 ### Bundled Components
