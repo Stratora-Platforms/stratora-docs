@@ -36,8 +36,8 @@ Environmental alerting (temperature, fan, PSU) is available on the **Server BMC*
 
 | Device type | Manufacturer | Model series | Recognition | Validation | Alerts |
 |---|---|---|---|---|---|
-| Switch | Arista | DCS Series | Auto-recognized (unverified) | **MIB-derived** | Reachability · Interface · CPU |
-| Switch | Cisco | Catalyst | Manual add | **MIB-derived** | Reachability · Interface · CPU · Memory |
+| Switch | Arista | DCS Series | Auto-recognized | **Replay-validated** | Reachability · Interface · CPU |
+| Switch | Cisco | Catalyst | Manual add | **Replay-validated** | Reachability · Interface · CPU · Memory |
 | Switch | Cisco | Nexus (NX-OS) | Auto-recognized | **Replay-validated** | Reachability · Interface · CPU |
 | Switch | Cisco | SG300 | Auto-recognized | **Validated** | Reachability · Interface · CPU |
 | Switch | Cisco Meraki | MS Series | Auto-recognized (unverified) | **MIB-derived** | Reachability · Interface |
@@ -49,7 +49,7 @@ Environmental alerting (temperature, fan, PSU) is available on the **Server BMC*
 | Router | Cisco | IOS-XE | Auto-recognized | **Replay-validated** | Reachability · Interface · CPU · Memory |
 | Router | Juniper Networks | MX Series | Auto-recognized | **Replay-validated** | Reachability · Interface · CPU · Memory |
 | Firewall | Cisco Meraki | MX Series | Auto-recognized (unverified) | **MIB-derived** | Reachability · Interface |
-| Firewall | Fortinet | FortiGate | Auto-recognized (unverified) | **MIB-derived** | Reachability · Interface · CPU · Memory |
+| Firewall | Fortinet | FortiGate | Auto-recognized | **Replay-validated** | Reachability · Interface · CPU · Memory |
 | Firewall | Juniper Networks | SRX Series | Auto-recognized (unverified) | **MIB-derived** | Reachability · Interface · CPU · Memory |
 | Firewall | Palo Alto Networks | PA-Series | Auto-recognized | **Validated** | Reachability · Interface · CPU |
 | Access Point | Aruba Networks (HPE) | IAP / AP Series | Auto-recognized | **Validated** | Reachability · Interface · CPU · Memory |
