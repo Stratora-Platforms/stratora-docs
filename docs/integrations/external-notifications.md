@@ -252,8 +252,20 @@ Navigate to **Settings → External Notifications → SMS & Voice**.
 3. In the **Twilio Console** → Phone Numbers → Active Numbers → select your number → Messaging → "A message comes in" → paste the webhook URL
 4. Stratora validates inbound requests using `X-Twilio-Signature` (HMAC-SHA1) — spoofed requests are rejected
 
+#### Inbound webhook requirements
+
+For bidirectional mode (and any inbound Twilio path — SMS replies and voice DTMF), all of the following must hold:
+
+- **Stratora is reachable from Twilio** at the configured `server.external_url` (public DNS, firewall/NAT allowing inbound HTTPS to Stratora).
+- **The Twilio webhook URL matches `server.external_url` exactly** — scheme, host, and port. Stratora reconstructs the URL it signs against from `external_url`, **never** from the incoming request's `Host` header, so a mismatch fails signature validation.
+- **HTTPS with a certificate Twilio trusts** (a publicly trusted CA; Twilio will not post to a self-signed endpoint).
+
 :::caution
-The webhook URL must match your `server.external_url` setting exactly. If `external_url` is wrong, all signature validations will fail silently.
+If the webhook URL and `external_url` disagree, inbound requests are **rejected** (HTTP 403). This is no longer silent: Stratora emits an **`auth.webhook_rejected`** security event (with the path, source IP, and reason) to its audit log — and to any [syslog destination](./syslog-destinations/index.md) — so a misconfiguration is visible rather than a mystery. Check the audit log if ACK-by-reply or voice DTMF stops working.
+:::
+
+:::note Split-horizon DNS
+If you point `external_url` at an **internal** name (so in-app email links resolve on your LAN) but Twilio must reach Stratora at a different **public** name, inbound webhooks will 403 because the signed URLs won't match. Today the two must be the same name; a dedicated webhook base URL is on the roadmap. **Polling mode** avoids this entirely for SMS (it needs no inbound path); voice DTMF is webhook-only.
 :::
 
 ### Polling Mode Setup

@@ -8,7 +8,7 @@ sidebar_position: 2
 
 Stratora's syslog forwarder is configured per-destination from **Settings → Syslog Destinations**. Add as many destinations as you need — each ships every audit event independently.
 
-The Add Destination wizard collects configuration in four steps: **Details**, **Connection**, **Format**, and **Review**.
+The Add Destination wizard collects configuration in five steps: **Details**, **Connection**, **Format**, **Filtering**, and **Review**.
 
 ---
 
@@ -88,15 +88,36 @@ Only disable verification for transitional lab setups or when the receiver's cer
 
 ---
 
-## Step 4 — Review
+## Step 4 — Filtering
 
-The Review step displays a read-only summary of all entered fields grouped by section (Details, Connection, Format) plus three affordances:
+By default a destination forwards **every event of every category**. The Filtering step narrows that, so a destination receives only what it needs.
+
+| Field | Required | Notes |
+|---|---|---|
+| Categories | No | A checklist of the six event categories (Security, Configuration, Alerts, Escalation, Notification, System). Leave **all unchecked** to forward every category (the default). Check one or more to forward **only** those categories. |
+| Minimum severity | No | The least-severe level to forward. Syslog severity is *lower = more severe*, so a higher setting forwards more. Options run from **Everything (debug and above)** — the default — down to **Critical and above**. |
+
+An event is forwarded when **both** conditions hold: its category is allowed (or no category filter is set) **and** its severity is at or above the minimum. A live summary at the bottom of the step restates the current rule in plain language, e.g. *"This destination will forward Security, Configuration at warning and above."*
+
+Filtering is a send-time decision: a filtered-out event is skipped cleanly. It is **not** counted as a dropped event, and it never adds to the destination's [lag](./index.md#delivery-and-reliability).
+
+:::tip Two-destination pattern
+A common setup is one destination that takes **everything** (for archival/compliance) and a second, narrower destination that takes only **Security at warning and above** (for the SOC's alerting pipeline). Each forwards from its own position, so the narrow one never affects the archival one.
+:::
+
+The minimum-severity choices stop at **Critical** because that is the most severe level Stratora emits — there is no event more severe than a fired critical alert, so offering "emergency only" would forward nothing.
+
+---
+
+## Step 5 — Review
+
+The Review step displays a read-only summary of all entered fields grouped by section (Details, Connection, Format, Filtering) plus three affordances:
 
 - **Test Connection** — sends a single test event end-to-end (encoder → transport → receiver acknowledgment for TCP) without writing to the persistent audit log. Surfaces success or failure with the verbatim error message and the encoded payload preview.
 - **Enabled toggle** — controls whether the destination receives events after save. A destination saved as Enabled=false exists in the DB but ships nothing.
 - **Create / Save** — commits the configuration. The destination starts shipping the next audit event Stratora generates.
 
-The rail entries for Steps 1–3 show green checks once their validation passes; you can click any prior step rail entry to navigate back and edit.
+The rail entries for Steps 1–4 show green checks once their validation passes; you can click any prior step rail entry to navigate back and edit. (The Filtering step is always valid — an empty filter simply means "forward everything.")
 
 ### What Test Connection actually does
 
@@ -108,7 +129,7 @@ If your destination requires the test event to appear in audit history (some com
 
 ## After save
 
-The destination appears in the **Settings → Syslog Destinations** list. The Health column shows the current state (Unknown until the first audit event ships). Counters increment as events ship.
+The destination appears in the **Settings → Syslog Destinations** list. The Health column shows the current state (Unknown until the first event ships), the Counters column shows shipped / dropped totals, and the **Lag** column shows how many events the destination has not yet forwarded (and the age of the oldest unsent one) — `0` in steady state. A persistent non-zero Lag means the receiver is unreachable or slower than the event rate.
 
 To make changes after save, click the destination's row or use the kebab menu's **Edit** action. The Edit modal re-opens the wizard at Step 1 with all fields prefilled.
 
