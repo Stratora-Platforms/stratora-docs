@@ -35,10 +35,10 @@ Test events triggered from the wizard's **Test Connection** action are explicitl
 
 ## Wire format
 
-Stratora encodes events per **RFC 5424** by default. Example shipped event:
+Stratora encodes events per **RFC 5424** by default. A real shipped event (RFC 5424):
 
 ```
-<132>1 2026-10-02T14:28:54.123456Z DJN-DC-DEV01 stratora 10620 auth.denied [stratora@32473 event_id="7b2c…" category="security" severity="4" actor="admin" route="/api/v1/settings" count="20"] authorization denied user=admin route=/api/v1/settings
+<132>1 2026-10-05T16:30:03.711133Z stratora-server stratora 4336 enrollment.failed - user=external resource=remote_component ip=192.0.2.10 event_id=06ee638f-2d1a-4dd1-89db-9f5a5e764167 type=enrollment.failed seq=193 category=security
 ```
 
 | Field | Value |
@@ -49,11 +49,19 @@ Stratora encodes events per **RFC 5424** by default. Example shipped event:
 | HOSTNAME | Stratora server hostname |
 | APP-NAME | `stratora` |
 | PROCID | Backend process ID |
-| MSGID | The event's wire MSGID: the dotted event type for stream events (`alert.fired`, `auth.denied`, …) and the **bare audit action** (`create`, `login`, …) for audit events, so v2.2 receiver rules keep matching |
-| STRUCTURED-DATA | A `stratora@<PEN>` element carrying the event's **redacted** detail fields (including `event_id`, the de-duplication key). Secret-shaped values are masked before they leave Stratora |
-| MSG | Space-separated `key=value` summary |
+| MSGID | The event's wire MSGID: the **dotted event type** for stream events (`alert.fired`, `enrollment.failed`, …) and the **bare audit action** (`syslog_destination_create`, `login`, …) for audit events, so existing receiver rules keep matching |
+| STRUCTURED-DATA | **`-` (none) in this release.** Stratora's IANA Private Enterprise Number is not yet registered, so no `stratora@<PEN>` element is emitted; the event identity is carried in the **MSG** instead (see below). Once the PEN is registered, a `stratora@<PEN>` element will be **added alongside** the MSG fields — not replacing them — so MSG-based parsing keeps working unchanged. |
+| MSG | A human-readable summary followed by the event identity as `key=value` pairs: `event_id` (the de-duplication key), `type`, `seq`, and `category`, plus the event's own detail fields. Secret-shaped values are redacted before they leave Stratora. |
 
-The **severity** of each event type is listed in the [Event catalog](./event-catalog.md); it is no longer a uniform `notice`. RFC 3164 is available for legacy receivers — it has no structured-data field, so the same detail fields are folded into the message text. Choose the format your SIEM expects when configuring the destination.
+**MSGID vs `type`.** Audit events keep their legacy MSGID (e.g. `syslog_destination_create`) for receiver back-compat, while the MSG carries the dotted `type=audit.syslog_destination_create`; dotted stream events (like `enrollment.failed` above) use the dotted name for **both** the MSGID and `type=`. **Build SIEM rules on the MSG `type=` field, not the MSGID.**
+
+The **severity** of each event type is listed in the [Event catalog](./event-catalog.md); it is no longer a uniform `notice`. **RFC 3164** is available for legacy receivers — it has no structured-data field, and because the RFC 5424 output also withholds structured data in this release, **both formats carry the identity the same way: in the message text.** The same event over RFC 3164:
+
+```
+<132>Oct  5 12:30:03 stratora-server stratora: enrollment.failed user=external resource=remote_component ip=192.0.2.10 event_id=06ee638f-2d1a-4dd1-89db-9f5a5e764167 type=enrollment.failed seq=193 category=security
+```
+
+Choose the format your SIEM expects when configuring the destination.
 
 ### Validation reference
 
@@ -80,7 +88,7 @@ If any enabled destination enters the **Failing** state, an admin-only banner ap
 ## Delivery and reliability
 
 - **At-least-once, durable.** Every event is written to a transactional outbox in the **same database transaction** as the action that caused it, then forwarded to each destination from a persisted position (cursor). A backend restart, a receiver outage, or a crash mid-backlog does not lose events — forwarding resumes from where each destination left off.
-- **De-duplicate on event ID.** Because delivery is at-least-once, a destination may occasionally receive the same event twice (for example, if Stratora restarts between sending an event and recording that it was sent). Every event carries a unique `event_id` in its structured data; configure your SIEM to de-duplicate on it.
+- **De-duplicate on event ID.** Because delivery is at-least-once, a destination may occasionally receive the same event twice (for example, if Stratora restarts between sending an event and recording that it was sent). Every event carries a unique `event_id` in its MSG (as `event_id=…`); configure your SIEM to de-duplicate on it.
 - **Per-destination isolation.** Each destination forwards from its own cursor on its own schedule. A failing or filtered destination cannot block, slow, or starve events to another.
 - **Retry with backoff.** A failed send is retried with exponential backoff (1, 2, 4, 8, 16, 32, 60 seconds, capped at 7 attempts) before the message is dropped and counted; the cursor only advances past an event once it is sent (or intentionally filtered).
 - **Backlog lag is visible.** The destinations list shows a **Lag** column — the number of events a destination has not yet forwarded, and the age of the oldest unsent one. In steady state this is `0`; a persistent non-zero lag means the receiver is unreachable or slow.

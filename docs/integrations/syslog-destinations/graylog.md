@@ -98,7 +98,7 @@ In Graylog's web UI, **Search** → use a query like:
 source:stratora-host AND application_name:stratora
 ```
 
-Graylog's structured-data extraction populates fields directly from RFC 5424 wire bytes:
+Graylog's RFC 5424 parser populates these fields directly from the syslog header:
 
 | Graylog field | Stratora wire field |
 |---|---|
@@ -111,14 +111,14 @@ Graylog's structured-data extraction populates fields directly from RFC 5424 wir
 
 ### Extracting key=value pairs from MSG
 
-Graylog's **Key=Value Pairs Extractor** can split the MSG body into individual fields. Configure on the input:
+Stratora does not emit an RFC 5424 structured-data element in this release, so the **event identity and detail fields live in the MSG body** as `key=value` pairs. Graylog's **Key=Value Pairs Extractor** splits them into individual fields. Configure on the input:
 
 1. Input → **Manage extractors**
 2. **Add extractor → Key=Value Pairs**
 3. Source field: `message`
 4. Save
 
-After the extractor is in place, audit metadata appears as top-level Graylog fields: `user`, `resource`, `ip`, `resource_id`, etc.
+After the extractor is in place, the event identity and metadata appear as top-level Graylog fields: `event_id`, `type`, `seq`, `category`, `user`, `resource`, `ip`, `resource_id`, etc. **Build stream rules and alerts on `type`** (e.g. `type=enrollment.failed`), not the MSGID.
 
 ### Streams and alerts
 

@@ -8,6 +8,59 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.5.0 — October 5, 2026
+
+### Bundled Components
+- Server 2.5.0
+- Agent 2.5.0 (Windows)
+- Agent 2.5.0 (Linux)
+- Collector 2.5.0
+
+All four components ship and upgrade together at a single matching version.
+
+Stratora 2.5.0 turns audit-log forwarding into a complete **event stream**, redesigns **Home**, puts your **sites on the map**, and gives every node a cleaner **detail page** — alongside a refreshed look and feel and security and installer hardening.
+
+### Event stream — syslog now forwards everything
+- Syslog forwarding now covers **every** Stratora event, not just audit actions: alerts (fired, resolved, acknowledged, muted, suppressed), escalation steps and outcomes, notification delivery attempts and results, security events (authorization denied, failed enrollment, license blocks, rejected webhooks), and system events (shutdown, upgrade, retention purge). Every event carries a stable type, category, and a meaningful severity.
+- **Per-destination filtering:** each destination can forward only chosen categories and only events at or above a minimum severity.
+- **At-least-once delivery that survives restarts and receiver outages:** events are staged in a transactional outbox and forwarded from a persisted cursor; receivers dedupe on the event id. A new **Lag** column shows each destination's unsent backlog.
+
+### Home, redesigned
+- A redesigned Home with KPI history (node states and active-alert totals over time), filled in retroactively on upgrade, and a world map that fits and pans.
+
+### Sites on the map
+- Place a site from the site form or the setup wizard — address suggestions as you type, a picker map, or raw coordinates; "Don't show on maps" for sites with no physical place. Adding and editing a site is now a three-step wizard.
+- The Sites page shows which sites aren't on maps yet, with counts; **Find locations** places existing sites from their stored address (assisted — nothing is saved until you accept a match).
+- Address lookup is configurable (Settings → System): Photon by default, a self-hosted Photon/Nominatim server, or off.
+
+### Node detail and nodes list
+- A node's detail page lays its panels out in a responsive grid, with virtualization rosters and Recent Tasks; the nodes list gains a "Degraded or Critical" status filter and multi-status links.
+
+### A refreshed look and feel
+- A refreshed visual design across pages, tables, and dialogs — cleaner layouts and more consistent components throughout.
+- Status and severity colors are now consistent everywhere: the same color means the same thing on every page, badge, dot, and chart.
+- A new **Light mode (Beta)** alongside the default dark theme, plus a **System** option that follows your operating system — choose it from your profile menu. Light mode is still being refined.
+
+### Security
+- The backend API now binds to **loopback (127.0.0.1)** instead of all interfaces (fronted through NGINX); upgrades migrate a stale `0.0.0.0` default once, with a durable marker so a deliberate `0.0.0.0` is preserved. Proxy-trust hardening closes forged-header spoofing.
+- The app's HTML entry point and static assets now carry the full security-header set (deep links no longer lose them); hashed assets are immutable; missing assets return 404 instead of app HTML.
+
+### Installer and reliability
+- Reinstalling over a preserved database no longer leaves the backend unable to start (role-password reconciliation on reinstall).
+- The Alerts time-range filter is faster on large alert histories.
+
+### Known issues
+
+**Collector offline can clear existing alerts for its nodes.** If a collector stops reporting while its host is still up, Stratora can mark the nodes' existing metric alerts as resolved. **Workaround:** keep the built-in **Collector Offline** alert enabled and treat any auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back and a fresh collection cycle completes.
+
+**Let's Encrypt renewal does not redeploy the certificate to NGINX.** A renewed certificate is written to the ACME store but not applied automatically. **Workaround — re-upload the renewed certificate:** after each renewal, and before the current certificate expires, take the newest `<domain>-chain.pem` and `<domain>-key.pem` from `C:\Program Files\Stratora\acme-data\certs\`, then in **Administration → SSL / TLS Certificate → Upload Certificate** (format **PEM**) choose `<domain>-chain.pem` as the **Certificate File (.crt, .pem)** and `<domain>-key.pem` as the **Private Key File (.key)** (leave the optional chain field empty), click **Validate Certificate**, then **Upload & Apply**. Stratora installs the certificate and restarts NGINX for you.
+
+**Status-alert value labels (partial).** Status alerts without a numeric value no longer show a raw number; some enumerated status values (for example RAID status) still show the raw code rather than a friendly label. Full labels are coming in an upcoming release.
+
+**FortiGate VPN tunnel panel.** The FortiGate VPN tunnel panel can read "No ports found" due to an incorrect SNMP OID; interface, CPU, and memory monitoring are unaffected. Under investigation.
+
+**After a "Repair", start the Stratora services (or reboot).** Running **Repair** from Programs & Features (or `msiexec /fa`) completes successfully but leaves the Stratora Windows services stopped. To recover, open **Services** and start every service whose name begins with "Stratora" — or reboot the server. (As an Administrator, `Get-Service Stratora* | Start-Service` does the same.) A fix is coming in the next release.
+
 ## v2.4.4 — September 11, 2026
 
 ### Bundled Components

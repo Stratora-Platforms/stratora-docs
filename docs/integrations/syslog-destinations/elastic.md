@@ -34,11 +34,17 @@ input {
 filter {
   if [type] == "stratora_audit" {
     grok {
+      # NOTSPACE (not WORD): stream event types are dotted (e.g. enrollment.failed),
+      # and WORD stops at the dot. The MSGID is the audit action for audit events,
+      # the dotted type for stream events; build rules on [audit][type], not this.
       match => {
-        "message" => "%{NONNEGINT:procid}\s+%{WORD:audit_action}\s+-\s+%{GREEDYDATA:audit_kv}"
+        "message" => "%{NONNEGINT:procid}\s+%{NOTSPACE:msgid}\s+-\s+%{GREEDYDATA:audit_kv}"
       }
     }
     kv {
+      # Splits the MSG into [audit][event_id], [audit][type], [audit][seq],
+      # [audit][category], and the detail fields. Stratora emits no RFC 5424
+      # structured-data element this release, so the identity lives here in the MSG.
       source => "audit_kv"
       target => "audit"
     }
@@ -144,20 +150,24 @@ In Kibana, navigate to **Discover** and search the index `stratora-audit-*`. Exp
 
 ```json
 {
-  "@timestamp": "2026-05-24T12:00:00.000Z",
-  "host": "stratora-host",
+  "@timestamp": "2026-10-05T16:30:03.711Z",
+  "host": "stratora-server",
   "program": "stratora",
-  "procid": 392,
-  "audit_action": "login",
+  "procid": 4336,
+  "msgid": "enrollment.failed",
   "audit": {
-    "user": "admin",
-    "resource": "session",
-    "ip": "10.0.0.10"
+    "event_id": "06ee638f-2d1a-4dd1-89db-9f5a5e764167",
+    "type": "enrollment.failed",
+    "seq": "193",
+    "category": "security",
+    "user": "external",
+    "resource": "remote_component",
+    "ip": "192.0.2.10"
   }
 }
 ```
 
-The grok pattern from the Logstash config above extracts `audit_action` and the key=value pairs into the `audit.*` namespace; adjust the pattern if your needs differ.
+The grok pattern from the Logstash config above captures the `msgid` and the `kv` filter extracts the key=value pairs — including `event_id`, `type`, `seq`, and `category` — into the `audit.*` namespace. Build rules and alerts on `[audit][type]` (e.g. `audit.type: enrollment.failed`), not the `msgid`. A detail field whose value contains spaces (e.g. a destination named `Main Office SIEM`) is truncated by the `kv` filter, but `event_id` and `type` are single-token values and parse correctly on every line; adjust the pattern if you need the full value of such fields.
 
 ### Index lifecycle management
 

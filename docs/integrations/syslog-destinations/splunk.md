@@ -122,9 +122,16 @@ In `$SPLUNK_HOME/etc/system/local/props.conf`:
 
 ```ini
 [syslog]
+# Legacy MSGID (the audit action for audit events, the dotted type for stream events)
 EXTRACT-stratora_action = stratora\s+\d+\s+(?<stratora_action>\S+)\s+-
+# Event identity — carried in the MSG (Stratora emits no RFC 5424 structured-data element this release)
+EXTRACT-stratora_event_id = \bevent_id=(?<stratora_event_id>\S+)
+EXTRACT-stratora_type = \btype=(?<stratora_type>\S+)
+# Common detail fields
 EXTRACT-stratora_kv = (?<stratora_user>user=\S+)\s+(?<stratora_resource>resource=\S+)
 ```
+
+Build searches and alerts on `stratora_type` (e.g. `stratora_type=enrollment.failed`), **not** the MSGID. (Splunk's automatic key=value extraction also surfaces `event_id` and `type` on `KV_MODE=auto` sourcetypes; the explicit extracts above make them reliable regardless.) A detail field whose value contains spaces — e.g. a destination named `Main Office SIEM` — is truncated by naive key=value parsing, but `event_id` and `type` are single-token values and extract correctly on every line.
 
 ---
 
