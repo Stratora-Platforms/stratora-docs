@@ -10,83 +10,91 @@ The Home page is Stratora's daily-driver overview — the first surface you see 
 
 ## What's on the page
 
-![Stratora Home dashboard — Infrastructure Brief hero, Nodes by Site, Top Resources, Platform Activity, Collectors, and Quick Actions panels in a single overview](/img/monitoring/home-overview.png)
+![Stratora Home dashboard — Health Score gauge and world map hero, the Infrastructure KPI cards, and the Needs Attention, Node Status, Infrastructure by Type, and Sites panels](/img/monitoring/home-overview.png)
 
 ### Status counters (top bar)
 
-The status counters in the top bar — visible on every page in Stratora, not just Home — show how many monitored nodes are currently **Critical**, **Degraded**, **Offline**, **Maintenance**, and **Healthy**. The counters update on the same cadence as the rest of the page (~10 seconds). Click any counter to open the Nodes list filtered to that status — useful when you want to immediately see which devices are flagged.
+The status counters in the top bar — visible on every page in Stratora, not just Home — show how many monitored nodes are currently **Critical**, **Degraded**, **Offline**, **Maintenance**, and **Healthy**. They update on the same cadence as the rest of the page (~10 seconds). Click any counter to open the Nodes list filtered to that status.
 
-### Infrastructure Brief (hero card)
+### Health Score and the world map (hero)
 
-The hero card on the Home page is the **Infrastructure Brief** — a one-screen triage that combines:
+The hero combines the platform's **Health Score** gauge — the overall health percentage, with a one-line summary beneath it (for example, "37 of 45 nodes healthy," "Score reduced by 8 issues," and a link to how many collectors are online) — with a **world map** of your sites. Each site is plotted at its location and colored by its worst current status; zoom, pan, **Fit to sites**, and **Full screen** controls are on the map. See [Health score methodology](#health-score-methodology) below for how the percentage is calculated. A **time-range picker** and a manual refresh control sit at the top right, and a **Setup wizard** shortcut appears until setup is complete.
 
-- **The Health Score gauge** — the platform's overall health percentage. See [Health score methodology](#health-score-methodology) below for how it's calculated.
-- **The Node Status donut** — a proportional breakdown of nodes by health state (Healthy, Degraded, Critical, and Offline, plus Discovering or Maintenance when any nodes are in those states). Click a segment to jump to the matching nodes.
-- **Triage bullets** — short text callouts highlighting the most consequential issues right now (sites with the most critical nodes, the noisiest alerting categories, recent state changes).
+### Infrastructure KPIs
 
-If everything is healthy the brief reads "ALL CLEAR" and the gauge shows 100%. When that's not the case, the bullets tell you what to look at first.
+A row of KPI cards summarizes the deployment, each with a 24-hour sparkline and a since-24h delta, and each clickable into the matching filtered view:
 
-![Infrastructure Brief card — health score gauge on the left, a Node Status donut on the right showing nodes by health state, with triage bullets summarizing the most consequential issues](/img/monitoring/home-infrastructure-brief.png)
+- **Active Devices** — devices seen in the last 24 hours.
+- **Nodes Down** — nodes currently offline.
+- **Nodes Degraded / Critical** — with the critical-vs-degraded split.
+- **Active Alerts** — with the critical / warning / info split.
+- **Nodes in Maintenance** — nodes in an active maintenance window.
 
-### Recommended Actions
+![Infrastructure KPI cards — Active Devices, Nodes Down, Nodes Degraded / Critical, Active Alerts, and Nodes in Maintenance, each with a 24-hour sparkline and a since-24h delta](/img/monitoring/home-kpi-cards.png)
 
-When Stratora detects actionable items — pending agents waiting for approval, unbound IPAM subnets, a credential about to expire, a discovery job that finished and has importable devices — they surface in the **Recommended Actions** card. The card only appears when there are actions to recommend. Each item links straight to the relevant page in Stratora.
+### Needs Attention
 
-![Recommended Actions card — surfaces actionable items detected by Stratora with direct links to the relevant page](/img/monitoring/home-recommended-actions.png)
+The **Needs Attention** card lists the active alerts that most warrant a look — severity, the affected item, the issue, its site, and how long ago it fired — with a **View All Alerts** link into the full Alerts page. When Stratora detects actionable items (pending agents awaiting approval, unbound IPAM subnets, an expiring credential, a finished discovery job with importable devices), a **Recommended actions** list appears beneath the alerts with direct links to the relevant page.
 
-### Nodes by Site
+![Needs Attention card — a severity-ranked list of active alerts with item, issue, site, and time, plus a Recommended actions list](/img/monitoring/home-needs-attention.png)
 
-The **Nodes by Site** table breaks down node counts per site, columned by status (Healthy, Degraded, Critical, Offline, Discovering, Maintenance, Total). Click any site name to open its per-site dashboard with the same context preserved. Empty sites show zeros across the row — useful when you've defined a site but haven't imported any nodes yet.
+### Node Status
 
-![Nodes by Site table — per-site rollup with status columns (Healthy, Degraded, Critical, Offline, Discovering, Maintenance) and a Total column](/img/monitoring/home-nodes-by-site.png)
+The **Node Status** card shows a donut of all nodes broken down by health state — Healthy, Degraded, Critical, Offline, and Maintenance — with a legend giving the count and percentage for each. **View Nodes** opens the full Nodes list.
 
-### Top Resources
+![Node Status card — a donut of all nodes by health state with a legend showing count and percentage per state](/img/monitoring/home-node-status.png)
 
-The **Top Resources** card shows the three most utilized resources across the deployment: top **CPU Usage**, top **Memory Usage**, and top **Bandwidth**. Each column lists the top three nodes for that metric. Click any node to open its detail page.
+### Infrastructure by Type
 
-![Top Resources card — three columns side by side showing the most-utilized nodes by CPU, Memory, and Bandwidth](/img/monitoring/home-top-resources.png)
+The **Infrastructure by Type** card counts nodes by category — Servers and Storage, Networking, Wireless, Virtualization, Misc Checks, Out-of-Band Management — with a proportional bar for each, so you can see the shape of what you're monitoring at a glance.
 
-### Platform Activity
+![Infrastructure by Type card — node counts per category (Servers and Storage, Networking, Wireless, Virtualization, Misc Checks, Out-of-Band Management) with proportional bars](/img/monitoring/home-infrastructure-by-type.png)
 
-The **Platform Activity** card surfaces recent significant events from the audit log — node approvals, credential changes, alert acknowledgments, user actions. This is your at-a-glance record of "what's been happening on Stratora" without having to navigate to the full Audit Logs page. The full log lives at [Audit Logs](/docs/administration/audit-logs).
+### Sites
 
-![Platform Activity card — recent audit-log events including node approvals, credential changes, and user actions](/img/monitoring/home-platform-activity.png)
+The **Sites** card rolls infrastructure health up by location: total nodes, a health bar, per-status counts (Degraded, Critical, Offline, Maintenance), an overall status, and when the site last changed. Click any site row to open its per-site dashboard; **View All Sites** opens the Sites page. Sites with no nodes read "No nodes."
 
-### Quick Actions
+![Sites card — per-site rollup with total nodes, a health bar, per-status counts, overall status, and last-change time](/img/monitoring/home-sites.png)
 
-The **Quick Actions** card gives you single-click shortcuts to the most common workflows: Add Node, View Alerts, View All Nodes. Operators with limited daily Stratora use will reach for these.
+### Active Resource Conditions
 
-### Collectors
+The **Active Resource Conditions** card surfaces the resources currently **at trigger** — the node, its type, the metric, the current value, and the threshold it has crossed — each linking to the underlying alert. This often surfaces resource-saturation incidents faster than scanning the alert list.
 
-The **Collectors** card lists every registered [Collector](/docs/collection/collectors) with its name, status (Online / Offline / Stale), last heartbeat age, and current target count. Click any collector to open its detail view. Use this card to verify your collection fleet is healthy before relying on the metrics it produces.
-
-![Collectors card — registered collectors with name, status, last heartbeat age, and assigned target count](/img/monitoring/home-collectors.png)
+![Active Resource Conditions card — resources currently at trigger, showing node, type, metric, current value, and threshold](/img/monitoring/home-active-resource-conditions.png)
 
 ### Recent Activity
 
-The **Recent Activity** card mirrors Platform Activity but scopes to per-node events — recently-added nodes, recent status transitions, recent metric anomalies. Empty when there's been no recent change.
+The **Recent Activity** card is a running feed of the last 24 hours of alert activity — fires and resolutions — each with its site and time, linking to the alert. It's your at-a-glance record of what's been happening without leaving Home.
+
+![Recent Activity card — the last 24 hours of alert fires and resolutions with site and time](/img/monitoring/home-recent-activity.png)
+
+### Upcoming Maintenance
+
+The **Upcoming Maintenance** card lists maintenance windows that are in progress or scheduled, so planned work doesn't get mistaken for an incident. **View All** opens the Maintenance page.
+
+![Upcoming Maintenance card — in-progress and scheduled maintenance windows](/img/monitoring/home-upcoming-maintenance.png)
 
 ## Health score methodology
 
 The percentage shown in the Health Score gauge is a weighted aggregation across all monitored nodes:
 
-- Each node contributes a score based on its current health status: Healthy = 100%, Degraded = a partial credit, Critical / Offline = 0%, Discovering = neutral (excluded from the average), Maintenance = neutral.
+- Each node contributes a score based on its current health status: Healthy = 100%, Degraded = partial credit, Critical / Offline = 0%, Discovering = neutral (excluded from the average), Maintenance = neutral.
 - Sites are weighted by their node count — a 50-node site contributes more weight than a 5-node site.
 - The result is a single percentage that tracks the deployment's overall health day over day.
 
-The score is intended as a directional indicator, not a precise SLA metric. Use it to spot trend changes; use the per-node and per-site dashboards for incident-level detail.
+The score is a directional indicator, not a precise SLA metric. Use it to spot trend changes; use the per-node and per-site dashboards for incident-level detail.
 
 ## Common workflows from the Home page
 
-**Start your shift here.** A glance at the Infrastructure Brief tells you whether anything broke overnight. Recommended Actions tells you whether anything needs your attention before your first standup. Nodes by Site tells you which sites carry the current weight.
+**Start your shift here.** The Health Score and the KPI cards tell you whether anything broke overnight; Needs Attention tells you what to look at first; Sites tells you which locations carry the current weight.
 
-**Triage during an incident.** When the Critical counter ticks up, click it to jump to the affected nodes. The Top Resources card often surfaces resource-saturation incidents faster than the alert engine does — a CPU spike will show up in Top Resources before the threshold-based alert fires.
+**Triage during an incident.** When the Critical counter or the Nodes Degraded / Critical card ticks up, click through to the affected nodes. Active Resource Conditions often surfaces resource-saturation incidents the moment a metric crosses its threshold.
 
-**Wind down your shift.** Platform Activity gives you a quick read of what changed today — who approved which agents, who acknowledged which alerts, which credentials were touched. Useful for handoffs and post-incident reconstruction.
+**Wind down your shift.** Recent Activity gives you a quick read of what fired and resolved today — useful for handoffs and post-incident reconstruction — and Upcoming Maintenance shows what's planned next.
 
 ## Refresh cadence
 
-The Home page refreshes automatically every ~10 seconds. The **Refresh** button at the top forces an immediate refresh — useful when you want to see the effect of an action you just took (for example, after approving a pending agent).
+The Home page refreshes automatically every ~10 seconds, and the time-range picker scopes the KPI sparklines and activity feeds. The refresh control at the top right forces an immediate refresh — useful when you want to see the effect of an action you just took (for example, after approving a pending agent).
 
 ## See also
 
