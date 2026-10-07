@@ -8,6 +8,31 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.5.1 — October 7, 2026
+
+### Bundled Components
+- Server 2.5.1
+- Agent 2.5.1 (Windows)
+- Agent 2.5.1 (Linux)
+- Collector 2.5.1
+
+Stratora 2.5.1 is a patch release on top of 2.5.0. **Upgrading from 2.4.x? 2.5.1 includes everything in 2.5.0** — the full event stream for syslog/SIEM, the redesigned Home, sites on the map, the new node detail pages, and security and installer hardening. See the [2.5.0 release notes](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.5.0) for the full list. If you are on 2.5.0, upgrade to 2.5.1.
+
+### Fixed
+- **The Home page no longer appears blank on a deployment with no monitored nodes yet** — for example right after a fresh install, or after upgrading an empty environment. Every Home panel now shows its empty state.
+- **Pages recover from errors instead of going blank.** If a panel or page hits a problem, Stratora shows a recoverable message in its place, and the navigation stays available.
+- **The "Setup wizard" button in the Home header is now clearly readable** over the map, matching the time-range and refresh controls beside it.
+
+### Changed
+- **The setup wizard now opens automatically only on a brand-new installation.** After an upgrade, or when a user is asked to change their password, Stratora opens Home normally. If setup hasn't been completed, Home shows a "Start setup" or "Continue setup" prompt.
+
+### Known issues (carried forward from 2.5.0)
+- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. A fix is planned for an upcoming release.
+- **Let's Encrypt renewal doesn't redeploy the certificate to NGINX.** After each renewal, re-upload the renewed certificate under Administration → SSL / TLS Certificate (full steps in the [2.5.0 notes](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.5.0)).
+- **Some status alerts still show raw codes** for certain values (for example RAID status); full labels are coming.
+- **FortiGate VPN tunnel panel** can read "No ports found"; under investigation.
+- **After a Repair from Programs & Features, start the Stratora services or reboot.** In Services, start every service whose name begins with "Stratora", or run `Get-Service Stratora* | Start-Service`.
+
 ## v2.5.0 — October 5, 2026
 
 ### Bundled Components
