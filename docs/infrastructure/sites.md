@@ -146,7 +146,9 @@ Clicking any site opens the site detail page, which provides a complete view of 
 
 ### Photos tab
 
-![Site detail — Photos tab with site photo gallery and upload zone](/img/infrastructure/site-detail-photos.png)
+:::note Screenshot being refreshed
+The Photos tab screenshot is being refreshed and will return in an upcoming docs update.
+:::
 
 ### Networks
 
