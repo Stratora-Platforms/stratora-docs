@@ -8,6 +8,33 @@ sidebar_position: 110
 All notable changes to Stratora are listed here, newest first.
 For detailed installation instructions see [Getting Started](/docs/getting-started).
 
+## v2.5.2 — October 11, 2026
+
+### Bundled Components
+- Server 2.5.2
+- Agent 2.5.2 (Windows)
+- Agent 2.5.1 (Linux)
+- Collector 2.5.2
+
+Stratora 2.5.2 is a patch release on top of 2.5.1 with three fixes. **Upgrading from 2.4.x? 2.5.2 includes everything in 2.5.0 and 2.5.1.** If you are on 2.4.2 or later, upgrade to 2.5.2.
+
+### Fixed
+- **Auto-generated site dashboards are visible again.** Since 2.4.2, the dashboard Stratora generates for each site could be hidden from every user: the Dashboards page listed none under Auto-Generated, and the site's Dashboard tab was empty. This affected every new installation, and every site added after upgrading to 2.4.2 or later. After you upgrade, each site's dashboard appears for all users again; nothing needs to be recreated.
+- **Escalation teams can use selected contacts as their only recipients.** Saving a team failed with an error when an email, Slack or Teams notification listed selected contacts but no typed addresses or webhook URL, including from the setup wizard's Alerts step. These teams now save, and notifications go to the contacts' email addresses or webhooks. If none of a notification's selected contacts has the address or webhook it needs, Stratora names those contacts. Editing a team also no longer clears its typed email addresses or its selected contacts.
+- **On a new installation, the Stratora server appears as a monitored node without a restart.** The agent bundled with the server tried to register before the first site existed, then stopped trying, so the server didn't appear under Nodes until its Stratora Agent service was restarted. The agent now keeps retrying and registers shortly after the first site is created. Upgrading the server to 2.5.2 updates its own agent. Windows agents on other machines get the same fix by installing the 2.5.2 Agent installer (Collection → Agents → Download Agent MSI); on collector hosts, install the 2.5.2 Collector installer instead.
+
+### Downloads
+- Installers: [v2.5.2 release page](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.5.2)
+- SHA-256 (Stratora-Server-2.5.2.msi): 3c310a4359182b005a8edf8ad1b24d045eab02759cc2fb43483701d67402b7bb
+
+### Known issues
+- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. A fix is planned for an upcoming release.
+- **Let's Encrypt renewal doesn't redeploy the certificate to NGINX.** After each renewal, re-upload the renewed certificate under Administration → SSL / TLS Certificate (full steps in the [2.5.0 notes](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.5.0)).
+- **Some status alerts still show raw codes** for certain values (for example RAID status); full labels are coming.
+- **FortiGate VPN tunnel panel** can read "No ports found"; under investigation.
+- **After a Repair from Programs & Features, start the Stratora services or reboot.** In Services, start every service whose name begins with "Stratora", or run `Get-Service Stratora* | Start-Service`.
+- **Hardware status can be wrong when Dell and HPE controllers share a collector.** When Dell iDRAC and HPE iLO devices are monitored by the same collector, a server's hardware status (fans, power supplies, temperature) can be reported incorrectly: healthy components may show as failed, or failures as healthy. Workaround: monitor Dell and HPE management controllers from separate collectors until the fix ships.
+
 ## v2.5.1 — October 7, 2026
 
 ### Bundled Components
