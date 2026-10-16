@@ -93,7 +93,6 @@ warning).
 | `alert.acknowledged` | `alert.acknowledged` | 5 (notice) |  | Alert acknowledged (actor_channel = ui/api/email_token/sms/voice) |
 | `alert.fired` | `alert.fired` | 4 (warning) | ✓ | Alert instance fired (severity follows the alert: crit=2, warning=4, info=6) |
 | `alert.muted` | `alert.muted` | 5 (notice) |  | Alert muted |
-| `alert.refired` | `alert.refired` | 4 (warning) | ✓ | Alert re-fired after a prior resolution |
 | `alert.resolved` | `alert.resolved` | 5 (notice) |  | Alert resolved (auto or manual; actor in envelope) |
 | `alert.severity_changed` | `alert.severity_changed` | 5 (notice) |  | Alert severity transitioned (from/to in details) |
 | `alert.suppressed` | `alert.suppressed` | 5 (notice) |  | An existing alert transitioned to suppressed (node entered a maintenance window) |
