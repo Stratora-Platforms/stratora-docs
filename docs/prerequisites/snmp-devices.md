@@ -57,7 +57,7 @@ For the full list — including **how each device is recognized during discovery
 Two things it makes explicit that a flat vendor list cannot:
 
 - **Recognition** — whether a device is found automatically on a scan. Most families are auto-recognized, but not all. For example, classic-IOS **Cisco Catalyst** collection works, yet no discovery fingerprint exists for it yet, so it is **added manually** rather than found on a scan — a known, closable gap.
-- **Validation basis** — whether a template was verified against a real physical device (**Validated**), against a captured firmware replay with no live device (**Replay-validated**), or is authored from vendor MIB documentation and not yet verified (**MIB-derived**). Many families are not yet hardware-validated.
+- **Validation level** — whether a template was tested against a real physical device (**Real-world validated**), against a recorded SNMP dataset replayed in a simulator with no physical device (**Simulated**), or is implemented from vendor MIB documentation and covered by automated tests but not yet checked against a device or a recording (**Code only**). Many families are not yet real-world validated, and some devices have individual features at a different level from the device as a whole; the page lists those separately under **Features at a different level**.
 
 :::note ESXi and vCenter
 For vSphere, vCenter inventory and per-host/VM utilization come from the **vSphere API**, not SNMP — see [Virtualization prerequisites](/docs/prerequisites/virtualization). SNMP applies to the **per-host enrichment layer** (each ESXi host onboarded as a VMware Host node for memory overcommit and host-alert attribution); ESXi ships with **SNMP disabled**, so enable it per host (`esxcli system snmp set --enable true`) before onboarding.
@@ -65,11 +65,11 @@ For vSphere, vCenter inventory and per-host/VM utilization come from the **vSphe
 
 ## What the built-in alerts cover
 
-Every monitored device gets reachability alerting: device unreachable, packet loss, and response time. The network device families above additionally get SNMP interface monitoring — per-interface throughput, plus interface **error-rate** alerting — and per-family alerts where the platform exposes the data: NAS volume and RAID state on Synology and QNAP, host memory overcommit and datastore capacity on VMware.
+Every monitored device gets reachability alerting: device unreachable, packet loss, and response time. The network device families above additionally get SNMP interface monitoring — per-interface throughput, plus interface **error-rate** alerting — and per-family alerts where the platform exposes the data: NAS volume and RAID state on Synology and QNAP, and host memory overcommit on VMware ESXi. The Alerts column on [Supported Devices](/docs/supported-devices) lists the built-in alerts that apply to each device.
 
 Two qualifications in the current release:
 
-- **Palo Alto PA Series** — the PA template does not currently collect interface error counters, so interface-error alerting does not apply to PA devices. Reachability alerting and interface throughput monitoring are unaffected.
+- **Palo Alto PA Series** — the PA template collects interface error counters (inbound and outbound errors), so interface-error alerting applies to PA devices. PA devices do not expose interface discard counters, so discard-based alerting does not apply to them.
 - **Interface discards** — discard counters are collected on a subset of device families; discard-based alerting applies only where a device's template collects those counters.
 
 The [built-in alert library](/docs/alerting/alert-configurations) lists every alert. Each alert evaluates only on devices whose template collects the underlying metric — seeing an alert in the library does not by itself mean it applies to every device family.
