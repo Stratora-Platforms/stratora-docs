@@ -57,7 +57,7 @@ For the full list — including **how each device is recognized during discovery
 Two things it makes explicit that a flat vendor list cannot:
 
 - **Recognition** — whether a device is found automatically on a scan. Most families are auto-recognized, but not all. For example, classic-IOS **Cisco Catalyst** collection works, yet no discovery fingerprint exists for it yet, so it is **added manually** rather than found on a scan — a known, closable gap.
-- **Validation basis** — whether a template was verified against a real physical device (**Validated**), against a captured firmware replay with no live device (**Replay-validated**), or is authored from vendor MIB documentation and not yet verified (**MIB-derived**). Many families are not yet hardware-validated.
+- **Validation level** — whether a template was tested against a real physical device (**Real-world validated**), against a recorded SNMP dataset replayed in a simulator with no physical device (**Simulated**), or is implemented from vendor MIB documentation and covered by automated tests but not yet checked against a device or a recording (**Code only**). Many families are not yet real-world validated, and some devices have individual features at a lower level than the device as a whole; the page lists those separately.
 
 :::note ESXi and vCenter
 For vSphere, vCenter inventory and per-host/VM utilization come from the **vSphere API**, not SNMP — see [Virtualization prerequisites](/docs/prerequisites/virtualization). SNMP applies to the **per-host enrichment layer** (each ESXi host onboarded as a VMware Host node for memory overcommit and host-alert attribution); ESXi ships with **SNMP disabled**, so enable it per host (`esxcli system snmp set --enable true`) before onboarding.
