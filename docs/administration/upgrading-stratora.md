@@ -10,10 +10,10 @@ This page takes you through an in-place upgrade of an existing Stratora deployme
 
 In short:
 
-1. [Before you upgrade](#before-you-upgrade): check your versions and the upgrade path, take a backup, and plan for a short monitoring gap.
+1. [Before you upgrade](#before-you-upgrade): check your versions and the upgrade path, take a snapshot of each machine, and plan for a short monitoring gap.
 2. [Upgrade the server](#upgrade-the-server).
 3. Right after that, [upgrade every collector](#upgrade-the-collectors) and [every agent](#upgrade-the-agents).
-4. [After the upgrade](#after-the-upgrade): confirm that nothing is left on an older version.
+4. [After the upgrade](#after-the-upgrade): confirm that nothing is left on an older version, then commit or delete the snapshots.
 
 ---
 
@@ -39,22 +39,24 @@ At every step, upgrade the server first and then its collectors and agents, as d
 
 You can't install an older version over a newer one. Each installer stops with a message such as "A newer version of Stratora Server is already installed."
 
-### Back up the server
+### Take a snapshot first
 
-Stratora has no built-in backup command. Back up the server machine before you upgrade, in one of these two ways:
+**Before you upgrade, take a snapshot or backup of each machine you are about to upgrade**: the Stratora server, and every collector and agent host. Use your virtualization or backup software.
 
-- **A virtual machine snapshot or a full image backup** of the server. This is the simplest way to go back if you need to.
-- **A copy of the install folder's `config` and `data` folders**, taken while the Stratora services are stopped. The install folder is `C:\Program Files\Stratora` unless you chose another one. `data` holds the database, the metric store and the keys the server uses, so always keep and restore the `data` folder as a whole. A server restored without its own `data` folder needs every collector and agent enrolled again. From PowerShell opened with **Run as administrator**:
+- **Keep each snapshot until you have confirmed that the upgrade succeeded** (see [After the upgrade](#after-the-upgrade)). Then commit or delete it, as your platform requires.
+- **If anything goes wrong partway through the upgrade**, for example a power loss, a host failure or an upgrade that can't complete, **restoring that snapshot is the supported way back.**
 
-  ```powershell
-  Get-Service Stratora* | Stop-Service -Force
-  # Copy C:\Program Files\Stratora\config and C:\Program Files\Stratora\data to your backup location.
-  Get-Service Stratora* | Start-Service
-  ```
+### Physical servers: copy the config and data folders
 
-  Store the copy where only administrators can read it.
+Stratora has no built-in backup command. If the Stratora server is a physical machine and you can't take an image backup of it, copy the install folder's `config` and `data` folders while the Stratora services are stopped. The install folder is `C:\Program Files\Stratora` unless you chose another one. `data` holds the database, the metric store and the keys the server uses, so always keep and restore the `data` folder as a whole. A server restored without its own `data` folder needs every collector and agent enrolled again. From PowerShell opened with **Run as administrator**:
 
-Collectors and agents don't need a backup for the upgrade: their upgrades keep their configuration and enrollment.
+```powershell
+Get-Service Stratora* | Stop-Service -Force
+# Copy C:\Program Files\Stratora\config and C:\Program Files\Stratora\data to your backup location.
+Get-Service Stratora* | Start-Service
+```
+
+Store the copy where only administrators can read it.
 
 ### Plan for a short monitoring gap
 
@@ -120,7 +122,7 @@ You don't need to give the install folder. The installer finds the folder the cu
 - the file `UPGRADE-COMPLETED-WITH-ERRORS.txt` in the install folder names the step that failed and lists the recovery steps;
 - `logs\postinstall.log` in the install folder has the details.
 
-Follow the recovery steps in that file. When database changes are still pending, one of them is to run the same installer again. If the steps don't fix it, restore your backup or contact support.
+Follow the recovery steps in that file. When database changes are still pending, one of them is to run the same installer again. If the steps don't fix it, restore your pre-upgrade snapshot or backup, or contact support.
 
 ### 4. Confirm the server upgrade
 
@@ -231,6 +233,8 @@ Open **Infrastructure → Nodes**. The agent reports its version with every hear
 - **The Out of date badge and filter.** On **Collection → Collectors** and **Infrastructure → Nodes**, an **Out of date** badge marks each collector and agent on an older version, and the version filter lists only those. The Collectors page also shows how many are out of date under the total.
 
 The upgrade is complete when both filtered pages are empty and the **About** row says the collectors and agents are up to date.
+
+**Then commit or delete the pre-upgrade snapshots.** Once the server, every collector and every agent check out, you no longer need the snapshots you took in [Take a snapshot first](#take-a-snapshot-first). Commit or delete them, as your platform requires.
 
 A collector or agent that hasn't reported a version yet, or that runs a development build, is not counted as out of date.
 
