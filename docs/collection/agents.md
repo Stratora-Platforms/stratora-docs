@@ -134,7 +134,9 @@ If the agent doesn't appear, check:
 - **StratoraAgent** — Windows service managing the agent lifecycle (register/heartbeat, hostname detection, role detection, Telegraf config generation)
 - **stratora-agent-telegraf** — Windows service running the embedded Telegraf instance that collects and ships metrics
 - **stratora-tray.exe** — system-wide tray indicator (launched at logon for every interactive user) that shows agent connection status and links to logs
-- Installed to `C:\Program Files\Stratora\`, with configuration and logs under `C:\ProgramData\Stratora\`
+- Installed to `C:\Program Files\Stratora\`, with the configuration (`config.json`) in that folder
+- Agent log at `C:\Program Files\Stratora\logs\agent.log` (when it reaches 10 MB it is renamed to `agent.<date>-<time>.log` and a new one starts)
+- `C:\ProgramData\Stratora\` holds only the agent's status file, `agent-status.json`. The installer also creates a `C:\ProgramData\Stratora\logs` folder, but the agent does not write its log there.
 
 ### Linux
 
@@ -224,7 +226,7 @@ Agents upgrade in-place. Configuration, the enrolled component ID, and the compo
 
 ### Windows
 
-Run the new `StratoraAgent-X.Y.Z.msi` installer (interactively or silently) — WiX's `MajorUpgrade` schedule removes the older product after the new one is installed. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade; there is a brief metric gap (typically &lt;30 seconds) while the new Telegraf binary takes over.
+Run the new `StratoraAgent-X.Y.Z.msi` installer. The command line below is the simpler way: the interactive installer asks for a server URL and an enrollment token even on an upgrade, although the upgrade keeps the agent's enrollment and does not use them. The installer removes the older version at the start of the upgrade, inside the same installation (its `MajorUpgrade` is scheduled `afterInstallInitialize`), and only then installs the new files. If the upgrade fails or is cancelled, Windows Installer puts the older version back. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade; there is a brief metric gap (typically &lt;30 seconds) while the new Telegraf binary takes over.
 
 ```cmd
 msiexec /i StratoraAgent-X.Y.Z.msi /qn
