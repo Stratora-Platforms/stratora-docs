@@ -80,10 +80,10 @@ curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/
 sudo dpkg -i /tmp/stratora-agent.deb
 ```
 
-2. Write the agent configuration and start the service:
+2. Create the agent configuration file (owned by the `stratora` user, mode `0600`), write the configuration and start the service:
 
 ```bash
-sudo tee /etc/stratora/agent.json << 'EOF'
+sudo install -m 0600 -o stratora -g stratora /dev/null /etc/stratora/agent.json && sudo tee /etc/stratora/agent.json > /dev/null << 'EOF'
 { "server_url": "https://stratora.example.com", "enrollment_token": "enroll_xxxxx", "site_name": "Main Office" }
 EOF
 sudo systemctl enable --now stratora-agent
@@ -98,10 +98,10 @@ curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/
 sudo rpm -i /tmp/stratora-agent.rpm
 ```
 
-2. Write the agent configuration and start the service:
+2. Create the agent configuration file (owned by the `stratora` user, mode `0600`), write the configuration and start the service:
 
 ```bash
-sudo tee /etc/stratora/agent.json << 'EOF'
+sudo install -m 0600 -o stratora -g stratora /dev/null /etc/stratora/agent.json && sudo tee /etc/stratora/agent.json > /dev/null << 'EOF'
 { "server_url": "https://stratora.example.com", "enrollment_token": "enroll_xxxxx", "site_name": "Main Office" }
 EOF
 sudo systemctl enable --now stratora-agent
@@ -140,7 +140,7 @@ If the agent doesn't appear, check:
 
 - **stratora-agent** — systemd service at `/opt/stratora/bin/stratora-agent`, running as the `stratora` user
 - Embedded Telegraf managed as a subprocess (linked to the system package's `telegraf` binary at install time if available)
-- Configuration at `/etc/stratora/agent.json`
+- Configuration at `/etc/stratora/agent.json` (owner `stratora`, mode `0600`; the agent and the package keep it that way)
 - State at `/var/lib/stratora/`
 - Logs via journald: `journalctl -u stratora-agent -f`
 
@@ -217,6 +217,8 @@ Production deployments should use a valid certificate instead of relying on the 
 ---
 
 ## Updating the Agent
+
+For the full upgrade procedure and the upgrade order (server first, then every collector and agent), see [Upgrading Stratora](../administration/upgrading-stratora.md).
 
 Agents upgrade in-place. Configuration, the enrolled component ID, and the component API key are preserved across upgrades, so **an upgraded agent does not re-enroll** and keeps its existing node record.
 
