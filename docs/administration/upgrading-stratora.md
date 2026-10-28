@@ -33,7 +33,7 @@ The server installer carries the collector and agent installers for the same rel
 
 ### Check the supported upgrade path
 
-A release supports a direct upgrade from the two releases before it (n-2). If your server is older than that, upgrade in steps, one supported release at a time, until you reach the release you want. All releases are on the [Stratora releases page](https://github.com/Stratora-Platforms/stratora-releases/releases).
+A release supports a direct upgrade from the two full releases before it (n-2); pre-releases don't count. Each release's notes name those two versions under **Supported upgrade paths**. If your server is older, upgrade in steps: first to a release that supports a direct upgrade from your version, then onward, until you reach the release you want. All releases are on the [Stratora releases page](https://github.com/Stratora-Platforms/stratora-releases/releases).
 
 At every step, upgrade the server first and then its collectors and agents, as described below.
 
@@ -58,7 +58,7 @@ Collectors and agents don't need a backup for the upgrade: their upgrades keep t
 
 ### Plan for a short monitoring gap
 
-While the server upgrades, its services are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors keep metrics in memory for a short time and send them when the server is back. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
+While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors keep metrics in memory for a short time and send them when the server is back. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
 
 ---
 
@@ -110,11 +110,11 @@ You don't need to give the install folder. The installer finds the folder the cu
 1. **The pre-upgrade database check.** Before anything is stopped or changed, the installer tests that the new version's database changes apply to your database. The progress window shows "Checking that the new version's database changes apply to the installed database". This can take a few minutes. The check runs the same way whether you double-click the installer or run it from the command line.
    - If a database change would fail, the installer stops with an error **before changing anything**. Your current version stays installed and keeps running. The Windows Application event log has an Error from source **Stratora**, event ID **4243**, that names the change that failed, and the installer log has the same details. Send both to support.
    - If the check can't run at all, the upgrade goes ahead without it, and the installer writes a Warning, event ID **4244**.
-2. **The services stop and the files are replaced.** The installer stops the Stratora services (StratoraBackend, StratoraNginx, StratoraPostgreSQL and StratoraVictoriaMetrics) and installs the new version.
+2. **The services stop and the files are replaced.** The installer stops StratoraBackend, StratoraNginx and StratoraPostgreSQL and installs the new version. StratoraVictoriaMetrics (the metric store) keeps running; the installer restarts it afterwards when the release ships a new version of it.
 3. **The database is updated and the services start again.** The installer applies the database changes and starts the services. It logs this part in `logs\postinstall.log` in the install folder.
 4. **The server's own collector and agent are upgraded.** See [The server's own collector](#the-servers-own-collector).
 
-**If the upgrade fails.** If installing the new version fails, Windows Installer rolls back and puts the previous version back, installed and able to start. If a step fails after the new files are in place, for example while the database is updated, the installer doesn't roll back. It finishes, and reports that the upgrade **completed with errors**:
+**If the upgrade fails.** If installing the new version fails, Windows Installer rolls back and puts the previous version back, installed and able to start. If a step fails after the new files are in place, for example while the database is updated, the installer doesn't roll back. It finishes as if it had succeeded: the wizard shows a normal finish and msiexec returns 0. The upgrade has **completed with errors**, and the only signs are:
 
 - the Windows Application event log has an Error from source **Stratora**, event ID **4242**;
 - the file `UPGRADE-COMPLETED-WITH-ERRORS.txt` in the install folder names the step that failed and lists the recovery steps;
@@ -189,7 +189,7 @@ Going back to an older agent version isn't supported. If you uninstall the agent
 1. Download the package and install it over the current version:
 
    ```bash
-   curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/agent/linux-deb
+   curl -sko /tmp/stratora-agent.deb https://<your-stratora-server>/api/v1/downloads/agent/linux-deb
    sudo apt install /tmp/stratora-agent.deb
    ```
 
@@ -205,7 +205,7 @@ Going back to an older agent version isn't supported. If you uninstall the agent
 1. Download the package and install it over the current version:
 
    ```bash
-   curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/agent/linux-rpm
+   curl -sko /tmp/stratora-agent.rpm https://<your-stratora-server>/api/v1/downloads/agent/linux-rpm
    sudo dnf install /tmp/stratora-agent.rpm
    ```
 
@@ -226,7 +226,7 @@ Open **Infrastructure → Nodes**. The agent reports its version with every hear
 
 ### Check that nothing is out of date
 
-- **The upgrade reminder.** After a server upgrade, each administrator sees a summary the first time they sign in, titled "Upgrade your collectors and agents". It shows how many collectors and agents run an older version than the server ships, and the latest versions. **Review collectors** and **Review nodes** open the two pages filtered to them. Once you close it, it doesn't come back for that server version.
+- **The upgrade reminder.** After a server upgrade, if at least one collector or agent runs an older version than the server ships, each administrator sees a summary the next time they open Stratora, titled "Upgrade your collectors and agents". It shows how many collectors and agents run an older version than the server ships, and the latest versions. **Review collectors** and **Review nodes** open the two pages filtered to them. Once you close it, it doesn't come back for that server version.
 - **Open it again from About.** **Administration → About** has a **Collectors and agents** row that shows how many need upgrading. Select it to open the summary again.
 - **The Out of date badge and filter.** On **Collection → Collectors** and **Infrastructure → Nodes**, an **Out of date** badge marks each collector and agent on an older version, and the version filter lists only those. The Collectors page also shows how many are out of date under the total.
 
@@ -254,7 +254,7 @@ A collector or agent that hasn't reported a version yet, or that runs a developm
 |-----------|-----|
 | Server installer | The file you named with `/l*v` |
 | Server upgrade steps (database, services) | `<install folder>\logs\postinstall.log` |
-| Server services | `<install folder>\logs` (backend and metric store), `<install folder>\nginx\logs` (web server) |
+| Server services | `<install folder>\logs` (backend, database and metric store), `<install folder>\nginx\logs` (web server) |
 | The server's own collector upgrade | `<install folder>\logs\collector-install.log` |
 | Server upgrade events | Event Viewer → **Windows Logs → Application**, source **Stratora**: 4242 (upgrade completed with errors), 4243 (the pre-upgrade check found a database change that fails), 4244 (the pre-upgrade check could not run) |
 | Collector | `C:\ProgramData\Stratora\Collector\logs\collector.log` on the collector host |

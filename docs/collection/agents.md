@@ -226,25 +226,27 @@ Agents upgrade in-place. Configuration, the enrolled component ID, and the compo
 
 ### Windows
 
-Run the new `StratoraAgent-X.Y.Z.msi` installer. The command line below is the simpler way: the interactive installer asks for a server URL and an enrollment token even on an upgrade, although the upgrade keeps the agent's enrollment and does not use them. The installer removes the older version at the start of the upgrade, inside the same installation (its `MajorUpgrade` is scheduled `afterInstallInitialize`), and only then installs the new files. If the upgrade fails or is cancelled, Windows Installer puts the older version back. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade; there is a brief metric gap (typically &lt;30 seconds) while the new Telegraf binary takes over.
+Download `StratoraAgent.msi` from your upgraded server (**Collection → Agents**, or `/api/v1/downloads/agent/windows`) and run it. The command line below is the simpler way: the interactive installer asks for a server URL and an enrollment token even on an upgrade, although the upgrade keeps the agent's enrollment and does not use them. The installer removes the older version at the start of the upgrade, inside the same installation (its `MajorUpgrade` is scheduled `afterInstallInitialize`), and only then installs the new files. If the upgrade fails or is cancelled, Windows Installer puts the older version back. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade; there is a brief metric gap (typically &lt;30 seconds) while the new Telegraf binary takes over.
 
 ```cmd
-msiexec /i StratoraAgent-X.Y.Z.msi /qn
+msiexec /i StratoraAgent.msi /qn
 ```
 
 The config file under `C:\Program Files\Stratora\` is explicitly preserved — the installer does not declare `RemoveFile` entries on the config component, specifically to prevent MajorUpgrade from deleting enrolled credentials.
 
 ### Linux
 
-Install the new package directly over the old one:
+Download the new package from your upgraded server and install it directly over the old one:
 
 ```bash
 # Debian / Ubuntu
-sudo dpkg -i stratora-agent_X.Y.Z_amd64.deb
+curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/agent/linux-deb
+sudo dpkg -i /tmp/stratora-agent.deb
 sudo systemctl restart stratora-agent
 
 # RHEL / Rocky / Alma
-sudo rpm -U stratora-agent-X.Y.Z-1.x86_64.rpm
+curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/agent/linux-rpm
+sudo rpm -U /tmp/stratora-agent.rpm
 sudo systemctl restart stratora-agent
 ```
 
