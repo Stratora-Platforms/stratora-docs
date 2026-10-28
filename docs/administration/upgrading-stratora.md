@@ -68,7 +68,7 @@ While the server upgrades, its backend, web server and database are stopped. Dur
 
 Collectors and agents that are not upgraded yet keep working with the upgraded server, but some fixes and improvements only arrive with the new versions, so do not leave them on the old version.
 
-After the server upgrade, the first time each administrator signs in, Stratora shows how many collectors and agents run an older version than the server ships, with links to the **Collectors** and **Nodes** pages filtered to them (`/collectors?version=outdated`, `/nodes?version=outdated`). You can open this summary again at any time from **About**. On both pages, an **Out of date** badge marks each one, and the version filter lists only those.
+After the server upgrade, if any collector or agent runs an older version than the server ships, Stratora shows each administrator a summary the next time they open it, with how many there are and links to the **Collectors** and **Nodes** pages filtered to them (`/collectors?version=outdated`, `/nodes?version=outdated`). You can open this summary again at any time from **About**. On both pages, an **Out of date** badge marks each one, and the version filter lists only those.
 
 ---
 
