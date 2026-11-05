@@ -244,7 +244,7 @@ Discovery scans run **server-side only** as goroutines using the `gosnmp` librar
 7. Results stored in `discovered_devices` table
 8. Admin imports discovered devices into monitoring (auto-assigns first approved collector)
 
-**Current limitation:** Discovery scans currently run only from the central Server. Subnets reachable only from a remote Collector's network can't be scanned directly today. This is on the [roadmap](/docs/intro#where-stratora-is-heading) — discovery from remote Collectors is one of the capabilities we're actively investing in.
+**Limitation:** Discovery scans run only from the central Server. Subnets reachable only from a remote Collector's network can't be scanned; add those devices by hand.
 
 ---
 

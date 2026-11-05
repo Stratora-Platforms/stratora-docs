@@ -133,7 +133,7 @@ Monitor Dell iDRAC and HPE iLO service processors over SNMP — server health wi
 
 Environmental alerting ships as **built-in alerts keyed on the controller's own health status** (normal / fault), not user-set thresholds — the BMC reports each sensor's own good/bad state, so there is no custom temperature threshold to set on BMC readings, and BMC alerts are not built through the custom alert picker.
 
-Monitoring is over SNMP only. IPMI is a deliberate exclusion for security reasons; Redfish support is on the roadmap.
+Monitoring is over SNMP only. IPMI is a deliberate exclusion for security reasons, and Redfish is not supported.
 
 ### Device compatibility matrix
 
