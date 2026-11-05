@@ -34,7 +34,7 @@ The level shown in the matrix is the highest level reached by any of the device'
 
 ## A note on environmental alerting
 
-Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller — and on the QNAP and Synology NAS templates. It is **not** available on network-device templates (switches, routers, firewalls, access points): some of those templates collect sensor readings (listed under Features at a different level), but no built-in alert uses them yet. If you need environmental alerts on network gear today, plan around this limitation.
+Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller — and on the QNAP and Synology NAS templates. Room temperature and humidity alerting is available on the **Environmental sensor** template, and power alerting (on battery, battery low, runtime, overload) on the **UPS** and **PDU** templates. It is **not** available on network-device templates (switches, routers, firewalls, access points): some of those templates collect sensor readings (listed under Features at a different level), but no built-in alert uses them yet. If you need environmental alerts on network gear today, plan around this limitation.
 
 ## Device matrix
 
@@ -65,6 +65,10 @@ Environmental alerting (temperature, fan, PSU) is available on the **Server BMC*
 | NAS / Storage | Synology | DiskStation | Auto-recognized | **Real-world validated** | Reachability · Interface · CPU · Memory · Disk temperature · RAID / volume status · System temperature · Fan · PSU |
 | Server BMC (out-of-band) | Dell | iDRAC | Auto-recognized (unverified) | **Simulated** | Reachability · Temperature · Fan · PSU · PSU redundancy |
 | Server BMC (out-of-band) | HPE | iLO | Auto-recognized (unverified) | **Code only** | Reachability · Temperature · Fan · PSU · PSU redundancy |
+| UPS | APC | Smart-UPS | Auto-recognized (unverified) | **Code only** | Reachability · On battery · Battery low · Runtime low · UPS overload |
+| UPS | Generic | RFC 1628 UPS-MIB | Auto-recognized (unverified) | **Code only** | Reachability · On battery · Battery low · Runtime low · UPS overload |
+| PDU | APC | Rack PDU (rPDU2) | Auto-recognized (unverified) | **Code only** | Reachability · PDU overload · PDU phase overload · PDU bank overload |
+| Environmental sensor | Generic | ENTITY-SENSOR-MIB | Manual add | **Code only** | Reachability · Temperature out of range · Humidity out of range |
 | Hypervisor (VMware ESXi) | VMware | ESXi | Auto-recognized | **Real-world validated** | Reachability · Interface · Memory overcommit · Host CPU, host memory, host network, VM CPU, VM memory (via vCenter Server) |
 | Hypervisor mgmt (vCenter) | VMware | vCenter Server | API-connected | **Real-world validated** | Reachability |
 | Server | Any (OS-based) | Linux Server | Enrolled (agent) | **Real-world validated** | Reachability · CPU · Memory · Disk · Service state |
@@ -72,7 +76,7 @@ Environmental alerting (temperature, fan, PSU) is available on the **Server BMC*
 | Generic | — | HTTP Check | Any host | **Real-world validated** | Reachability · HTTP/HTTPS status · Response time · SSL-certificate expiry |
 | Generic | — | ICMP Ping | Any host | **Real-world validated** | Reachability (device down, packet loss, latency, jitter) |
 | Generic | — | WAN Circuit | Any host | **Real-world validated** | Reachability (device down, packet loss, latency, jitter) |
-| Out-of-band (IPMI · Redfish) | non-SNMP BMCs (Supermicro · Lenovo · Cisco · generic) | — | — | **Not supported** | Dell iDRAC + HPE iLO are supported over SNMP (rows above). IPMI is a deliberate exclusion for security reasons; Redfish is on the roadmap |
+| Out-of-band (IPMI · Redfish) | non-SNMP BMCs (Supermicro · Lenovo · Cisco · generic) | — | — | **Not supported** | Dell iDRAC + HPE iLO are supported over SNMP (rows above). IPMI is a deliberate exclusion for security reasons. Redfish is not supported. |
 
 Every row is derived from a device template's validation record. The Alerts column lists only the built-in alerts Stratora evaluates for that device's collected data; Reachability (device down) applies to every device. Hyper-V, Proxmox, and Nutanix are monitored through their own agent/API collectors rather than an SNMP template, so they are covered separately, not in this SNMP-oriented matrix.
 
@@ -87,6 +91,7 @@ Some devices have features that sit at a different level from the device's row a
 | Cisco Nexus (NX-OS) | Memory | **Code only** |
 | Cisco SG300 | PoE | **Code only** |
 | Cisco IOS-XE | CPU, memory, routing protocol state (BGP / OSPF) | **Code only** |
+| Fortinet FortiGate | IPsec VPN tunnels | **Code only** |
 | QNAP NAS | Memory | **Code only** |
 | QNAP NAS | CPU, disk temperature and status, environmental sensors, fan status, power status, RAID / volume status | **Code only** ¹ |
 | Synology DiskStation | CPU, disk temperature and status, environmental sensors, fan status, memory, power status, RAID / volume status, volume I/O, storage I/O | **Code only** ¹ |
