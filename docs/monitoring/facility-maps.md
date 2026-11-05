@@ -73,7 +73,7 @@ For a **node** the card shows:
 | Windows, Linux and hypervisor servers | CPU, memory |
 | UPS | Battery, load, runtime |
 | PDU | Power, current |
-| Environmental sensor | Temperature of the hottest sensor, and its humidity |
+| Environmental sensor | Temperature of the hottest sensor, with that sensor's humidity; if it has none, another sensor's humidity, named for that sensor |
 
 A value that is not collected for a device is left out, never shown as zero. Other device types show status, ping, last seen and alerts.
 
@@ -219,7 +219,7 @@ Stratora 2.5.3 adds four SNMP templates that supply the power and environment re
 | **Environmental Sensor (ENTITY-SENSOR-MIB)** | Temperature and humidity sensors | Temperature and humidity per sensor, named by the sensor's label |
 
 - All four use **read-only SNMP**: a read-only community or SNMPv3 user. The UPS or PDU network card must allow the collector's address.
-- **Discovery** should recognise APC Smart-UPS and Symmetra UPSs, APC rPDU2 rack PDUs, and UPS cards that report the UPS-MIB as their system object ID. This is not yet confirmed on real units. Add other UPS cards and environmental sensors by hand and choose the template.
+- **Discovery** should recognise APC Smart-UPS and Symmetra UPSs, APC rPDU2 rack PDUs, and UPS cards that report the UPS-MIB as their system object ID. This has not been confirmed on real units. Add other UPS cards and environmental sensors by hand and choose the template.
 - Eaton, Raritan, ServerTech, APC NetBotz and Vertiv Geist devices are not covered.
 
 :::note Not validated on real hardware

@@ -153,9 +153,7 @@ Floor plans for the site's buildings and floors, with its nodes, racks and space
 
 ### Photos tab
 
-:::note Screenshot being refreshed
-The Photos tab screenshot is being refreshed and will return in an upcoming docs update.
-:::
+The site's photo gallery. See [Site Photos](./site-photos).
 
 ### Networks
 
