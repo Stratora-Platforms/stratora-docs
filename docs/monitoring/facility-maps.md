@@ -99,7 +99,7 @@ Below that are the tabs. The tab you pick stays selected when you move to anothe
 |-----------|------|
 | Space | Overview, Devices, Links, Environment, Events |
 | Rack | Overview, Devices, Links, Environment, Events |
-| Node | Overview, Links, Events, plus Environment for UPSs, PDUs and environmental sensors |
+| Node | Overview, Links, Events, plus Environment for UPSs, PDUs, environmental sensors and other devices with power or environment readings |
 
 ### Overview
 
@@ -135,7 +135,7 @@ The power and environmental devices in the space or rack, with their status and 
 - **PDU**: input voltage, power and current;
 - **Environmental sensor**: temperature and humidity per sensor.
 
-![Environment tab for the network closet IDF-B: a UPS with its battery, runtime and load, and a temperature sensor reading 36.4 °C](/img/monitoring/facility-space-environment.png)
+![Environment tab for the network closet IDF-B: a UPS with its battery, runtime and load, and a temperature sensor reading 36 °C](/img/monitoring/facility-space-environment.png)
 
 Readings come from devices that use the UPS, rack PDU and environmental sensor templates (see [Power and environment templates](#power-and-environment-templates)). For other devices the panel says that no readings are collected for that device type yet. A reading is only shown while fresh data arrives: a device that stops reporting shows no reading rather than an old value. Temperatures follow your temperature unit setting.
 
@@ -188,7 +188,7 @@ If someone else changed the same plan while you were editing, nothing is saved. 
 
 ### Photos
 
-A rack or a space can have one photo, shown on its Overview tab. In the editor, select the rack or space and use **Add photo**, **Replace photo** or **Remove** in the **Photo** section of its panel. Photos must be PNG or JPEG, up to 25 MB. A photo is saved as soon as you upload or remove it, not with the layout's **Save**.
+A rack or a space can have one photo, shown on its Overview tab. In the editor, select the rack or space and use **Add photo**, **Replace photo** or **Remove** in the **Photo** section of its panel. Photos must be PNG or JPEG, up to 25 MB and 8192 px on the longest side. A photo is saved as soon as you upload or remove it, not with the layout's **Save**.
 
 When you upload a photo or a floor plan image, Stratora removes the location, camera details, comments and embedded thumbnails stored in the file before it saves it. The picture itself is not re-encoded.
 
@@ -218,7 +218,7 @@ Stratora 2.5.3 adds four SNMP templates that supply the power and environment re
 
 - All four use **read-only SNMP**: a read-only community or SNMPv3 user. The UPS or PDU network card must allow the collector's address.
 - **Discovery** recognises APC Smart-UPS and Symmetra UPSs, APC rPDU2 rack PDUs, and UPS cards that identify themselves with the UPS-MIB. Add other UPS cards and environmental sensors by hand and choose the template.
-- Eaton, Raritan, ServerTech, APC NetBotz and Vertiv Geist devices are not covered yet.
+- Eaton, Raritan, ServerTech, APC NetBotz and Vertiv Geist devices are not covered.
 
 :::note Not yet validated on real hardware
 These templates are built from the vendor and standard MIBs and checked on simulated devices. They have not yet been tested against real hardware. See [Supported Devices](../supported-devices.md).
