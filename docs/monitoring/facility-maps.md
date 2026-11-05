@@ -11,6 +11,8 @@ Facility maps show where your infrastructure sits and how it is doing, on your o
 
 Facility maps are included in every edition: Community, Pro and Enterprise.
 
+Screenshots on this page show a fictional site with example readings.
+
 ---
 
 ## Who can use it
@@ -29,7 +31,7 @@ See [User Roles & Permissions](../administration/user-roles-and-permissions.md).
 
 1. Go to **Infrastructure → Sites**, open a site and choose the **Facility** tab.
 2. Click **Upload a floor plan**. Choose the floor (or **New floor…** to create one) and the plan image.
-   - The image must be **PNG or JPEG**, up to **25 MB** and **8192 px** on the longest side. Export a PDF plan as PNG first.
+   - The image must be **PNG or JPEG**, up to **25 MB**, **8192 px** on the longest side and 40 megapixels in all. Export a PDF plan as PNG first.
    - If the site has no buildings or floors yet, the first upload creates "Main building" and "Ground floor". You can rename and add more in **Buildings and floors**.
 3. Add the spaces you want to show (closets, MDFs, IDFs, server rooms, rooms and areas) in **Plan → Buildings and floors → Add a space**. Spaces go under a floor. A floor or an area can hold every type of space, so an IDF can sit inside a production area; any other space can hold rooms, closets and areas.
 4. Click **Edit layout** and place your nodes, racks and spaces on the plan (see [Editing the layout](#editing-the-layout)). Click **Save**.
@@ -60,18 +62,18 @@ For a **node** the card shows:
 
 - its status (up, down, degraded and so on);
 - **Ping**: the reply time and packet loss, for example "&lt;1 ms · 0% loss", or **No reply**;
-- **Last seen**: when its newest data arrived;
+- **Last seen**: when it last replied, or **Never** if it has never replied;
 - **Uptime** and **Active alerts**;
 - up to three readings for its type:
 
 | Device type | Readings on the hover card |
 |-------------|----------------------------|
-| Wi-Fi access point, Wi-Fi controller | Clients |
+| Wi-Fi access point, Wi-Fi controller | Clients, for controllers and for access points whose template reports a per-access-point count |
 | Switch, router, firewall | Ports up and down (Interfaces for firewalls that report no port type), errors in the last 15 minutes |
 | Windows, Linux and hypervisor servers | CPU, memory |
 | UPS | Battery, load, runtime |
 | PDU | Power, current |
-| Environmental sensor | Temperature and humidity of the hottest sensor |
+| Environmental sensor | Temperature of the hottest sensor, and its humidity |
 
 A value that is not collected for a device is left out, never shown as zero. Other device types show status, ping, last seen and alerts.
 
@@ -99,7 +101,7 @@ Below that are the tabs. The tab you pick stays selected when you move to anothe
 |-----------|------|
 | Space | Overview, Devices, Links, Environment, Events |
 | Rack | Overview, Devices, Links, Environment, Events |
-| Node | Overview, Links, Events, plus Environment for UPSs, PDUs, environmental sensors and other devices with power or environment readings |
+| Node | Overview, Links, Events, plus Environment for UPS, PDU and environmental sensor nodes |
 
 ### Overview
 
@@ -137,7 +139,7 @@ The power and environmental devices in the space or rack, with their status and 
 
 ![Environment tab for the network closet IDF-B: a UPS with its battery, runtime and load, and a temperature sensor reading 36 °C](/img/monitoring/facility-space-environment.png)
 
-Readings come from devices that use the UPS, rack PDU and environmental sensor templates (see [Power and environment templates](#power-and-environment-templates)). For other devices the panel says that no readings are collected for that device type yet. A reading is only shown while fresh data arrives: a device that stops reporting shows no reading rather than an old value. Temperatures follow your temperature unit setting.
+Readings come from devices that use the UPS, rack PDU and environmental sensor templates (see [Power and environment templates](#power-and-environment-templates)). For other devices the panel says that no readings are collected for that device type. A reading is only shown while fresh data arrives: a device that stops reporting shows no reading rather than an old value. Temperatures follow your temperature unit setting.
 
 ### Events
 
@@ -188,7 +190,7 @@ If someone else changed the same plan while you were editing, nothing is saved. 
 
 ### Photos
 
-A rack or a space can have one photo, shown on its Overview tab. In the editor, select the rack or space and use **Add photo**, **Replace photo** or **Remove** in the **Photo** section of its panel. Photos must be PNG or JPEG, up to 25 MB and 8192 px on the longest side. A photo is saved as soon as you upload or remove it, not with the layout's **Save**.
+A rack or a space can have one photo, shown on its Overview tab. In the editor, select the rack or space and use **Add photo**, **Replace photo** or **Remove** in the **Photo** section of its panel. Photos must be PNG or JPEG, up to 25 MB, 8192 px on the longest side and 40 megapixels in all. A photo is saved as soon as you upload or remove it, not with the layout's **Save**.
 
 When you upload a photo or a floor plan image, Stratora removes the location, camera details, comments and embedded thumbnails stored in the file before it saves it. The picture itself is not re-encoded.
 
@@ -211,17 +213,17 @@ Stratora 2.5.3 adds four SNMP templates that supply the power and environment re
 
 | Template | Device | Readings |
 |----------|--------|----------|
-| **UPS (RFC 1628 UPS-MIB)** | The standard UPS MIB most UPS network cards implement | On battery, battery charge and status, estimated runtime, output load, input and output voltage |
+| **UPS (RFC 1628 UPS-MIB)** | The standard UPS MIB many UPS network cards implement | On battery, battery charge and status, estimated runtime, output load, input and output voltage |
 | **APC Smart-UPS** | APC Smart-UPS and Symmetra with a Network Management Card (PowerNet MIB) | The same, plus the battery fault and replace-battery flags |
 | **APC Rack PDU (rPDU2)** | APC rack PDUs | Device, phase and bank load state, current, voltage and power |
 | **Environmental Sensor (ENTITY-SENSOR-MIB)** | Temperature and humidity sensors | Temperature and humidity per sensor, named by the sensor's label |
 
 - All four use **read-only SNMP**: a read-only community or SNMPv3 user. The UPS or PDU network card must allow the collector's address.
-- **Discovery** recognises APC Smart-UPS and Symmetra UPSs, APC rPDU2 rack PDUs, and UPS cards that identify themselves with the UPS-MIB. Add other UPS cards and environmental sensors by hand and choose the template.
+- **Discovery** should recognise APC Smart-UPS and Symmetra UPSs, APC rPDU2 rack PDUs, and UPS cards that report the UPS-MIB as their system object ID. This is not yet confirmed on real units. Add other UPS cards and environmental sensors by hand and choose the template.
 - Eaton, Raritan, ServerTech, APC NetBotz and Vertiv Geist devices are not covered.
 
-:::note Not yet validated on real hardware
-These templates are built from the vendor and standard MIBs and checked on simulated devices. They have not yet been tested against real hardware. See [Supported Devices](../supported-devices.md).
+:::note Not validated on real hardware
+These templates are built from the vendor and standard MIBs and tested against simulated devices built from those MIBs, not recordings of real devices. They have not been tested on real hardware. [Supported Devices](../supported-devices.md) lists them as Code only.
 :::
 
 ### Built-in power and environment alerts
