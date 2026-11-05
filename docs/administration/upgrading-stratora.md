@@ -60,7 +60,7 @@ Store the copy where only administrators can read it.
 
 ### Plan for a short monitoring gap
 
-While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors keep metrics in memory for a short time and send them when the server is back. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
+While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors buffer a limited amount of data while the server is unavailable. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
 
 ---
 
@@ -122,7 +122,7 @@ You don't need to give the install folder. The installer finds the folder the cu
 - the file `UPGRADE-COMPLETED-WITH-ERRORS.txt` in the install folder names the step that failed and lists the recovery steps;
 - `logs\postinstall.log` in the install folder has the details.
 
-Follow the recovery steps in that file. When database changes are still pending, one of them is to run the same installer again. If the steps don't fix it, restore your pre-upgrade snapshot or backup, or contact support.
+Follow the recovery steps in that file. They restart the services one by one and check that the backend answers. If database changes are still pending, the file gives the command that applies them; running the installer again does not apply them. If the steps don't fix it, restore your pre-upgrade snapshot or backup, or contact support.
 
 ### 4. Confirm the server upgrade
 
