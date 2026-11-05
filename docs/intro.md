@@ -100,16 +100,17 @@ Operator-friendly access control with first-class identity-provider integration.
 - Component enrollment with token-based registration for Agents and Collectors — no shared credentials to manage
 - Multi-site, multi-environment, multi-collector deployments out of the box
 
-## Where Stratora is heading
+## Where Stratora is heading {#where-stratora-is-heading}
 
-What ships today covers the core operational workflows teams rely on. We're actively investing in additional coverage:
+These are directions we are working toward, not commitments or dates. Each item says what ships today and what the direction is.
 
-- **Cisco Meraki support** — first-class support for Meraki MS switches, MR access points, and MX appliances, validated against live hardware.
-- **Veeam Backup & Replication monitoring** — bringing backup-job health into the same alerting and dashboards your infrastructure already lives in.
-- **Network discovery from remote collectors** — discovery and credentialed probing local to each collector, so segmented networks don't pay a round-trip to the central server.
-- **Alert acknowledgment via voice and SMS** — close the loop on alerts from your phone, with a keypad press on a call or an SMS reply, without exposing webhooks on the internet.
+- **Cisco Meraki.** Today, Meraki MS switches, MR access points and MX appliances are monitored over SNMP (interfaces and reachability). Their templates are Code only: not tested on a real Meraki device (see [Supported Devices](/docs/supported-devices)). Direction: validate them on live hardware.
+- **Power and environment.** Today, UPS (RFC 1628 UPS-MIB and APC Smart-UPS), APC rack PDU and environmental sensor (ENTITY-SENSOR-MIB) templates ship with built-in alerts. They are Code only: tested against simulated devices built from the MIBs, not on real hardware. Direction: validate them on real hardware.
+- **Network discovery from remote collectors.** Today, discovery scans and credentialed probes run only from the central Server, so subnets that only a remote collector can reach are not scanned. Direction: discovery and credentialed probing that run on each remote collector.
+- **Alert acknowledgement from your phone.** Today, you can acknowledge or escalate an alert by replying to its SMS, in the Twilio bidirectional and polling modes (see [External Notifications](/docs/integrations/external-notifications#ack-and-escalate-via-sms-reply)). Voice calls are announcement-only. Direction: acknowledgement with a keypad press during a call.
+- **Veeam Backup & Replication.** Not supported today. Direction: backup-job health in the same alerting and dashboards as the rest of your infrastructure.
 
-We prioritize what customers ask for — if a vendor or capability matters to you and isn't on this list, that's exactly the kind of signal we want.
+We prioritize what customers ask for. If a vendor or capability matters to you and isn't on this list, tell us.
 
 ## Where to go next
 
