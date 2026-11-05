@@ -379,7 +379,7 @@ The announcement uses Amazon Polly text-to-speech. Hostnames are spelled out cha
 
 ### Acknowledging a voice alert
 
-Voice calls are **announcement-only** in this release — there is no DTMF (keypad) acknowledgement. The call is informational; to acknowledge or escalate the alert, use one of these paths:
+Voice calls are **announcement-only**: there is no keypad acknowledgement. The call is informational; to acknowledge or escalate the alert, use one of these paths:
 
 - **Reply `ACK <token>`** to the SMS notification (if SMS is also configured on the team)
 - **Click the Acknowledge link** in the email notification

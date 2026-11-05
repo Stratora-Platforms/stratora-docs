@@ -310,10 +310,8 @@ All components on one machine. Suitable for small environments (< 100 nodes), de
 ### Distributed Collectors
 Backend centralized, collectors deployed at remote sites. Suitable for multi-site deployments, IT/OT network segmentation, and scale-out metric collection.
 
-### High Availability (Planned)
-- Backend clustering with shared PostgreSQL
-- VictoriaMetrics cluster mode
-- Load balancer for frontend
+### High availability
+The Stratora server runs on a single machine: one backend, one bundled PostgreSQL database and one single-node VictoriaMetrics metric store. Clustering and high availability of the server are not supported. There is no standby server.
 
 ---
 
