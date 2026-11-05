@@ -107,7 +107,7 @@ You can override the preferred collector on individual nodes. The site preferenc
 
 ## Site Detail Page
 
-Clicking any site opens the site detail page, which provides a complete view of everything at that location across eight tabs.
+Clicking any site opens the site detail page, which provides a complete view of everything at that location across nine tabs.
 
 | Tab | Content |
 |-----|---------|
@@ -116,6 +116,7 @@ Clicking any site opens the site detail page, which provides a complete view of 
 | **Nodes** | All nodes at this site — health status, type, IP address, last seen |
 | **Topology** | Network topology map scoped to this site |
 | **Racks** | Rack diagrams for this site |
+| **Facility** | Floor plans with live status for nodes, racks and spaces (see [Facility Maps](../monitoring/facility-maps.md)) |
 | **Alerts** | Active and recently resolved alerts for nodes at this site |
 | **Reports** | Shortcuts to run site-scoped Site Health and Disk Capacity reports |
 | **Photos** | Site photo gallery (see [Site Photos](./site-photos)) |
@@ -136,6 +137,12 @@ Clicking any site opens the site detail page, which provides a complete view of 
 
 ![Site detail — Racks tab with rack diagrams for this site](/img/infrastructure/site-detail-racks.png)
 
+### Facility tab
+
+Floor plans for the site's buildings and floors, with its nodes, racks and spaces placed on them and live status. Admins and operators see this tab; viewers do not. See [Facility Maps](../monitoring/facility-maps.md).
+
+![Site detail — Facility tab with a floor plan and the side panel for a network closet](/img/monitoring/facility-space-overview.png)
+
 ### Alerts tab
 
 ![Site detail — Alerts tab showing active alerts at this site](/img/infrastructure/site-detail-alerts.png)
@@ -146,9 +153,7 @@ Clicking any site opens the site detail page, which provides a complete view of 
 
 ### Photos tab
 
-:::note Screenshot being refreshed
-The Photos tab screenshot is being refreshed and will return in an upcoming docs update.
-:::
+The site's photo gallery. See [Site Photos](./site-photos).
 
 ### Networks
 
