@@ -56,7 +56,7 @@ For the full list — including **how each device is recognized during discovery
 
 Two things it makes explicit that a flat vendor list cannot:
 
-- **Recognition** — whether a device is found automatically on a scan. Most families are auto-recognized, but not all. For example, classic-IOS **Cisco Catalyst** collection works, yet no discovery fingerprint exists for it yet, so it is **added manually** rather than found on a scan — a known, closable gap.
+- **Recognition** — whether a device is found automatically on a scan. Most families are auto-recognized, but not all. For example, classic-IOS **Cisco Catalyst** collection works, but Stratora has no discovery fingerprint for it, so it is **added manually** rather than found on a scan.
 - **Validation level** — whether a template was tested against a real physical device (**Real-world validated**), against a recorded SNMP dataset replayed in a simulator with no physical device (**Simulated**), or is implemented from vendor MIB documentation and covered by automated tests but not yet checked against a device or a recording (**Code only**). Many families are not yet real-world validated, and some devices have individual features at a different level from the device as a whole; the page lists those separately under **Features at a different level**.
 
 :::note ESXi and vCenter
@@ -82,9 +82,9 @@ Stratora ships generic templates for hosts and services that don't fit a vendor 
 - `http-https` — HTTP / HTTPS endpoint monitoring with SSL certificate expiry tracking
 - `wan-circuit` — latency, jitter, and loss monitoring for WAN links
 
-## Vendors on the roadmap
+## Devices without a vendor template
 
-Additional vendor support is on the [roadmap](/docs/intro#where-stratora-is-heading) — including first-class support for Cisco Meraki cloud-managed switches, access points, and appliances.
+Stratora supports the vendors and models listed on [Supported Devices](/docs/supported-devices). Cisco Meraki MS, MR and MX devices are monitored over SNMP; Stratora does not use the Meraki cloud dashboard. For a device with no vendor template, use the generic templates above.
 
 ## Where to go next
 

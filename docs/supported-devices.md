@@ -18,7 +18,7 @@ When you run discovery, Stratora identifies devices by their SNMP fingerprint. T
 
 - **Auto-recognized** — found automatically; recognition confirmed against real hardware or a captured firmware walk.
 - **Auto-recognized (unverified)** — the fingerprint pattern is in place and should match, but has not yet been confirmed against a real unit. It will usually still be found; it simply is not yet proven.
-- **Manual add** — not found on a scan because no fingerprint exists yet; you add the device by hand. This is a known, closable gap for the affected model, not a permanent limitation.
+- **Manual add** — not found on a scan because Stratora has no discovery fingerprint for it; you add the device by hand and choose its template.
 
 Servers are **enrolled** through the Stratora Agent rather than scanned; vCenter is **API-connected**; the generic templates apply to **any host**.
 
@@ -34,7 +34,7 @@ The level shown in the matrix is the highest level reached by any of the device'
 
 ## A note on environmental alerting
 
-Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller — and on the QNAP and Synology NAS templates. Room temperature and humidity alerting is available on the **Environmental sensor** template, and power alerting (on battery, battery low, runtime, overload) on the **UPS** and **PDU** templates. It is **not** available on network-device templates (switches, routers, firewalls, access points): some of those templates collect sensor readings (listed under Features at a different level), but no built-in alert uses them yet. If you need environmental alerts on network gear today, plan around this limitation.
+Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller — and on the QNAP and Synology NAS templates. Room temperature and humidity alerting is available on the **Environmental sensor** template, and power alerting (on battery, battery low, runtime, overload) on the **UPS** and **PDU** templates. It is **not** available on network-device templates (switches, routers, firewalls, access points): some of those templates collect sensor readings (listed under Features at a different level), but no built-in alert uses them. If you need environmental alerts on network gear, plan around this limitation.
 
 ## Device matrix
 
