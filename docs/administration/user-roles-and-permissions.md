@@ -61,6 +61,8 @@ Read-only access to monitoring data. Viewers can see dashboards, node status, al
 | Create, edit, and delete sites | ✅ | ✅ | ❌ |
 | View IPAM subnets and addresses | ✅ | ✅ | ✅ |
 | Manage IPAM (add/edit/scan subnets) | ✅ | ✅ | ❌ |
+| View the Facility tab (floor plans) | ✅ | ✅ | ❌ |
+| Upload floor plans and photos, edit facility layouts | ✅ | ✅ | ❌ |
 
 ### Collection & Deployment
 
