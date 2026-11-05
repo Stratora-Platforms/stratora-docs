@@ -33,7 +33,7 @@ The server installer carries the collector and agent installers for the same rel
 
 ### Check the supported upgrade path
 
-A release supports a direct upgrade from the two full releases before it (n-2); pre-releases don't count. Each release's notes name those two versions under **Supported upgrade paths**. If your server is older, upgrade in steps: first to a release that supports a direct upgrade from your version, then onward, until you reach the release you want. All releases are on the [Stratora releases page](https://github.com/Stratora-Platforms/stratora-releases/releases).
+A release supports a direct upgrade from the two full releases before it (n-2); pre-releases don't count. Starting with 2.5.3, each release's notes name those two versions under **Supported upgrade paths**. If your server is older, upgrade in steps: first to a release that supports a direct upgrade from your version, then onward, until you reach the release you want. All releases are on the [Stratora releases page](https://github.com/Stratora-Platforms/stratora-releases/releases).
 
 At every step, upgrade the server first and then its collectors and agents, as described below.
 
@@ -60,7 +60,7 @@ Store the copy where only administrators can read it.
 
 ### Plan for a short monitoring gap
 
-While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors buffer a limited amount of data while the server is unavailable. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
+While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors buffer a limited amount of data while the server is unavailable. A Collector Offline alert can open briefly for collectors that are still on the older version. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
 
 ---
 

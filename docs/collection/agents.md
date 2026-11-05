@@ -136,7 +136,7 @@ If the agent doesn't appear, check:
 - **stratora-tray.exe** — system-wide tray indicator (launched at logon for every interactive user) that shows agent connection status and links to logs
 - Installed to `C:\Program Files\Stratora\`, with the configuration (`config.json`) in that folder
 - Agent log at `C:\Program Files\Stratora\logs\agent.log` (when it reaches 10 MB it is renamed to `agent.<date>-<time>.log` and a new one starts)
-- `C:\ProgramData\Stratora\` holds only the agent's status file, `agent-status.json`. The installer also creates a `C:\ProgramData\Stratora\logs` folder, but the agent does not write its log there.
+- `C:\ProgramData\Stratora\`: the agent writes only its status file, `agent-status.json`, there. The installer also creates a `C:\ProgramData\Stratora\logs` folder, but the agent does not write its log there.
 
 ### Linux
 
