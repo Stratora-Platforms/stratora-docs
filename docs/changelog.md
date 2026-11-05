@@ -28,10 +28,10 @@ Stratora 2.5.2 is a patch release on top of 2.5.1 with three fixes. **Upgrading 
 - SHA-256 (Stratora-Server-2.5.2.msi): 3c310a4359182b005a8edf8ad1b24d045eab02759cc2fb43483701d67402b7bb
 
 ### Known issues
-- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. A fix is planned for an upcoming release.
+- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. Not fixed in this release.
 - **Let's Encrypt renewal doesn't redeploy the certificate to NGINX.** After each renewal, re-upload the renewed certificate under Administration → SSL / TLS Certificate (full steps in the [2.5.0 notes](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.5.0)).
-- **Some status alerts still show raw codes** for certain values (for example RAID status); full labels are coming.
-- **FortiGate VPN tunnel panel** can read "No ports found"; under investigation.
+- **Some status alerts still show raw codes** for certain values (for example RAID status). Not fixed in this release.
+- **FortiGate VPN tunnel panel** can read "No ports found". Not fixed in this release.
 - **After a Repair from Programs & Features, start the Stratora services or reboot.** In Services, start every service whose name begins with "Stratora", or run `Get-Service Stratora* | Start-Service`.
 - **Hardware status can be wrong when Dell and HPE controllers share a collector.** When Dell iDRAC and HPE iLO devices are monitored by the same collector, a server's hardware status (fans, power supplies, temperature) can be reported incorrectly: healthy components may show as failed, or failures as healthy. Workaround: monitor Dell and HPE management controllers from separate collectors until the fix ships.
 - **QNAP memory readings can be wrong when several QNAP devices share a collector.** With two or more QNAP NAS devices monitored by the same collector, memory usage is reported incorrectly and the memory alert cannot fire. Workaround: monitor each QNAP device from a separate collector until the fix ships.
@@ -55,10 +55,10 @@ Stratora 2.5.1 is a patch release on top of 2.5.0. **Upgrading from 2.4.x? 2.5.1
 - **The setup wizard now opens automatically only on a brand-new installation.** After an upgrade, or when a user is asked to change their password, Stratora opens Home normally. If setup hasn't been completed, Home shows a "Start setup" or "Continue setup" prompt.
 
 ### Known issues (carried forward from 2.5.0)
-- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. A fix is planned for an upcoming release.
+- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. Not fixed in this release.
 - **Let's Encrypt renewal doesn't redeploy the certificate to NGINX.** After each renewal, re-upload the renewed certificate under Administration → SSL / TLS Certificate (full steps in the [2.5.0 notes](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.5.0)).
-- **Some status alerts still show raw codes** for certain values (for example RAID status); full labels are coming.
-- **FortiGate VPN tunnel panel** can read "No ports found"; under investigation.
+- **Some status alerts still show raw codes** for certain values (for example RAID status). Not fixed in this release.
+- **FortiGate VPN tunnel panel** can read "No ports found". Not fixed in this release.
 - **After a Repair from Programs & Features, start the Stratora services or reboot.** In Services, start every service whose name begins with "Stratora", or run `Get-Service Stratora* | Start-Service`.
 
 ## v2.5.0 — October 5, 2026
@@ -108,11 +108,11 @@ Stratora 2.5.0 turns audit-log forwarding into a complete **event stream**, rede
 
 **Let's Encrypt renewal does not redeploy the certificate to NGINX.** A renewed certificate is written to the ACME store but not applied automatically. **Workaround — re-upload the renewed certificate:** after each renewal, and before the current certificate expires, take the newest `<domain>-chain.pem` and `<domain>-key.pem` from `C:\Program Files\Stratora\acme-data\certs\`, then in **Administration → SSL / TLS Certificate → Upload Certificate** (format **PEM**) choose `<domain>-chain.pem` as the **Certificate File (.crt, .pem)** and `<domain>-key.pem` as the **Private Key File (.key)** (leave the optional chain field empty), click **Validate Certificate**, then **Upload & Apply**. Stratora installs the certificate and restarts NGINX for you.
 
-**Status-alert value labels (partial).** Status alerts without a numeric value no longer show a raw number; some enumerated status values (for example RAID status) still show the raw code rather than a friendly label. Full labels are coming in an upcoming release.
+**Status-alert value labels (partial).** Status alerts without a numeric value no longer show a raw number; some enumerated status values (for example RAID status) still show the raw code rather than a friendly label. Not fixed in this release.
 
-**FortiGate VPN tunnel panel.** The FortiGate VPN tunnel panel can read "No ports found" due to an incorrect SNMP OID; interface, CPU, and memory monitoring are unaffected. Under investigation.
+**FortiGate VPN tunnel panel.** The FortiGate VPN tunnel panel can read "No ports found" due to an incorrect SNMP OID; interface, CPU, and memory monitoring are unaffected. Not fixed in this release.
 
-**After a "Repair", start the Stratora services (or reboot).** Running **Repair** from Programs & Features (or `msiexec /fa`) completes successfully but leaves the Stratora Windows services stopped. To recover, open **Services** and start every service whose name begins with "Stratora" — or reboot the server. (As an Administrator, `Get-Service Stratora* | Start-Service` does the same.) A fix is coming in the next release.
+**After a "Repair", start the Stratora services (or reboot).** Running **Repair** from Programs & Features (or `msiexec /fa`) completes successfully but leaves the Stratora Windows services stopped. To recover, open **Services** and start every service whose name begins with "Stratora" — or reboot the server. (As an Administrator, `Get-Service Stratora* | Start-Service` does the same.) Not fixed in this release.
 
 ## v2.4.4 — September 11, 2026
 
@@ -133,11 +133,11 @@ Monitor Dell iDRAC and HPE iLO service processors over SNMP — server health wi
 
 Environmental alerting ships as **built-in alerts keyed on the controller's own health status** (normal / fault), not user-set thresholds — the BMC reports each sensor's own good/bad state, so there is no custom temperature threshold to set on BMC readings, and BMC alerts are not built through the custom alert picker.
 
-Monitoring is over SNMP only. IPMI is a deliberate exclusion for security reasons; Redfish support is on the roadmap.
+Monitoring is over SNMP only. IPMI is a deliberate exclusion for security reasons, and Redfish is not supported.
 
 ### Device compatibility matrix
 
-The Supported Devices page now states, per device, how far each template has been validated — real hardware, real-capture replay, or MIB-derived. It is the authoritative answer to "is my device supported, and how confirmed is it": a MIB-derived template was built from vendor documentation and not yet confirmed against physical equipment. Check it before relying on a device class in production.
+The Supported Devices page now states, per device, how far each template has been validated — real hardware, real-capture replay, or MIB-derived (now shown as Real-world validated / Simulated / Code only). It is the authoritative answer to "is my device supported, and how confirmed is it": a MIB-derived template was built from vendor documentation and not yet confirmed against physical equipment. Check it before relying on a device class in production.
 
 ### New built-in alerts
 
@@ -167,9 +167,9 @@ Memory readings are now consistent across platforms: every memory surface (panel
 
 ### Known issues
 
-- **Alert text shows a numeric status code for hardware faults.** A fired temperature/fan/PSU alert names the component but renders its status as a number (e.g. "(fan): 2.0") in the alert summary, while the dashboard shows the word ("Fault"). Both built-in and custom alerts are affected. A fix is targeted for an upcoming alerting release.
+- **Alert text shows a numeric status code for hardware faults.** A fired temperature/fan/PSU alert names the component but renders its status as a number (e.g. "(fan): 2.0") in the alert summary, while the dashboard shows the word ("Fault"). Both built-in and custom alerts are affected. Not fixed in this release; 2.5.0 fixed it in part (see its Known issues).
 - **An alert scoped to a whole group, site, or globally may include device types the metric can't measure** — those members simply never fire. (An alert scoped to a single device of the wrong type is now rejected when you save it.) Scope alerts to the device types the metric applies to.
-- **FortiGate VPN tunnel panel shows "No ports found."** The VPN tunnel panel specifically does not populate; this does **not** affect the rest of FortiGate monitoring — interfaces, CPU, and memory all work. It is a known issue, pre-existing since a March 2026 release and under investigation, not a regression in 2.4.4.
+- **FortiGate VPN tunnel panel shows "No ports found."** The VPN tunnel panel specifically does not populate; this does **not** affect the rest of FortiGate monitoring — interfaces, CPU, and memory all work. It is a known issue, present since a March 2026 release, not a regression in 2.4.4. Not fixed in this release.
 
 **Upgrading:** in-place upgrade from v2.4.3. Existing monitored infrastructure, dashboards, and settings are preserved.
 

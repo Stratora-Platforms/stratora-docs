@@ -58,4 +58,4 @@ After the clock is fixed and the future data cleared:
 
 ## Prevention
 
-Bounding ingest timestamps at the proxy so a future-dated sample can never establish the high-water mark is planned architectural hardening. Until then, keep the server on reliable time sync (NTP), and treat any large clock jump as an event to watch for this condition.
+Stratora does not reject future-dated samples at ingest, so one can still establish the high-water mark. Keep the server on reliable time sync (NTP), and treat any large clock jump as an event to watch for this condition.
