@@ -17,7 +17,7 @@ Which devices Stratora monitors, how each is recognized when you scan, how thoro
 When you run discovery, Stratora identifies devices by their SNMP fingerprint. Three outcomes:
 
 - **Auto-recognized** — found automatically; recognition confirmed against real hardware or a captured firmware walk.
-- **Auto-recognized (unverified)** — the fingerprint pattern is in place and should match, but has not yet been confirmed against a real unit. It will usually still be found; it simply is not yet proven.
+- **Auto-recognized (unverified)** — the fingerprint pattern is in place and should match, but has not been confirmed against a real unit. It will usually still be found; it is not proven.
 - **Manual add** — not found on a scan because no fingerprint exists for it; you add the device by hand.
 
 Servers are **enrolled** through the Stratora Agent rather than scanned; vCenter is **API-connected**; the generic templates apply to **any host**.
@@ -28,13 +28,13 @@ Every device is shown at one of three levels:
 
 - **Real-world validated** — tested against a real physical device (or, for vCenter, a real vCenter Server), with the data checked end to end.
 - **Simulated** — tested against a recorded SNMP dataset replayed in an SNMP simulator; **no physical device was involved.** The recording is either a capture from a real device's firmware or, for the Dell iDRAC and HPE iLO, a published test recording with the vendor's real data structures. Metric queries are proven to resolve, and status alerts can be proven to fire from a recorded fault. Because replayed counters do not move, rate and counter alerts (for example interface errors) are not proven to *fire* at this level.
-- **Code only** — implemented from the vendor's MIB documentation and covered by automated tests, but not yet checked against a real device or a recording of one.
+- **Code only** — implemented from the vendor's MIB documentation and covered by automated tests, but not checked against a real device or a recording of one.
 
 The level shown in the matrix is the highest level reached by any of the device's core features: interfaces, CPU and memory for network devices; power, temperature, fan and memory health for server BMCs; CPU, memory, disk and network for servers; and the API connection for vCenter. Every feature, core or not, that sits at a different level is listed under [Features at a different level](#features-at-a-different-level).
 
 ## A note on environmental alerting
 
-Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller — and on the QNAP and Synology NAS templates. Room temperature and humidity alerting is available on the **Environmental sensor** template, and power alerting (on battery, battery low, runtime, overload) on the **UPS** and **PDU** templates. It is **not** available on network-device templates (switches, routers, firewalls, access points): some of those templates collect sensor readings (listed under Features at a different level), but no built-in alert uses them yet. If you need environmental alerts on network gear today, plan around this limitation.
+Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller — and on the QNAP and Synology NAS templates. Room temperature and humidity alerting is available on the **Environmental sensor** template, and power alerting (on battery, battery low, runtime, overload) on the **UPS** and **PDU** templates. It is **not** available on network-device templates (switches, routers, firewalls, access points): some of those templates collect sensor readings (listed under Features at a different level), but no built-in alert uses them. Environmental alerts are not available for network gear.
 
 ## Device matrix
 
@@ -101,6 +101,6 @@ Some devices have features that sit at a different level from the device's row a
 | VMware vCenter Server | Datastore metrics | **Code only** |
 | VMware vCenter Server | Cluster metrics, host metrics, VM metrics | **Code only** ¹ |
 
-¹ The device is in our own environment and this data is collected from it, but each metric has not yet been individually checked and signed off, so we do not yet claim it as validated.
+¹ The device is in our own environment and this data is collected from it, but each metric has not been individually checked and signed off, so we do not claim it as validated.
 
 Metrics that a device does not expose over SNMP, or that its template does not collect, are not listed here.
