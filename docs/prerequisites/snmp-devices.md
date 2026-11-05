@@ -84,7 +84,7 @@ Stratora ships generic templates for hosts and services that don't fit a vendor 
 
 ## Devices without a vendor template
 
-Stratora supports the vendors and models listed on [Supported Devices](/docs/supported-devices). Cisco Meraki MS, MR and MX devices are monitored over SNMP; Stratora does not use the Meraki cloud dashboard. For a device with no vendor template, use the generic templates above.
+Stratora supports the vendors and models listed on [Supported Devices](/docs/supported-devices). Cisco Meraki MS, MR and MX devices are monitored over SNMP (Code only: interfaces and reachability; not tested on a real Meraki device; see Supported Devices); Stratora does not use the Meraki cloud dashboard. For a device with no vendor template, use the generic templates above.
 
 ## Where to go next
 
