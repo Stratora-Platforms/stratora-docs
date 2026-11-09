@@ -154,6 +154,8 @@ Upgrade each remote collector on its own host, after the server.
 3. The collector services (StratoraCollector and stratora-collector-telegraf) restart, so collection from that host pauses for a moment.
 4. **The collector's bundled agent upgrades with it.** On a collector host, don't run the Agent installer as well.
 
+**Upgraded collectors stay approved.** A collector that was enrolled before the upgrade keeps its approval and keeps collecting. From 2.5.3, a remote collector that you install **new** waits for an administrator's approval before it collects, and approving it also approves the agent installed with it. See [Approving a Remote Collector](../collection/collectors.md#approving-a-remote-collector).
+
 If the upgrade fails or you cancel it, Windows Installer puts the previous version back, with its configuration and services.
 
 **Confirm on the Collectors page.** Open **Collection → Collectors**. The collector is online and shows the new version, with no **Out of date** badge. To list only the collectors that still need upgrading, choose **Out of date** in the version filter, or open `/collectors?version=outdated`.
@@ -183,6 +185,12 @@ An upgraded agent keeps its configuration and enrollment. It does not enroll aga
 3. The agent services (StratoraAgent and stratora-agent-telegraf) restart, which leaves a short gap in that host's metrics. If the upgrade fails, Windows Installer puts the previous version back.
 
 On a host that runs a Stratora collector, upgrade the collector instead: its installer upgrades the bundled agent. On the Stratora server itself, the agent upgrades with the server.
+
+:::warning Known issue: a 2.5.2 Windows agent installed on an existing node
+A 2.5.2 agent installed or reinstalled on a computer whose node already exists may send no metrics until its Telegraf service restarts. Upgrade the agent to 2.5.3, or restart the `stratora-agent-telegraf` service (in **Services**, **Stratora Agent Telegraf**, or `Restart-Service stratora-agent-telegraf` from PowerShell opened with **Run as administrator**). A 2.5.3 agent does not have this problem.
+:::
+
+A newly enrolled agent's node must be approved before its metrics appear. An upgraded agent keeps its node and its approval. See [Nodes → Approval Workflow](../infrastructure/nodes.md#approval-workflow).
 
 Going back to an older agent version isn't supported. If you uninstall the agent and then install an older version, that older agent needs a new enrollment token, as on a new host.
 
@@ -248,6 +256,8 @@ A collector or agent that hasn't reported a version yet, or that runs a developm
 | **About** still shows the old version | Reload the page without the cache (Ctrl+Shift+R). If it still shows the old version, check that StratoraBackend is running. |
 | The web interface doesn't load after the upgrade | Check that StratoraNginx is running, that your browser still trusts the server's certificate, and that nothing else uses port 443. |
 | A collector stays offline or out of date | Check the collector log on its host and the installer log you wrote with `/l*v`, then run the collector installer again. |
+| A Windows agent's node gets no metrics after a 2.5.2 agent was installed or reinstalled on it | Upgrade the agent to 2.5.3, or restart the `stratora-agent-telegraf` service. |
+| A new agent or collector sends no data | Its node or collector is waiting for approval. Approve it under **Infrastructure → Nodes**. |
 | A Linux agent doesn't come back | Run `sudo systemctl restart stratora-agent`, then check `systemctl status stratora-agent` and `journalctl -u stratora-agent`. |
 
 ### Where the logs are
