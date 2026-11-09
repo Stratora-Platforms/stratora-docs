@@ -257,7 +257,7 @@ A collector or agent that hasn't reported a version yet, or that runs a developm
 | The web interface doesn't load after the upgrade | Check that StratoraNginx is running, that your browser still trusts the server's certificate, and that nothing else uses port 443. |
 | A collector stays offline or out of date | Check the collector log on its host and the installer log you wrote with `/l*v`, then run the collector installer again. |
 | A Windows agent's node gets no metrics after a 2.5.2 agent was installed or reinstalled on it | Upgrade the agent to 2.5.3, or restart the `stratora-agent-telegraf` service. |
-| A new agent or collector sends no data | Its node or collector is waiting for approval. Approve it under **Infrastructure → Nodes**. |
+| A new agent or collector sends no data | Its node or collector is waiting for approval. Approve it under **Infrastructure → Nodes**; a collector can also be approved from its card on **Collection → Collectors**. |
 | A Linux agent doesn't come back | Run `sudo systemctl restart stratora-agent`, then check `systemctl status stratora-agent` and `journalctl -u stratora-agent`. |
 
 ### Where the logs are
