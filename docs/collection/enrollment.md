@@ -87,7 +87,7 @@ If a collector or agent needs to be reinstalled on the same host (e.g., after a 
 - For agents, the matching node in `nodes` is also updated (matched on the reported hostname)
 - The component resumes normal operation with the new key
 - A collector that was waiting for approval still waits, and an approved collector stays approved
-- A component that an administrator rejected cannot enroll again under the same host name
+- A component that an administrator rejected cannot enroll again under the same host name until you delete or revoke it
 
 This means you can reimage a server and reinstall the agent with the same enrollment token — it just works.
 

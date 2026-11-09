@@ -98,9 +98,9 @@ To approve it:
 
 You can also approve or reject a pending collector from its card on **Collection → Collectors**.
 
-**The collector and its agent are decided together.** The Collector MSI also installs a Stratora Agent on the same computer, so the collector's own host is monitored. Approving the collector also approves that agent's node, and rejecting the collector rejects that node, so you don't have to decide the pair twice. In the pending node list, that node shows **(with collector *name*)**, and approving or rejecting it there decides both. A node or collector that has already been approved or rejected is not changed by its partner's decision.
+**The collector and its agent are decided together.** The Collector MSI also installs a Stratora Agent on the same computer, so the collector's own host is monitored. Once that agent has registered, approving the collector also approves that agent's node, and rejecting the collector rejects that node, so you don't have to decide the pair twice. Stratora pairs them only when the collector and the agent enrolled with the same enrollment token and from the same address, as they do when the Collector MSI installs both; otherwise each is approved on its own. In the pending node list, that node shows **(with collector *name*)**, and approving or rejecting it there decides both. A node or collector that has already been approved or rejected is not changed by its partner's decision.
 
-**Approving a collector needs an administrator.** Only the Admin role can approve or reject collectors, and that includes the node of a collector's agent. Operators can see a pending collector and its node, but cannot approve or reject them.
+**Approving a collector needs an administrator.** Only the Admin role can approve or reject collectors, and that includes the node of a collector's agent. Operators and viewers can see the list of pending collectors and their nodes, but cannot approve or reject them.
 
 **While it waits, the collector keeps running.** It checks with the server about once a minute, and picks up its configuration within about a minute of being approved. You don't need to restart or reinstall it.
 
