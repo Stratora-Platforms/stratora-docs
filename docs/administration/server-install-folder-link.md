@@ -10,11 +10,10 @@ Stratora Server must be installed in a real folder on a local NTFS volume. It is
 
 ## Why this is not supported
 
-The Server's database cannot start in such a folder. It stops with a "Permission denied" error on its lock file, so the Server does not work there:
+Installing there fails, and upgrading there breaks the server:
 
-- a fresh install into such a folder does not complete;
-- a working server that is moved behind a link or onto a mounted volume afterwards stops working;
-- upgrading such a server would leave it broken.
+- a fresh install into such a folder does not complete: the database cannot create its lock file ("Permission denied");
+- a server that was installed in a real folder and moved behind a link or onto a mounted volume afterwards may keep running, but upgrading it breaks it (for example, its services are removed and its database can no longer be reached).
 
 From Stratora 2.5.3, the Server installer checks the install folder before it changes anything, and stops if the folder, or a folder above it, is a link or a mounted volume folder.
 
@@ -61,7 +60,7 @@ If the installer stopped an **upgrade**, move the server's files into a real fol
 
 Before you start:
 
-- Plan a maintenance window: Stratora is stopped while its files move.
+- Plan a maintenance window: Stratora is stopped while its files move, and the upgrade you run afterwards can take a while (about 15 minutes in our testing, mostly database changes).
 - Make sure the drive that holds the path has room for the server's files (the `data` folder can be large).
 - Take a backup or a VM checkpoint of the server.
 - Run every command below **as an administrator**. Run `rmdir`, `mountvol` and `robocopy` in an elevated **Command Prompt** (`cmd.exe`), not in PowerShell: in PowerShell, `rmdir` is a different command that can delete the contents of the folder a link leads to.
@@ -108,7 +107,11 @@ Follow the layout the installer message names.
 
    robocopy creates `C:\Stratora` and keeps the files' permissions. An exit code below 8 means it worked; check it with `echo %ERRORLEVEL%`. An exit code of 8 or higher means some files were not moved and are still at the source: read robocopy's output, fix the cause (often a program that still has a file open), and run the same command again.
 
-   If the link leads to the root of a drive (for example `E:\`), write the source without quotes and leave out the drive's system folders: `robocopy E:\ "C:\Stratora" /E /COPYALL /MOVE /R:2 /W:5 /XD "System Volume Information" "$RECYCLE.BIN"`. Never end a quoted path with a backslash (`"E:\"`): the Command Prompt reads `\"` as a quote.
+   If the link leads to the root of a drive (for example `E:\`), write the source without quotes and leave out the drive's system folders: `robocopy E:\ "C:\Stratora" /E /COPYALL /MOVE /R:2 /W:5 /XD "System Volume Information" "$RECYCLE.BIN"`. Never end a quoted path with a backslash (`"E:\"`): the Command Prompt reads `\"` as a quote. A copy from a drive root gives `C:\Stratora` the root's Hidden and System attributes, so clear them afterwards:
+
+   ```bat
+   attrib -h -s "C:\Stratora"
+   ```
 
 3. Check that `C:\Stratora` now holds the `bin`, `config` and `data` folders, and that `D:\StratoraData` is gone or empty.
 
@@ -170,7 +173,14 @@ A volume is mounted on `C:\Stratora`, the install folder, or on a folder above i
 
    An exit code below 8 means it worked; check it with `echo %ERRORLEVEL%`. An exit code of 8 or higher means some files were not moved and are still at the source: read robocopy's output, fix the cause (often a program that still has a file open), and run the same command again. If the volume holds other files than Stratora's, they move too.
 
-5. Check that the install folder holds the `bin`, `config` and `data` folders: `C:\Stratora` if the volume was mounted on the install folder, or the install folder below it (for example `C:\Stratora\Server`) if it was mounted on a folder above. You can then remove the drive letter again with `mountvol X: /D`.
+5. The copy gives `C:\Stratora` the volume root's Hidden and System attributes. Clear them, and remove the temporary drive letter:
+
+   ```bat
+   attrib -h -s "C:\Stratora"
+   mountvol X: /D
+   ```
+
+6. Check that the install folder holds the `bin`, `config` and `data` folders: `C:\Stratora` if the volume was mounted on the install folder, or the install folder below it (for example `C:\Stratora\Server`) if it was mounted on a folder above.
 
 ### Step 3: Run the upgrade again
 
@@ -180,7 +190,7 @@ Run the new Server installer as you did before, for example:
 msiexec /i Stratora-Server-X.Y.Z.msi /l*v upgrade.log
 ```
 
-The installer checks the folder again. If it still stops, read the new Event ID 4245 message: it names the folder that is still a link or a mounted volume folder.
+The upgrade can take a while (about 15 minutes in our testing, mostly database changes); let it finish. The installer checks the folder again. If it still stops, read the new Event ID 4245 message: it names the folder that is still a link or a mounted volume folder.
 
 ### Step 4: Check the server
 
