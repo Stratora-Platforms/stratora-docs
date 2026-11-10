@@ -82,7 +82,9 @@ Get-Service -DisplayName 'Stratora*' | Stop-Service -Force
 Get-Service -DisplayName 'Stratora*' | Format-Table Status, DisplayName
 ```
 
-Every Stratora service should show **Stopped**.
+Every Stratora service should show **Stopped**. This also stops a Stratora Agent or Remote Collector installed on the same server; [Step 4](#step-4-check-the-server) starts them again.
+
+In the `robocopy` commands below, `/R:2 /W:5` makes robocopy retry a file that is in use twice, 5 seconds apart. Without it, robocopy retries a million times, 30 seconds apart, and can look hung for days while Stratora is stopped.
 
 ### Step 2: Move the files into a real folder
 
@@ -101,10 +103,12 @@ Follow the layout the installer message names.
 2. Move the server's files into a real `C:\Stratora` folder:
 
    ```bat
-   robocopy "D:\StratoraData" "C:\Stratora" /E /COPYALL /MOVE
+   robocopy "D:\StratoraData" "C:\Stratora" /E /COPYALL /MOVE /R:2 /W:5
    ```
 
-   robocopy creates `C:\Stratora` and keeps the files' permissions. An exit code below 8 means it worked; check it with `echo %ERRORLEVEL%`.
+   robocopy creates `C:\Stratora` and keeps the files' permissions. An exit code below 8 means it worked; check it with `echo %ERRORLEVEL%`. An exit code of 8 or higher means some files were not moved and are still at the source: read robocopy's output, fix the cause (often a program that still has a file open), and run the same command again.
+
+   If the link leads to the root of a drive (for example `E:\`), write the source without quotes and leave out the drive's system folders: `robocopy E:\ "C:\Stratora" /E /COPYALL /MOVE /R:2 /W:5 /XD "System Volume Information" "$RECYCLE.BIN"`. Never end a quoted path with a backslash (`"E:\"`): the Command Prompt reads `\"` as a quote.
 
 3. Check that `C:\Stratora` now holds the `bin`, `config` and `data` folders, and that `D:\StratoraData` is gone or empty.
 
@@ -112,7 +116,7 @@ Follow the layout the installer message names.
 
 The server is in `C:\Stratora\Server`, and `C:\Stratora` is a junction or symbolic link to `D:\StratoraData`.
 
-The steps are the same as for Layout 1, but for the folder that is the link (`C:\Stratora`), not the install folder. This moves **everything** in `D:\StratoraData`, not only Stratora. If other programs keep files there, stop them first too.
+The steps are the same as for Layout 1, but for the folder that is the link (`C:\Stratora`), not the install folder. This moves **everything** in `D:\StratoraData`, not only Stratora, so the drive that holds `C:\Stratora` needs free space for all of it. If other programs keep files there, stop them first too.
 
 1. Remove the link only:
 
@@ -123,10 +127,10 @@ The steps are the same as for Layout 1, but for the folder that is the link (`C:
 2. Move everything it led to into a real `C:\Stratora` folder:
 
    ```bat
-   robocopy "D:\StratoraData" "C:\Stratora" /E /COPYALL /MOVE
+   robocopy "D:\StratoraData" "C:\Stratora" /E /COPYALL /MOVE /R:2 /W:5
    ```
 
-   An exit code below 8 means it worked.
+   An exit code below 8 means it worked; check it with `echo %ERRORLEVEL%`. An exit code of 8 or higher means some files were not moved and are still at the source: read robocopy's output, fix the cause (often a program that still has a file open), and run the same command again.
 
 3. Check that `C:\Stratora\Server` holds the `bin`, `config` and `data` folders.
 
@@ -134,7 +138,7 @@ If the installer named more than one link (for example the install folder and a 
 
 #### Layout 3: a mounted volume folder
 
-A volume is mounted on `C:\Stratora` (or on a folder above the install folder). Use the folder the message names in place of `C:\Stratora`.
+A volume is mounted on `C:\Stratora`, the install folder, or on a folder above it. In the commands below, use the mounted folder the message names in place of `C:\Stratora`. If the volume is mounted on a folder above the install folder, everything on the volume moves, not only Stratora, so the drive that holds that folder needs free space for all of it.
 
 1. Note the volume's name:
 
@@ -161,12 +165,12 @@ A volume is mounted on `C:\Stratora` (or on a folder above the install folder). 
 4. Move the server's files from the volume into `C:\Stratora`:
 
    ```bat
-   robocopy X:\ "C:\Stratora" /E /COPYALL /MOVE /XD "System Volume Information" "$RECYCLE.BIN"
+   robocopy X:\ "C:\Stratora" /E /COPYALL /MOVE /R:2 /W:5 /XD "System Volume Information" "$RECYCLE.BIN"
    ```
 
-   An exit code below 8 means it worked. If the volume holds other files than Stratora's, they move too.
+   An exit code below 8 means it worked; check it with `echo %ERRORLEVEL%`. An exit code of 8 or higher means some files were not moved and are still at the source: read robocopy's output, fix the cause (often a program that still has a file open), and run the same command again. If the volume holds other files than Stratora's, they move too.
 
-5. Check that `C:\Stratora` holds the `bin`, `config` and `data` folders. You can then remove the drive letter again with `mountvol X: /D`.
+5. Check that the install folder holds the `bin`, `config` and `data` folders: `C:\Stratora` if the volume was mounted on the install folder, or the install folder below it (for example `C:\Stratora\Server`) if it was mounted on a folder above. You can then remove the drive letter again with `mountvol X: /D`.
 
 ### Step 3: Run the upgrade again
 
@@ -180,9 +184,10 @@ The installer checks the folder again. If it still stops, read the new Event ID 
 
 ### Step 4: Check the server
 
-1. In PowerShell, check that every Stratora service is running:
+1. In an elevated PowerShell, start any Stratora service that is still stopped, then check that every one is running. The Server upgrade starts the Server's services, but not a Stratora Agent or Remote Collector on the same server that Step 1 stopped:
 
    ```powershell
+   Get-Service -DisplayName 'Stratora*' | Start-Service
    Get-Service -DisplayName 'Stratora*' | Format-Table Status, DisplayName
    ```
 
