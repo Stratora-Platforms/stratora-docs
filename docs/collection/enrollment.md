@@ -36,6 +36,8 @@ sequenceDiagram
 ```
 
 After enrollment:
+- A remote **collector** waits for an administrator's approval before it receives configuration or sends data. See [Approving a Remote Collector](./collectors.md#approving-a-remote-collector). The server's own local collector is approved at install.
+- An **agent's node** arrives with **Pending** approval status, and its metrics appear once the node is approved. See [Nodes → Approval Workflow](../infrastructure/nodes.md#approval-workflow).
 - The **enrollment token** can be discarded (or reused for more installs if it's multi-use)
 - The **API key** (`sk_stra_xxxxx`) is the component's permanent credential for all communication with the server
 - The server stores only a **bcrypt hash** of the API key — the plain-text key exists only on the component itself
@@ -84,6 +86,8 @@ If a collector or agent needs to be reinstalled on the same host (e.g., after a 
 - A **new API key** is generated and the old one is invalidated
 - For agents, the matching node in `nodes` is also updated (matched on the reported hostname)
 - The component resumes normal operation with the new key
+- A collector that was waiting for approval still waits, and an approved collector stays approved
+- A component that an administrator rejected cannot enroll again under the same host name until you delete or revoke it
 
 This means you can reimage a server and reinstall the agent with the same enrollment token — it just works.
 

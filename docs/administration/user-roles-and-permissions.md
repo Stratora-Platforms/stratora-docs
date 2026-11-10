@@ -110,6 +110,7 @@ Read-only access to monitoring data. Viewers can see dashboards, node status, al
 | Reveal enrollment token values | ✅ | ❌ | ❌ |
 | View registered components (agents/collectors) | ✅ | ✅ | ✅ |
 | Revoke component API keys | ✅ | ❌ | ❌ |
+| Approve or reject remote collectors (and the agent installed with each) | ✅ | ❌ | ❌ |
 
 ### Administration
 
