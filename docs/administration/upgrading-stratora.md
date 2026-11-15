@@ -33,7 +33,7 @@ The server installer carries the collector and agent installers for the same rel
 
 ### Check the supported upgrade path
 
-A release supports a direct upgrade from the two full releases before it (n-2); pre-releases don't count. Starting with 2.5.3, each release's notes name those two versions under **Supported upgrade paths**. If your server is older, upgrade in steps: first to a release that supports a direct upgrade from your version, then onward, until you reach the release you want. All releases are on the [Stratora releases page](https://github.com/Stratora-Platforms/stratora-releases/releases).
+A release supports a direct upgrade from the two full releases before it (n-2); pre-releases don't count. Starting with 2.5.3, each release's notes name those two versions under **Supported upgrade paths**. Stratora 2.5.3 upgrades directly from **2.5.2** and **2.5.1**. If your server is older, upgrade in steps: first to a release that supports a direct upgrade from your version, then onward, until you reach the release you want. All releases are on the [Stratora releases page](https://github.com/Stratora-Platforms/stratora-releases/releases).
 
 At every step, upgrade the server first and then its collectors and agents, as described below.
 
@@ -60,7 +60,7 @@ Store the copy where only administrators can read it.
 
 ### Plan for a short monitoring gap
 
-While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors buffer a limited amount of data while the server is unavailable. A Collector Offline alert can open briefly for collectors that are still on the older version. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
+While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. The first upgrade to 2.5.3 takes longer on a large server, because it checks every file in the `data` folder (see [What happens during the upgrade](#3-what-happens-during-the-upgrade)). Collectors buffer a limited amount of data while the server is unavailable. A Collector Offline alert can open briefly for collectors that are still on the older version. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
 
 ---
 
@@ -69,6 +69,8 @@ While the server upgrades, its backend, web server and database are stopped. Dur
 **Upgrade the server first, then upgrade every collector and agent right away.**
 
 Collectors and agents that are not upgraded yet keep working with the upgraded server, but some fixes and improvements only arrive with the new versions, so do not leave them on the old version.
+
+**Never upgrade a collector or agent before its server.** From 2.5.3, collectors and agents verify the server through its server trust key. An upgraded collector or agent learns that key from a 2.5.3 server on its first start, and until it has, it sends nothing and keeps its Telegraf service stopped. With a server that is still on 2.5.2 or older, it would stay that way.
 
 After the server upgrade, if any collector or agent runs an older version than the server ships, Stratora shows each administrator a summary the next time they open it, with how many there are and links to the **Collectors** and **Nodes** pages filtered to them (`/collectors?version=outdated`, `/nodes?version=outdated`). You can open this summary again at any time from **About**. On both pages, an **Out of date** badge marks each one, and the version filter lists only those.
 
@@ -113,8 +115,10 @@ You don't need to give the install folder. The installer finds the folder the cu
    - If a database change would fail, the installer stops with an error **before changing anything**. Your current version stays installed and keeps running. The Windows Application event log has an Error from source **Stratora**, event ID **4243**, that names the change that failed, and the installer log has the same details. Send both to support.
    - If the check can't run at all, the upgrade goes ahead without it, and the installer writes a Warning, event ID **4244**.
 2. **The services stop and the files are replaced.** The installer stops StratoraBackend, StratoraNginx and StratoraPostgreSQL and installs the new version. StratoraVictoriaMetrics (the metric store) keeps running; the installer restarts it afterwards when the release ships a new version of it.
-3. **The database is updated and the services start again.** The installer applies the database changes and starts the services. It logs this part in `logs\postinstall.log` in the install folder.
-4. **The server's own collector and agent are upgraded.** See [The server's own collector](#the-servers-own-collector).
+3. **The install folder and the `data` folder are checked.** The installer sets the permissions of the install folder and of each folder in `data` again. On the first upgrade to 2.5.3 it also checks every folder and file in `data` (their owners and permissions) and takes back anything another account owns or can open. **On a large server this can take several minutes**: the time grows with the number of files in `data`, and in testing about 37,000 files took 4 to 5 minutes. The server is still down for the upgrade while this runs, and the metric store (StratoraVictoriaMetrics) is stopped for the check and started again right after it, so the check makes the monitoring gap that much longer. Later upgrades only check the folders themselves, which takes seconds. Anything the check had to take back is reported as an install folder warning: in the installer log, as a Windows Application event from source **Stratora** with event ID **4250**, and to administrators in a banner and on **Administration → Diagnostics**.
+4. **The database is updated and the services start again.** The installer applies the database changes and starts the services. It logs this part in `logs\postinstall.log` in the install folder.
+   - **PostgreSQL moves to 17.12 by itself.** Stratora 2.5.3 bundles PostgreSQL 17.12 (2.5.1 and 2.5.2 bundled 17.10). It is a minor release of the same version: the database files are used as they are, with no dump and restore, and the installer restarts PostgreSQL on the new version. There is nothing to do.
+5. **The server's own collector and agent are upgraded.** See [The server's own collector](#the-servers-own-collector).
 
 **If the upgrade fails.** If installing the new version fails, Windows Installer rolls back and puts the previous version back, installed and able to start. If a step fails after the new files are in place, for example while the database is updated, the installer doesn't roll back. It finishes as if it had succeeded: the wizard shows a normal finish and msiexec returns 0. The upgrade has **completed with errors**, and the only signs are:
 
@@ -126,10 +130,11 @@ Follow the recovery steps in that file. They restart the services one by one and
 
 ### 4. Confirm the server upgrade
 
-1. Sign in to Stratora and open **Administration → About**. **Version** shows the new version. If it still shows the old one, reload the page without the cache (Ctrl+Shift+R).
-2. In **Services** (`services.msc`), or with `Get-Service Stratora*`, check that StratoraBackend, StratoraNginx, StratoraPostgreSQL and StratoraVictoriaMetrics are **Running**.
-3. Check that the install folder has no `UPGRADE-COMPLETED-WITH-ERRORS.txt`.
-4. As an administrator, you see the summary of collectors and agents that still run an older version. Upgrade them next.
+1. Sign in to Stratora as an administrator. The first time an administrator opens Stratora on the new version, a check page opens. It waits for the backend, database, metric store and web server, confirms that the new version runs with every database change applied and without `UPGRADE-COMPLETED-WITH-ERRORS.txt`, and shows whether the server's collector, the remote collectors and the agents report again. When everything passes it continues by itself; a failed check says what to do. **Continue** is always there, and the checks stop after 3 minutes. Operators and viewers never see this page.
+2. Open **Administration → About**. **Version** shows the new version. If it still shows the old one, reload the page without the cache (Ctrl+Shift+R).
+3. In **Services** (`services.msc`), or with `Get-Service Stratora*`, check that StratoraBackend, StratoraNginx, StratoraPostgreSQL and StratoraVictoriaMetrics are **Running**.
+4. Check that the install folder has no `UPGRADE-COMPLETED-WITH-ERRORS.txt`.
+5. As an administrator, you see the summary of collectors and agents that still run an older version. Upgrade them next.
 
 ---
 
@@ -150,13 +155,17 @@ Upgrade each remote collector on its own host, after the server.
    msiexec /i StratoraCollector.msi /qn /l*v collector-upgrade.log
    ```
 
-   You don't need a server URL or an enrollment token: the upgrade keeps the collector's configuration and enrollment. The interactive installer asks for both even on an upgrade, so the command line is the simpler way.
+   You don't need a server URL or an enrollment token: the upgrade keeps the collector's configuration and enrollment. The interactive installer asks for both even on an upgrade, so the command line is the simpler way. The upgrade stays in the collector's install folder, including a custom folder and custom data and Telegraf folders; don't pass `INSTALLFOLDER` or another data or Telegraf folder, because moving a collector during an upgrade isn't supported. An upgrade from 2.5.1 or 2.5.2 also works with basic UI (`/qb`) or a double-click.
 3. The collector services (StratoraCollector and stratora-collector-telegraf) restart, so collection from that host pauses for a moment.
 4. **The collector's bundled agent upgrades with it.** On a collector host, don't run the Agent installer as well.
 
 If the upgrade fails or you cancel it, Windows Installer puts the previous version back, with its configuration and services.
 
 **Confirm on the Collectors page.** Open **Collection → Collectors**. The collector is online and shows the new version, with no **Out of date** badge. To list only the collectors that still need upgrading, choose **Out of date** in the version filter, or open `/collectors?version=outdated`.
+
+**On its first start**, the upgraded collector stores its API key encrypted for that computer and learns the server's trust key. Until then its Telegraf service stays stopped, for a moment. Going back to an older collector version needs an uninstall and a new install with a new enrollment token.
+
+**A collector host that also has the standalone Windows Agent.** Up to 2.5.2, the standalone agent could be installed on a computer that also ran a Remote Collector with its own agent. Upgrading the collector keeps the standalone agent working, and from then on the collector has no agent of its own. If you want the collector's own agent to monitor that computer instead, **uninstall the standalone agent before you upgrade the collector**. The Windows Agent installation guide (in the **Installation** section) covers both paths, and when the collector's agent must be enrolled again with `-reenroll`.
 
 ---
 
@@ -180,7 +189,7 @@ An upgraded agent keeps its configuration and enrollment. It does not enroll aga
    ```
 
    You don't need `SERVERURL` or `ENROLLTOKEN`: the upgrade keeps the agent's enrollment. The interactive installer asks for both even on an upgrade, so the command line is the simpler way. Deployment tools (GPO, SCCM, Intune, PDQ Deploy) can run the same command.
-3. The agent services (StratoraAgent and stratora-agent-telegraf) restart, which leaves a short gap in that host's metrics. If the upgrade fails, Windows Installer puts the previous version back.
+3. The agent services (StratoraAgent and stratora-agent-telegraf) restart, which leaves a short gap in that host's metrics. On its first start, the upgraded agent stores its key in a protected form and learns the server's trust key; its Telegraf service stays stopped until then. If the upgrade fails, Windows Installer puts the previous version back. An upgrade from 2.5.1 or 2.5.2 also works with basic UI (`/qb`) or a double-click: the installer closes the tray icon first.
 
 On a host that runs a Stratora collector, upgrade the collector instead: its installer upgrades the bundled agent. On the Stratora server itself, the agent upgrades with the server.
 
@@ -196,11 +205,9 @@ Going back to an older agent version isn't supported. If you uninstall the agent
    ```
 
    `sudo dpkg -i /tmp/stratora-agent.deb` does the same.
-2. Start the agent again. A `.deb` upgrade stops the agent and leaves it stopped:
+2. The package restarts the agent on the new version by itself. From 2.5.3, a `.deb` upgrade restarts a running agent, and starts an enrolled agent that the older package stopped during the upgrade (2.5.1 and 2.5.2 packages did that). An agent that has not enrolled yet stays stopped.
 
-   ```bash
-   sudo systemctl restart stratora-agent
-   ```
+   **An agent you turned off stays off.** When `stratora-agent` is masked, or disabled before an upgrade from 2.5.3 or later, the upgrade neither enables nor starts it. Packages before 2.5.3 disabled the agent themselves during every upgrade, so an upgrade from them enables the service again. To run a stopped agent: `sudo systemctl unmask stratora-agent` (if masked), then `sudo systemctl enable --now stratora-agent`.
 
 ### Linux agent: RHEL / Rocky / Alma (`.rpm`)
 
@@ -212,9 +219,11 @@ Going back to an older agent version isn't supported. If you uninstall the agent
    ```
 
    `sudo rpm -U /tmp/stratora-agent.rpm` does the same.
-2. An `.rpm` upgrade restarts a running agent by itself. If the agent was not running, start it with `sudo systemctl restart stratora-agent`.
+2. An `.rpm` upgrade restarts a running agent by itself. If the agent was not running, start it with `sudo systemctl restart stratora-agent`. The `.rpm` enables the service on every install and upgrade, so if you keep the agent disabled, disable it again afterwards.
 
 On both, the package keeps `/etc/stratora/agent.json`, owned by the `stratora` user with mode `0600`. Check the agent with `systemctl status stratora-agent`.
+
+Stratora 2.5.2 servers shipped the 2.5.1 Linux packages, so a Linux agent installed from a 2.5.2 server runs 2.5.1. It upgrades to 2.5.3 the same way.
 
 In these commands, `curl -k` skips certificate verification for the download only. Leave it out if the host trusts your server's certificate.
 
