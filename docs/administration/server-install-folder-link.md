@@ -204,7 +204,7 @@ The upgrade can take a while (about 15 minutes in our testing, mostly database c
 2. Open `https://your-server-hostname` and log in.
 3. Check that the version in the footer or About view is the new one, and that your sites, devices and dashboards are there.
 
-If a service does not start, see [Upgrading Stratora](./upgrading-stratora.md#if-something-looks-wrong).
+If a service does not start, see the troubleshooting steps in [Upgrading Stratora](./upgrading-stratora.md).
 
 ## See also
 
