@@ -248,7 +248,7 @@ curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/
 sudo rpm -U /tmp/stratora-agent.rpm
 ```
 
-The packages keep `/etc/stratora/agent.json` in place and restart the agent on the new version by themselves. The `.deb` also starts an enrolled agent that an older package stopped during the upgrade, and leaves a masked agent, or one you disabled, off. The `.rpm` restarts a running agent and enables the service. See [Upgrading Stratora](../administration/upgrading-stratora.md#linux-agent-debian--ubuntu-deb) for the details.
+The packages keep `/etc/stratora/agent.json` in place and restart the agent on the new version by themselves. The `.deb` also starts an enrolled agent that an older package stopped during the upgrade, and leaves a stopped agent off when it is masked, or when you disabled it before an upgrade from 2.5.3 or later (an upgrade from 2.5.1 or 2.5.2 enables the service again). The `.rpm` restarts a running agent and enables the service. See [Upgrading Stratora](../administration/upgrading-stratora.md#linux-agent-debian--ubuntu-deb) for the details.
 
 ### After upgrade
 

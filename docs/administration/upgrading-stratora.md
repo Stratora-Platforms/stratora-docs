@@ -207,7 +207,7 @@ Going back to an older agent version isn't supported. If you uninstall the agent
    `sudo dpkg -i /tmp/stratora-agent.deb` does the same.
 2. The package restarts the agent on the new version by itself. From 2.5.3, a `.deb` upgrade restarts a running agent, and starts an enrolled agent that the older package stopped during the upgrade (2.5.1 and 2.5.2 packages did that). An agent that has not enrolled yet stays stopped.
 
-   **An agent you turned off stays off.** When `stratora-agent` is masked, or disabled before an upgrade from 2.5.3 or later, the upgrade neither enables nor starts it. Packages before 2.5.3 disabled the agent themselves during every upgrade, so an upgrade from them enables the service again. To run a stopped agent: `sudo systemctl unmask stratora-agent` (if masked), then `sudo systemctl enable --now stratora-agent`.
+   **An agent you turned off stays off.** When `stratora-agent` is masked, or disabled before an upgrade from 2.5.3 or later, the upgrade doesn't enable it, and doesn't start it if it is stopped; a disabled agent that is still running is restarted on the new version. Packages before 2.5.3 disabled the agent themselves during every upgrade, so an upgrade from them enables the service again. To run a stopped agent: `sudo systemctl unmask stratora-agent` (if masked), then `sudo systemctl enable --now stratora-agent`.
 
 ### Linux agent: RHEL / Rocky / Alma (`.rpm`)
 
