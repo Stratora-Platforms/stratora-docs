@@ -22,7 +22,7 @@ The agent installer is `StratoraAgent.msi`. It installs:
 
 | Requirement | Details |
 |---|---|
-| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. |
+| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. Windows Server 2016 and 2019, and Windows 10 and 11, install but were not tested with this release. |
 | Account | A local administrator. |
 | Network | Outbound HTTPS (TCP 443) to the Stratora server. The agent never listens on a port and doesn't use a proxy. |
 | Reachability | Allow inbound ICMP Echo Request, or the node looks unreachable. See [Windows hosts](/docs/prerequisites/windows-hosts). |
@@ -81,7 +81,7 @@ Check the agent:
 
 - **Infrastructure → Nodes**: the node shows its agent version, and metrics within about a minute of the approval.
 - On the computer: `Get-Service StratoraAgent, stratora-agent-telegraf`.
-- The agent's log: `C:\Program Files\Stratora\logs\agent.log` (in your install folder if you chose another one).
+- The agent's log: `C:\Program Files\Stratora\logs\agent.log`. The agent always logs there, even when it is installed in another folder.
 
 ---
 
@@ -97,7 +97,7 @@ msiexec /i StratoraAgent.msi /qn /l*v agent-upgrade.log
 
 - No server URL or token is needed: the agent keeps its enrollment and its node.
 - It stays in its install folder, including a custom one. Don't pass another `INSTALLFOLDER`: the upgrade stops before changing anything.
-- An upgrade from 2.5.1 or 2.5.2 also works with basic UI (`/qb`) or a double-click: the installer closes the tray icon first. The tray comes back after an upgrade with UI, otherwise at the next sign-in.
+- An upgrade from 2.5.1 or 2.5.2 also works with basic UI (`/qb`), which needs no other input, or a double-click, where the wizard asks for a Server URL and an Enrollment Token and won't continue without them, although the upgrade doesn't use them. The installer closes the tray icon first. The tray comes back after an upgrade with UI, otherwise at the next sign-in.
 - If the upgrade fails or you cancel it, Windows Installer puts the previous version back.
 - On its first start, the upgraded agent stores its API key in a protected form (encrypted for this computer, and in the Windows Credential Manager of the LocalSystem account) and learns the server's trust key. Until then, its Telegraf service stays stopped for a moment.
 
@@ -121,6 +121,8 @@ Use **Apps & features** (select **Stratora Agent**), or from a Command Prompt wi
 ```cmd
 msiexec /x StratoraAgent.msi /qn /l*v agent-uninstall.log
 ```
+
+Use the MSI of the installed version.
 
 The uninstall removes the agent's services, files, `config.json` and its own log files. A cancelled or failed uninstall keeps them. On the Stratora server, the server's own logs in the same `logs` folder stay.
 

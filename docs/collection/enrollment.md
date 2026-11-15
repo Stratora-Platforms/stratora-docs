@@ -92,7 +92,7 @@ If a collector or agent needs to be reinstalled on the same host (e.g., after a 
 - For agents, the matching node in `nodes` is also updated (matched on the reported hostname)
 - The component resumes normal operation with the new key
 
-This means you can reimage a server and reinstall the agent without a duplicate node: use a single-use token with **Allow replacing an existing component** for that reinstall. The Stratora server's own agent and collector cannot be replaced this way.
+This means you can reimage a server and reinstall the agent without a duplicate node: use a single-use token with **Allow replacing an existing component** for that reinstall. A Remote Collector reinstall needs a multi-use token with at least 2 uses and that option, because the collector and the agent installed with it each use one. The Stratora server's own agent and collector cannot be replaced this way.
 
 :::note
 Re-enrollment only matches on hostname. If the host has been **renamed** between the original enrollment and the re-enrollment (for example, an OS reinstall that also changed the hostname), Stratora cannot correlate the new name with the old record and a duplicate node will be created. See [Server Renames and Agent Re-enrollment](./agents.md#server-renames-and-agent-re-enrollment) for the cleanup procedure.

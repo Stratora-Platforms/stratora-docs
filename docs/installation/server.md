@@ -16,7 +16,7 @@ This page covers a first-time install. To upgrade a server you already run, see 
 
 | Requirement | Details |
 |---|---|
-| Operating system | Windows Server 2016 or later, 64-bit. Stratora 2.5.3 was tested on Windows Server 2022. |
+| Operating system | Windows Server 2016 or later, 64-bit. Stratora 2.5.3 was tested on Windows Server 2022; Windows Server 2016 and 2019 install but were not tested with this release. |
 | Hardware | 4 CPU cores, 16 GB RAM and 200 GB of disk. The `data` folder holds the database and the metric store, so give it room to grow. |
 | Account | A local administrator. The installer runs elevated. |
 | Name | A DNS name (FQDN) for the server, with an A record that points to it. The Setup Wizard checks it, and collectors and agents use it to reach the server. |
@@ -45,11 +45,13 @@ A new install stops **before it changes anything** when the folder is:
 
 The installer log names the folder and what is wrong with it: `logs\postinstall.log` in the install folder, and the log you asked for with `/l*v`. A refused link or mounted folder is also written to the Windows Application event log, source **Stratora**, event ID **4245**.
 
+**Some of these are refused on an upgrade too.** For an existing server in a drive root, the Windows folder or a system folder, the upgrade refuses that folder and ends "completed with errors" (see [Upgrading Stratora](/docs/administration/upgrading-stratora)). An install folder reached through a link or a mounted volume folder stops the upgrade before it changes anything, with event ID 4245.
+
 To fix a refusal, choose a folder whose parent folders only administrators can change (the default under Program Files always qualifies), or remove the permission the log names, and run the installer again.
 
 ### Warnings instead of a refusal
 
-An existing install is never moved. When an upgrade or a repair finds a problem with the folder it already uses, it keeps the install in place, restricts what it can, and warns you:
+An existing install is never moved. Apart from the refusals above, when an upgrade or a repair finds a problem with the folder it already uses, it keeps the install in place, restricts what it can, and warns you:
 
 - the installer log lists each warning;
 - the Application event log gets one warning, source **Stratora**, event ID **4250**;
@@ -115,7 +117,7 @@ Windows Installer rolls a failed or cancelled first install back: it removes wha
 
 ## Sign in for the first time
 
-Stratora has no default password. The installer creates a one-time password for the `admin` account and writes it to `data\initial-admin-password.txt` in the install folder. Only SYSTEM and Administrators can read the file.
+Stratora has no default password. When the backend first starts, it creates a one-time password for the `admin` account and writes it to `data\initial-admin-password.txt` in the install folder. Only SYSTEM and Administrators can read the file.
 
 1. On the server, open PowerShell with **Run as administrator** and read the password:
 
@@ -148,7 +150,7 @@ Set the server's name and get a trusted certificate in the Setup Wizard's **Serv
 - **Let's Encrypt with HTTP-01**: needs port 80 on the server to be reachable from the internet.
 - **Upload** a certificate from your own certificate authority.
 
-Wildcard names (`*.example.com`) are refused: Stratora doesn't support wildcard certificates. See [SSL / TLS Certificates](/docs/administration/ssl-tls-certificates) for the details.
+Let's Encrypt requests for wildcard names (`*.example.com`) are refused: Stratora can't request wildcard certificates. An uploaded certificate is not checked for this. See [SSL / TLS Certificates](/docs/administration/ssl-tls-certificates) for the details.
 
 ### How collectors and agents trust the server
 
@@ -193,6 +195,8 @@ Use **Apps & features** (select **Stratora Server**, then **Uninstall**), or fro
 ```cmd
 msiexec /x Stratora-Server-X.Y.Z.msi /l*v uninstall.log
 ```
+
+Use the MSI of the installed version, as for a repair.
 
 - The uninstall removes the server's services and program files.
 - It **keeps** the `data` folder (the database, the metric store and the server's keys) and the `acme-data` folder (certificate data) in the install folder. Delete them yourself if you want nothing left, and only once you are sure you don't need them.

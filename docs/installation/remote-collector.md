@@ -21,7 +21,7 @@ The Stratora server already has a collector of its own. You only need a Remote C
 
 | Requirement | Details |
 |---|---|
-| Operating system | 64-bit Windows 10 or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. |
+| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. Windows Server 2016 and 2019, and Windows 10 and 11, install but were not tested with this release. |
 | Account | A local administrator. |
 | Network | Outbound HTTPS (TCP 443) to the Stratora server, and access to the devices it polls (ICMP, SNMP on UDP 161, and the APIs it uses). See [Network](/docs/prerequisites/network). |
 | Server version | The same version as the collector. Download the installer from your server (below), so the versions match. |
@@ -32,7 +32,7 @@ The Stratora server already has a collector of its own. You only need a Remote C
 1. In Stratora, open **Collection → Enrollment**, tab **Enrollment Tokens**, and click **Create Token**.
 2. Tick **Multi-use** and allow **at least 2 uses**: the collector uses one, and the agent installed with it uses another.
 3. Choose a short expiration, for example 24 hours.
-4. Leave **Allow replacing an existing component** off for a new computer. Turn it on only to reinstall a collector that is already enrolled under this computer's name (see [Reinstall or enroll again](#reinstall-or-enroll-again)).
+4. Leave **Allow replacing an existing component** off for a new computer. Turn it on only to reinstall a collector that is already enrolled under this computer's name; that token still needs **Multi-use** with at least 2 uses (see [Reinstall or enroll again](#reinstall-or-enroll-again)).
 5. Copy the token. It looks like `enroll_<secret>.sha256:<pin>`. **Copy the whole token**, including the part after `.sha256:`: that part lets the collector verify the server from its first connection.
 
 See [Enrollment](/docs/collection/enrollment) for more on tokens.
@@ -117,7 +117,7 @@ msiexec /i StratoraCollector.msi /qn /l*v collector-upgrade.log
 - Don't pass a different `COLLECTORTELEGRAFDIR` or `AGENTTELEGRAFDIR` on an upgrade either: removing the old version deletes the old Telegraf folder and everything in it, and the new folder starts with the default configuration.
 - A collector installed at a drive root, in the Windows folder or in a system folder is refused on upgrade.
 - If the upgrade fails or you cancel it, Windows Installer puts the previous version back, with its configuration and services.
-- An upgrade from 2.5.1 or 2.5.2 works with basic UI (`/qb`) or a double-click too.
+- An upgrade from 2.5.1 or 2.5.2 also works with basic UI (`/qb`), which needs no other input. A double-click works too, but the wizard asks for a Server URL and an Enrollment Token and won't continue without them, although the upgrade doesn't use them.
 - On its first start, the upgraded collector stores its API key encrypted for this computer and learns the server's trust key. Until then its Telegraf stays stopped, for a moment.
 
 Running the same MSI again over the same version changes nothing. Going back to an older collector version needs an uninstall and a new install with a new token.
@@ -137,9 +137,9 @@ A repair also registers the collector's own agent service again, which fixes a c
 
 ## Reinstall or enroll again
 
-A collector that is already enrolled under this computer's name is refused by an ordinary token, and the existing collector keeps working. To reinstall it on purpose (for example after rebuilding the computer), uninstall it, create a single-use token with **Allow replacing an existing component**, and install again with `SERVER_URL` and that token. The collector keeps its ID, its sites and its nodes.
+A collector that is already enrolled under this computer's name is refused by an ordinary token, and the existing collector keeps working. To reinstall it on purpose (for example after rebuilding the computer), uninstall it, create a **multi-use token with at least 2 uses** and **Allow replacing an existing component** (the collector and its agent each use one; with a single-use token the agent is refused), and install again with `SERVER_URL` and that token. The collector keeps its ID, its sites and its nodes.
 
-A collector that an administrator **rejected** cannot enroll again under the same name. Approve it on the Collectors page instead.
+A collector that an administrator **rejected** cannot enroll again under the same name. Approve it on the Collectors page instead, or delete it there (or revoke it under **Collection → Enrollment**, tab **Registered Components**) and enroll it again. After a delete or revoke it enrolls as a new collector, so choose it again as the preferred collector of its sites and reassign its nodes.
 
 ---
 
@@ -151,7 +151,11 @@ Use **Apps & features** (select **Stratora Remote Collector**), or from a Comman
 msiexec /x StratoraCollector.msi /qn /l*v collector-uninstall.log
 ```
 
+Use the MSI of the installed version.
+
 The uninstall removes the collector and its agent, their services, their configuration (`config.json`, the server-generated `telegraf.conf` and its copies), the device passwords and API key the collector kept in the Windows Credential Manager, and the agent's log files. It removes the folders once they are empty. It does all this only once the uninstall has succeeded: a cancelled or failed uninstall leaves the collector as it was.
+
+The uninstall **keeps** the configuration backups that upgrades write, `%ProgramData%\Stratora\collector-config-backup.json` and `agent-config-backup.json` (readable only by SYSTEM and Administrators). A later install on this computer without `SERVER_URL` and `ENROLLMENT_TOKEN` restores the collector from them. Delete them if you are retiring the computer.
 
 Afterwards, delete the collector in Stratora on **Collection → Collectors**. First choose another preferred collector for every site that uses it.
 
@@ -174,5 +178,5 @@ Computers that got both under 2.5.2 or earlier need some care when you upgrade. 
 |---|---|
 | The installer | The file you named with `/l*v` |
 | The collector | `C:\ProgramData\Stratora\Collector\logs\collector.log` |
-| The collector's agent | `C:\Program Files\Stratora\logs\agent.log` (in your install folder if you chose another one) |
+| The collector's agent | `C:\Program Files\Stratora\logs\agent.log`, wherever the collector is installed |
 | Installer events | Event Viewer → **Windows Logs → Application**, sources **Stratora** and **MsiInstaller** |

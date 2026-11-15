@@ -20,7 +20,7 @@ The package installs the `stratora-agent` systemd service, which runs as its own
 | Debian 12 | `.deb` | Install, enrollment and metrics, upgrade from 2.5.1, `remove` and `purge` |
 | Ubuntu 24.04 LTS | `.deb` | Install, enrollment and metrics, upgrade from 2.5.1, `remove` and `purge` |
 
-Only these three were tested with 2.5.3. The packages are built for 64-bit x86 (amd64) systems with systemd 239 or later, but other distributions and versions, such as RHEL, AlmaLinux, Rocky Linux 9, Debian 13 or Ubuntu 22.04, were not tested with this release. ARM systems are not supported.
+Only these three were tested with 2.5.3. The packages are built for 64-bit x86 (amd64) systems with systemd, but other distributions and versions, such as RHEL, AlmaLinux, Rocky Linux 9, Debian 13 or Ubuntu 22.04, were not tested with this release. ARM systems are not supported.
 
 ---
 
@@ -56,7 +56,7 @@ curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/
 sudo apt install /tmp/stratora-agent.deb        # or: sudo dpkg -i /tmp/stratora-agent.deb
 ```
 
-Rocky Linux and other RHEL-family distributions:
+Rocky Linux (other RHEL-family distributions were not tested with 2.5.3):
 
 ```bash
 curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/agent/linux-rpm
@@ -118,7 +118,7 @@ Download the new package from your upgraded server and install it over the insta
 curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/agent/linux-deb
 sudo apt install /tmp/stratora-agent.deb        # or: sudo dpkg -i /tmp/stratora-agent.deb
 
-# Rocky Linux and RHEL family
+# Rocky Linux (other RHEL-family distributions were not tested with 2.5.3)
 curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/agent/linux-rpm
 sudo dnf install /tmp/stratora-agent.rpm        # or: sudo rpm -U /tmp/stratora-agent.rpm
 ```
@@ -126,7 +126,7 @@ sudo dnf install /tmp/stratora-agent.rpm        # or: sudo rpm -U /tmp/stratora-
 The upgrade keeps `/etc/stratora/agent.json`, so the agent keeps its enrollment and its node, and **restarts the agent on the new version by itself**:
 
 - **`.deb`:** a running agent is restarted. An enrolled agent that the old package stopped during the upgrade (2.5.1 and 2.5.2 did that) is started again. An agent that hasn't enrolled yet stays stopped.
-- **`.deb`, an agent you turned off stays off:** when `stratora-agent` is **masked**, or **disabled** before an upgrade from 2.5.3 or later, the upgrade neither enables nor starts it, and says so. Packages before 2.5.3 disabled the agent themselves during every upgrade, so an upgrade from them enables the service again. To run the agent again: `sudo systemctl unmask stratora-agent` (if masked), then `sudo systemctl enable --now stratora-agent`.
+- **`.deb`, an agent you turned off stays off:** when `stratora-agent` is **masked**, or **disabled** before an upgrade from 2.5.3 or later, the upgrade doesn't enable it, and doesn't start it if it is stopped, and says so. A disabled agent that is still **running** is restarted on the new version, as any running agent is. Packages before 2.5.3 disabled the agent themselves during every upgrade, so an upgrade from them enables the service again. To run the agent again: `sudo systemctl unmask stratora-agent` (if masked), then `sudo systemctl enable --now stratora-agent`.
 - **`.rpm`:** a running agent is restarted; a stopped agent stays stopped. The package enables the service on every install and upgrade, so if you keep the agent disabled, disable it again after the upgrade.
 
 Check it with `sudo systemctl status stratora-agent`. On the Nodes page, the node shows the new agent version within seconds.
@@ -159,7 +159,7 @@ Purge stops and disables the service, removes the program and the systemd unit, 
 
 Installing the package again after `remove` resumes with the same identity. To delete what `remove` kept, purge the package afterwards: `sudo apt purge stratora-agent`.
 
-### Rocky Linux and RHEL family
+### Rocky Linux
 
 ```bash
 sudo dnf remove stratora-agent        # or: sudo rpm -e stratora-agent

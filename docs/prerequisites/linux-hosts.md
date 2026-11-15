@@ -23,7 +23,7 @@ Architecture: amd64 only. ARM-based hosts are not supported in this release.
 ## Install prerequisites
 
 - `root` or `sudo` to install the package
-- `systemd` 239 or later — the agent runs as a systemd service unit
+- `systemd` — the agent runs as a systemd service unit
 - At least 200 MB of free disk space for the agent binary and its log directory
 - **Telegraf**, installed from the [InfluxData repository](https://docs.influxdata.com/telegraf/v1/install/) before the agent. The agent collects metrics through Telegraf, which its package does not include; the package links the system's `telegraf` into `/opt/stratora/bin` when it is installed. Without Telegraf the agent enrolls but sends no metrics.
 - No other package dependencies — the agent itself is a static binary
