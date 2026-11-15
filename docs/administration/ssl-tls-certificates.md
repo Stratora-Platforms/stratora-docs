@@ -22,6 +22,21 @@ During installation, Stratora generates a self-signed certificate so HTTPS works
 
 The self-signed certificate is suitable for initial setup and internal use. Browsers will show a certificate warning because it isn't signed by a trusted certificate authority.
 
+**Stratora renews its own self-signed certificate.** The backend checks it when it starts and once a day. When it has expired, expires within 30 days, is not valid yet, or doesn't match its key, Stratora renews it with the same host names plus the server's current ones, restarts the web server, and records the renewal in the audit log. Collectors and agents keep working without being enrolled again. Stratora only renews a certificate it created: it never replaces a certificate you uploaded or got from Let's Encrypt.
+
+---
+
+## How Collectors and Agents Trust the Server
+
+Collectors and agents always verify the Stratora server's certificate; this can't be turned off. From 2.5.3 they trust the server through its **server trust key**, `data\server-trust.key` in the install folder, which the server creates at its first start and uses to vouch for whatever certificate it serves:
+
+- Every enrollment token carries the trust key's pin: a token looks like `enroll_<secret>.sha256:<pin>`. Always copy the whole token. With the pin, a collector or agent accepts the server's certificate from its first connection, self-signed or not.
+- The pin is shown on **Administration → About** and when you create a token.
+- When the certificate changes (a renewal, a Let's Encrypt certificate, an upload), collectors and agents on 2.5.3 or later pick up the new one by themselves. Nothing needs doing on their hosts.
+- Keep `data\server-trust.key` in your backups with the rest of the `data` folder. A server that loses it has to enroll every collector and agent again.
+
+Collectors and agents **older than 2.5.3** check the server's certificate against their host's own trust store instead. When you upload a certificate that the server's own trust store doesn't trust, **Upload & Apply** first lists the enrolled collectors and agents that may still check it that way (older than 2.5.3, an unknown version, or not in contact since the server was upgraded) and asks you to confirm. Add the issuing certificate authority to the trust store on those hosts (on Windows: Trusted Root Certification Authorities, Local Computer), or upgrade them and let them connect once, then upload again or apply anyway.
+
 ---
 
 ## Let's Encrypt (Automated Certificates)
@@ -29,6 +44,8 @@ The self-signed certificate is suitable for initial setup and internal use. Brow
 Stratora includes a bundled ACME client ([win-acme](https://www.win-acme.com/)) for automated certificate issuance and renewal from Let's Encrypt.
 
 Navigate to **Administration → SSL / TLS Certificates** to configure.
+
+Wildcard names (`*.example.com`) are refused with "wildcard certificates aren't supported on Windows". So is a name whose first label is a Windows device name (`con`, `prn`, `aux`, `nul`, `com1` to `com9`, `lpt1` to `lpt9`). Request a certificate for the server's own name.
 
 ![Let's Encrypt section — client-ready status, domain and email fields, HTTP-01 / DNS-01 challenge selector, Request Certificate button, and the Auto-Renewal toggle showing the next scheduled check and managed certificates list](/img/administration/ssl-tls-letsencrypt-section.png)
 
@@ -47,7 +64,7 @@ The simplest method — Let's Encrypt verifies domain ownership by placing a fil
 
 ### DNS-01 Challenge
 
-For servers that aren't publicly accessible on port 80, or for wildcard certificates. Let's Encrypt verifies domain ownership via a DNS TXT record.
+For servers that aren't publicly accessible on port 80. Let's Encrypt verifies domain ownership via a DNS TXT record.
 
 #### Manual DNS-01
 

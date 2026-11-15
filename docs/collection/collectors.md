@@ -36,10 +36,12 @@ You can deploy as many remote collectors as your environment needs. Each one ope
 
 The fastest way to deploy a collector is from the **Deploy Collector** modal in the UI. Navigate to **Collection → Collectors** and click the **Deploy Collector** button. The modal provides two modes:
 
-- **Silent Install** — generates a ready-to-run PowerShell command with your server URL, enrollment token, collector name, and site pre-filled. Copy and run on the target server.
+- **Silent Install** — generates a ready-to-run `msiexec` command with your server URL, enrollment token and collector name filled in. Copy and run it on the target server from a Command Prompt opened with **Run as administrator**. The installer has no site setting: once the collector is approved, make it a site's [preferred collector](../infrastructure/sites.md#preferred-collector).
 - **Interactive Install** — download the MSI and run it manually. The modal shows your server URL for reference.
 
 The MSI can also be downloaded directly at `/api/v1/downloads/collector/windows`.
+
+For the full steps (prerequisites, every installer property, custom folders, upgrade, repair and uninstall), see [Install a Remote Collector](/docs/installation/remote-collector).
 
 ### MSI Installer
 
@@ -70,7 +72,7 @@ msiexec /i StratoraCollector.msi /qn SERVER_URL="https://stratora.example.com" E
 | `/l*v C:\temp\install.log` | Verbose logging to file |
 
 :::tip
-For mass deployments, create a multi-use enrollment token with an appropriate use limit and expiration window. See [Enrollment](./enrollment.md) for details.
+Each Remote Collector install uses **two** uses of its enrollment token: one for the collector and one for the agent installed with it. Create a multi-use token with at least two uses per collector and a short expiration window, and copy the whole token, including the part after `.sha256:`. See [Enrollment](./enrollment.md) for details.
 :::
 
 ### What Gets Installed
