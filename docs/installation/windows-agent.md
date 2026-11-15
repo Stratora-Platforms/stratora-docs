@@ -22,7 +22,7 @@ The agent installer is `StratoraAgent.msi`. It installs:
 
 | Requirement | Details |
 |---|---|
-| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. Windows Server 2016 and 2019, and Windows 10 and 11, install but were not tested with this release. |
+| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. The installer allows Windows Server 2016 and 2019 and Windows 10 and 11, but they were not tested with this release. |
 | Account | A local administrator. |
 | Network | Outbound HTTPS (TCP 443) to the Stratora server. The agent never listens on a port and doesn't use a proxy. |
 | Reachability | Allow inbound ICMP Echo Request, or the node looks unreachable. See [Windows hosts](/docs/prerequisites/windows-hosts). |

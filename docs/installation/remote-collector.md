@@ -21,7 +21,7 @@ The Stratora server already has a collector of its own. You only need a Remote C
 
 | Requirement | Details |
 |---|---|
-| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. Windows Server 2016 and 2019, and Windows 10 and 11, install but were not tested with this release. |
+| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. The installer allows Windows Server 2016 and 2019 and Windows 10 and 11, but they were not tested with this release. |
 | Account | A local administrator. |
 | Network | Outbound HTTPS (TCP 443) to the Stratora server, and access to the devices it polls (ICMP, SNMP on UDP 161, and the APIs it uses). See [Network](/docs/prerequisites/network). |
 | Server version | The same version as the collector. Download the installer from your server (below), so the versions match. |

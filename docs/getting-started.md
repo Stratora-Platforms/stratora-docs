@@ -14,7 +14,7 @@ Already running Stratora? See [Upgrading Stratora](/docs/administration/upgradin
 
 Before installing, you'll need:
 
-- **Windows Server 2016 or later** (64-bit) with 4 CPU cores, 16 GB RAM, and 200 GB of disk. Stratora 2.5.3 was tested on Windows Server 2022; Windows Server 2016 and 2019 install but were not tested with this release.
+- **Windows Server 2016 or later** (64-bit) with 4 CPU cores, 16 GB RAM, and 200 GB of disk. Stratora 2.5.3 was tested on Windows Server 2022. The installer allows Windows Server 2016 and 2019, but they were not tested with this release.
 - **Outbound HTTPS** from each monitored host to this server
 - **SNMP credentials** for any network devices you plan to monitor
 - **Local administrator** privileges to run the installer

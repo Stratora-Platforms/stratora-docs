@@ -16,7 +16,7 @@ This page covers a first-time install. To upgrade a server you already run, see 
 
 | Requirement | Details |
 |---|---|
-| Operating system | Windows Server 2016 or later, 64-bit. Stratora 2.5.3 was tested on Windows Server 2022; Windows Server 2016 and 2019 install but were not tested with this release. |
+| Operating system | Windows Server 2016 or later, 64-bit. Stratora 2.5.3 was tested on Windows Server 2022. The installer allows Windows Server 2016 and 2019, but they were not tested with this release. |
 | Hardware | 4 CPU cores, 16 GB RAM and 200 GB of disk. The `data` folder holds the database and the metric store, so give it room to grow. |
 | Account | A local administrator. The installer runs elevated. |
 | Name | A DNS name (FQDN) for the server, with an A record that points to it. The Setup Wizard checks it, and collectors and agents use it to reach the server. |

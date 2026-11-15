@@ -19,7 +19,7 @@ The Stratora Agent installs on these 64-bit Windows versions:
 - Windows Server 2016 or later
 - Windows 10, Windows 11
 
-Stratora 2.5.3 was tested on Windows Server 2022. Windows Server 2016 and 2019, and Windows 10 and 11, install but were not tested with this release. 32-bit Windows is not supported.
+Stratora 2.5.3 was tested on Windows Server 2022. The installer allows Windows Server 2016 and 2019 and Windows 10 and 11, but they were not tested with this release. 32-bit Windows is not supported.
 
 You don't need the standalone agent on the Stratora server or on a Remote Collector's computer: both already include an agent, and the agent installer refuses to install next to a Remote Collector.
 
