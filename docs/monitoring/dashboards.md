@@ -93,6 +93,9 @@ Stratora ships with a wide range of panel types, each designed for a specific ki
 | **Topology Map** | Embeds a saved [topology map](./maps.md#topology-maps) with live device status overlay |
 | **World Map** | Embeds a saved [world map](./maps.md#world-maps) with live pin health |
 | **Rack** | Embeds one or more [rack diagrams](./racks.md) with live device health |
+| **Facility Floor Plan** | Shows one site [floor plan](./facility-maps.md#floor-plans-on-dashboards) with its markers, live status and hover cards. Read-only |
+
+Clicking a node on a topology map, rack or rack topology panel opens the node side panel over the dashboard instead of leaving it; **Open node page** in the panel goes to the node's page. In edit mode a click still opens the node page. See [Facility Maps](./facility-maps.md#the-node-side-panel-elsewhere).
 
 ### Layout
 

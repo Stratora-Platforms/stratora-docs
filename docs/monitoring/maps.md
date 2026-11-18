@@ -14,6 +14,8 @@ Stratora provides two types of interactive maps for visualizing your infrastruct
 
 Both map types use the same **three-panel builder pattern** as dashboards: a left sidebar for browsing available items, a center canvas for placement, and a right panel for properties and configuration. Both support edit/view mode separation and can be embedded as panels inside dashboards.
 
+To see devices on your own floor plans instead, use the site's Facility tab: see [Facility Maps](./facility-maps.md).
+
 ---
 
 ## Topology Maps
@@ -52,8 +54,10 @@ Each device node on the map is linked to a monitored node. The node's border col
 - **Orange** — critical
 - **Red** — offline
 - **Purple** — maintenance
+- **Blue** — discovering
+- **Grey** — unknown: the device has no status data yet. It is never shown as healthy.
 
-Hover over a device to see its name, IP address, status, uptime, response time, and last-seen timestamp. Click to navigate to the node's detail page.
+Hover over a device to see a card with its status and the fields the Nodes page can show, such as IP address, uptime, response time, last seen, model and OS. Click a device to open the node side panel over the map, with its status, alerts, links and events; **Open node page** in the panel goes to the node's detail page. In the builder (edit mode) a click still opens the node page. See [Facility Maps](./facility-maps.md#the-node-side-panel-elsewhere).
 
 ### Zones
 
@@ -77,6 +81,10 @@ Connections represent links between devices. They support:
 - **Bend points** — add manual bend points for cleaner routing (Alt+Click to add, double-click to remove)
 - **Utilization display** — optionally show live throughput on the connection
 - **Status coloring** — connections change color when an interface has errors or is down
+
+### Highlighting devices with a link
+
+Add `?focus=<node ID>` to a site's Topology tab address or a topology map's address to centre the map on that node and ring it. You can list up to 50 node IDs, separated by commas. If the map does not contain some of them, a notice says how many. The Facility side panel's **View in topology** button opens these links for you.
 
 ### Edit vs. View Mode
 

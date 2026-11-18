@@ -78,6 +78,10 @@ The rack visualization shows where every device sits in the physical equipment c
 
 ---
 
+## Racks on floor plans
+
+Racks can also be placed on a site's floor plans, where they show their worst status and open a side panel with the rack's devices, elevation, power and environment readings and alerts. A rack can have a photo there too. See [Facility Maps](./facility-maps.md).
+
 ## Live Status Overlay
 
 Every device in the rack displays a health-colored border that updates automatically (every 30 seconds):
@@ -89,8 +93,10 @@ Every device in the rack displays a health-colored border that updates automatic
 | **Orange** | Critical |
 | **Red** | Offline |
 | **Purple** | Maintenance |
+| **Blue** | Discovering, or stabilizing after a change |
+| **Grey** | Unknown: no status data yet. It is never shown as healthy. |
 
-Hover over a device to see its name, U position range, and current health status. Click a device to navigate directly to its node detail page — the full per-node dashboard with metric panels, alert history, and configuration.
+On a site's **Racks** tab and on a dashboard's rack panel, clicking a device opens the node side panel over the page (see [Facility Maps](./facility-maps.md#the-node-side-panel-elsewhere)). Hover over a device to see its name, U position range, and current health status. In the rack view under **Monitoring → Racks**, click a device to navigate directly to its node detail page — the full per-node dashboard with metric panels, alert history, and configuration.
 
 ![Node detail page reached by clicking a device in the rack — full per-node dashboard with metric panels, alert history, and configuration, opened for the firewall placed in Rack A1](/img/monitoring/racks-device-detail.png)
 
