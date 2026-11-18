@@ -10,7 +10,7 @@ This page takes you through an in-place upgrade of an existing Stratora deployme
 
 In short:
 
-1. [Before you upgrade](#before-you-upgrade): check your versions and the upgrade path, take a snapshot of each machine, and plan for a short monitoring gap.
+1. [Before you upgrade](#before-you-upgrade): check your versions and the upgrade path, take a snapshot of each machine, and plan for a short monitoring gap. For an upgrade to 2.5.3, also read [What changes when you upgrade to 2.5.3](#what-changes-when-you-upgrade-to-253).
 2. [Upgrade the server](#upgrade-the-server).
 3. Right after that, [upgrade every collector](#upgrade-the-collectors) and [every agent](#upgrade-the-agents).
 4. [After the upgrade](#after-the-upgrade): confirm that nothing is left on an older version, then commit or delete the snapshots.
@@ -39,12 +39,18 @@ At every step, upgrade the server first and then its collectors and agents, as d
 
 You can't install an older version over a newer one. Each installer stops with a message such as "A newer version of Stratora Server is already installed."
 
+### Check the Windows version
+
+Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported. Stratora 2.5.3 was tested on Windows Server 2022.
+
 ### Take a snapshot first
 
 **Before you upgrade, take a snapshot or backup of each machine you are about to upgrade**: the Stratora server, and every collector and agent host. Use your virtualization or backup software.
 
 - **Keep each snapshot until you have confirmed that the upgrade succeeded** (see [After the upgrade](#after-the-upgrade)). Then commit or delete it, as your platform requires.
 - **If anything goes wrong partway through the upgrade**, for example a power loss, a host failure or an upgrade that can't complete, **restoring that snapshot is the supported way back.**
+
+Back up the database and the `data` folder in any case. Once you use Facility maps, `data` also holds the `data\facility-plans` folder with your uploaded floor plans.
 
 ### Physical servers: copy the config and data folders
 
@@ -60,7 +66,16 @@ Store the copy where only administrators can read it.
 
 ### Plan for a short monitoring gap
 
-While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. The first upgrade to 2.5.3 takes longer on a large server, because it checks every file in the `data` folder (see [What happens during the upgrade](#3-what-happens-during-the-upgrade)). Collectors buffer a limited amount of data while the server is unavailable. A Collector Offline alert can open briefly for collectors that are still on the older version. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
+While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors buffer a limited amount of data while the server is unavailable. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
+
+How long the 2.5.3 server upgrade takes:
+
+- A normal server upgrade takes about 4-7 minutes until all services run.
+- On a server whose database has very many tables, it takes longer: up to about 15 minutes in our testing (a database with about 41,000 tables, indexes and sequences). Let the upgrade finish.
+- The first upgrade to 2.5.3 also checks every file in the `data` folder, which takes longer on a server with many files (see [What happens during the upgrade](#3-what-happens-during-the-upgrade)).
+- The web interface and the API are unavailable for about 2.5 minutes during the upgrade.
+- About 2 minutes after the server upgrade, the server's own collector and agent update themselves; graphs for the Stratora server itself may show a gap of about 2 minutes.
+- In our test upgrades, collectors and agents did not show as Offline at any point.
 
 ---
 
@@ -76,6 +91,86 @@ After the server upgrade, if any collector or agent runs an older version than t
 
 ---
 
+## What changes when you upgrade to 2.5.3
+
+Read this before you upgrade a 2.5.1 or 2.5.2 deployment to 2.5.3.
+
+### One-time admin password
+
+If the `admin` account still has the never-used `admin`/`admin` password, the upgrade replaces it with a one-time password in `data\initial-admin-password.txt` in the install folder. A password you have set is never changed.
+
+### Certificate verification
+
+Collectors and agents on 2.5.3 trust the server through its server trust key, so a certificate renewal or a new certificate needs nothing on their hosts. Collectors and agents older than 2.5.3 still check the server certificate against their host's trust store. When you upload a certificate from a private CA, Stratora names any such clients and asks you to confirm. See [SSL/TLS Certificates](./ssl-tls-certificates.md).
+
+### Faster failover needs 2.5.3 collectors
+
+When a remote collector on 2.5.3 stops, its sites move to the server's collector after about 3-4 minutes instead of 10-11. A collector on 2.5.2 or earlier keeps the 10-minute failover until it is upgraded. **Keep the Collector Offline alert enabled until then.**
+
+Any outage over 3 minutes of a 2.5.3 collector, including a planned reboot, now moves its sites to the server's collector and back. Sites on segmented or OT networks that the server cannot reach can turn failover off with the site setting **Fail over to the server's collector** (see [Sites](../infrastructure/sites.md)).
+
+### Alert types for integrations
+
+VM Timeline Poisoning, New Version Available, Stratora Server Certificate Expiring, Server Clock Implausible, Maintenance Release Failing and Collector Metrics Stale alerts have their own alert type instead of `node_unreachable`. Update webhook or email filters that rely on the old value. Alerts opened before the upgrade keep `node_unreachable` until they resolve, and past alerts are not relabelled.
+
+### Local receivers
+
+Webhooks, the custom geocoder, OIDC and vCenter or Proxmox checks no longer reach addresses on the Stratora server itself. Run such services on another host. Private network addresses keep working, and SMTP to a local relay is unchanged.
+
+### Map tiles
+
+If your network inspects outbound HTTPS with its own certificate authority, the world map shows blank tiles.
+
+### Audit log retention
+
+The audit log now follows **Settings → Data Retention**. An upgraded server keeps at least 90 days of audit log until you next save that page. See [Audit Logs](./audit-logs.md).
+
+### Route 53 DNS validation and the owner of C:\
+
+2.5.3 runs the AWS CLI for Route 53 DNS validation only from a folder that nobody but SYSTEM, Administrators and TrustedInstaller can change, and that includes the folders above it. Other DNS providers are not affected.
+
+- **On a `C:\Stratora` install**, the bundled AWS CLI folder is refused. Install the AWS CLI v2 MSI, then run the provider test.
+- **The owner of `C:\`.** On a standard Windows install the root of the system drive is owned by TrustedInstaller. If `C:\` has a different owner, Route 53 DNS validation refuses to run. 2.5.2 did not check this, so Route 53 validation that worked before the upgrade can stop after it. The provider test and the SSL/TLS page show a message that names the cause and the steps to fix it. With such an owner, the server can also log an "install folder permissions" warning that names `C:\` and its owner.
+
+You can check the owner before you upgrade. In PowerShell:
+
+```powershell
+(Get-Acl C:\).Owner
+```
+
+A standard install shows `NT SERVICE\TrustedInstaller`. See [SSL/TLS Certificates](./ssl-tls-certificates.md) for the Route 53 setup.
+
+### Install folder through a link
+
+If your server's install folder, or a folder above it, is a junction, symbolic link or mounted folder, the upgrade stops before it changes anything. The message names the link and gives the steps to move to a real folder.
+
+### PDUs added as UPS
+
+Existing nodes keep their device type. To get PDU readings from a PDU that was added as a UPS, change the node's type to PDU and its template to APC Rack PDU (rPDU2).
+
+### Upgraded collectors stay approved
+
+A collector that was enrolled before the upgrade keeps its approval and keeps collecting. From 2.5.3, a remote collector that you install **new** waits for an administrator's approval before it collects, and approving it also approves the agent installed with it. Approve it under **Infrastructure → Nodes**, or from its card on **Collection → Collectors**. See [Collectors](../collection/collectors.md).
+
+### Going back to an older collector
+
+After the upgrade, a 2.5.2 collector cannot read the stored key. Reinstalling 2.5.2 needs `SERVER_URL` and `ENROLLMENT_TOKEN`.
+
+### What 2.5.1 and 2.5.2 leave behind
+
+- An upgrade runs the old version's own uninstall steps once. When you upgrade a Remote Collector or Agent from 2.5.1 or 2.5.2 by hand, **start the installer by double-clicking it or from an elevated Command Prompt, not from a PowerShell window.**
+- A Repair runs the installed version's own installer. Repairing 2.5.2 or older still leaves the server stopped until you start its services or reboot.
+- A collector backup that a cancelled 2.5.2 upgrade left in clear text is still restored. The next upgrade replaces it with an encrypted one.
+- A registry copy of the agent key that a 2.5.2 agent left is restricted to SYSTEM and Administrators while it is kept.
+- Alerts that earlier versions left suppressed after a recurring maintenance window are resolved on the first check. If the condition still holds, a new alert is raised with fresh notifications.
+- On a collector upgraded in place from 2.5.2 where a standalone agent once took over the bundled agent's enrollment, the bundled agent may need to be enrolled again. Create an enrollment token that allows replacing an existing component. Then, as administrator, run `stratora-agent.exe -reenroll <token> -config <folder>\config.json` in the collector's `Agent` folder, and restart the `StratoraAgent` service.
+
+### Uninstalling the server
+
+Uninstalling the Server now also removes the bundled Collector (with its agent) that the Server installed. A Remote Collector or Stratora Agent you installed yourself is not removed, unless the Server's install upgraded it. The `data\` folder (database and keys) is still kept, as is `acme-data\`.
+
+---
+
 ## Upgrade the server
 
 The server is upgraded with the Stratora Server MSI (Windows). The upgrade keeps everything: sites, nodes, collectors and agents and their enrollment, users, dashboards, alerting, certificates and settings. You don't need to run the setup wizard again.
@@ -83,11 +178,13 @@ The server is upgraded with the Stratora Server MSI (Windows). The upgrade keeps
 ### 1. Download and check the installer
 
 1. Download `Stratora-Server-X.Y.Z.msi` from the [releases page](https://github.com/Stratora-Platforms/stratora-releases/releases).
-2. Check its SHA-256 against the value in the release notes:
+2. Check its SHA-256 against the value published in the release notes. The value must match exactly:
 
    ```powershell
    Get-FileHash .\Stratora-Server-X.Y.Z.msi -Algorithm SHA256
    ```
+
+   The Stratora installers are not code-signed. Windows shows them as coming from an unknown publisher, and Microsoft Defender SmartScreen or Microsoft Defender Antivirus may warn about them or block them. Check the checksum before you run an installer.
 
 ### 2. Run the installer
 
@@ -155,7 +252,9 @@ Upgrade each remote collector on its own host, after the server.
    msiexec /i StratoraCollector.msi /qn /l*v collector-upgrade.log
    ```
 
-   You don't need a server URL or an enrollment token: the upgrade keeps the collector's configuration and enrollment. The interactive installer asks for both even on an upgrade, so the command line is the simpler way. The upgrade stays in the collector's install folder, including a custom folder and custom data and Telegraf folders; don't pass `INSTALLFOLDER` or another data or Telegraf folder, because moving a collector during an upgrade isn't supported. An upgrade from 2.5.1 or 2.5.2 also works with basic UI (`/qb`) or a double-click.
+   You don't need a server URL or an enrollment token: the upgrade keeps the collector's configuration and enrollment. The interactive installer asks for both even on an upgrade, so the command line is the simpler way. The upgrade stays in the collector's install folder, including a custom folder and custom data and Telegraf folders; don't pass `INSTALLFOLDER` or another data or Telegraf folder, because moving a collector during an upgrade isn't supported. An upgrade from 2.5.1 or 2.5.2 also works with basic UI (`/qb`) or a double-click. Start it by double-clicking or from an elevated Command Prompt, not from a PowerShell window.
+
+   To check the installer against the published SHA-256 value, download `StratoraCollector-X.Y.Z.msi` from the [releases page](https://github.com/Stratora-Platforms/stratora-releases/releases) and run `Get-FileHash .\StratoraCollector-X.Y.Z.msi -Algorithm SHA256`.
 3. The collector services (StratoraCollector and stratora-collector-telegraf) restart, so collection from that host pauses for a moment.
 4. **The collector's bundled agent upgrades with it.** On a collector host, don't run the Agent installer as well.
 
@@ -188,10 +287,18 @@ An upgraded agent keeps its configuration and enrollment. It does not enroll aga
    msiexec /i StratoraAgent.msi /qn /l*v agent-upgrade.log
    ```
 
-   You don't need `SERVERURL` or `ENROLLTOKEN`: the upgrade keeps the agent's enrollment. The interactive installer asks for both even on an upgrade, so the command line is the simpler way. Deployment tools (GPO, SCCM, Intune, PDQ Deploy) can run the same command.
+   You don't need `SERVERURL` or `ENROLLTOKEN`: the upgrade keeps the agent's enrollment. The interactive installer asks for both even on an upgrade, so the command line is the simpler way. Deployment tools (GPO, SCCM, Intune, PDQ Deploy) can run the same command. When you upgrade from 2.5.1 or 2.5.2 by hand, start the installer from an elevated Command Prompt or by double-clicking it, not from a PowerShell window.
+
+   To check the installer against the published SHA-256 value, download `StratoraAgent-X.Y.Z.msi` from the [releases page](https://github.com/Stratora-Platforms/stratora-releases/releases) and run `Get-FileHash .\StratoraAgent-X.Y.Z.msi -Algorithm SHA256`.
 3. The agent services (StratoraAgent and stratora-agent-telegraf) restart, which leaves a short gap in that host's metrics. On its first start, the upgraded agent stores its key in a protected form and learns the server's trust key; its Telegraf service stays stopped until then. If the upgrade fails, Windows Installer puts the previous version back. An upgrade from 2.5.1 or 2.5.2 also works with basic UI (`/qb`) or a double-click: the installer closes the tray icon first.
 
 On a host that runs a Stratora collector, upgrade the collector instead: its installer upgrades the bundled agent. On the Stratora server itself, the agent upgrades with the server.
+
+:::warning Known issue: a 2.5.2 Windows agent installed on an existing node
+A 2.5.2 agent installed or reinstalled on a computer whose node already exists may send no metrics. Upgrade the agent to 2.5.3, or restart its `stratora-agent-telegraf` service (in **Services**, **Stratora Agent Telegraf**, or `Restart-Service stratora-agent-telegraf` from PowerShell opened with **Run as administrator**). A 2.5.3 agent does not have this problem.
+:::
+
+A newly enrolled agent's node must be approved under **Infrastructure → Nodes** before its metrics appear. An upgraded agent keeps its node and its approval. See [Nodes → Approval Workflow](../infrastructure/nodes.md#approval-workflow).
 
 Going back to an older agent version isn't supported. If you uninstall the agent and then install an older version, that older agent needs a new enrollment token, as on a new host.
 
@@ -223,7 +330,11 @@ Going back to an older agent version isn't supported. If you uninstall the agent
 
 On both, the package keeps `/etc/stratora/agent.json`, owned by the `stratora` user with mode `0600`. Check the agent with `systemctl status stratora-agent`.
 
-Stratora 2.5.2 servers shipped the 2.5.1 Linux packages, so a Linux agent installed from a 2.5.2 server runs 2.5.1. It upgrades to 2.5.3 the same way.
+There is no 2.5.2 Linux agent package: Stratora 2.5.2 servers shipped the 2.5.1 Linux packages, so a Linux agent installed from a 2.5.2 server runs 2.5.1. It upgrades to 2.5.3 the same way. After the upgrade, agents report version 2.5.3 and show "Up to date". Stratora 2.5.3 was tested on Rocky Linux 8, Debian 12 and Ubuntu 24.04.
+
+To check a package downloaded from the [releases page](https://github.com/Stratora-Platforms/stratora-releases/releases) against the published SHA-256 value, run `sha256sum <file>`.
+
+For a full removal on Debian or Ubuntu, use `sudo apt purge stratora-agent`. `apt remove` keeps `/etc/stratora`, including the agent's API key.
 
 In these commands, `curl -k` skips certificate verification for the download only. Leave it out if the host trusts your server's certificate.
 
@@ -257,6 +368,10 @@ A collector or agent that hasn't reported a version yet, or that runs a developm
 | **About** still shows the old version | Reload the page without the cache (Ctrl+Shift+R). If it still shows the old version, check that StratoraBackend is running. |
 | The web interface doesn't load after the upgrade | Check that StratoraNginx is running, that your browser still trusts the server's certificate, and that nothing else uses port 443. |
 | A collector stays offline or out of date | Check the collector log on its host and the installer log you wrote with `/l*v`, then run the collector installer again. |
+| A Windows agent's node gets no metrics after a 2.5.2 agent was installed or reinstalled on it | Upgrade the agent to 2.5.3, or restart the `stratora-agent-telegraf` service. |
+| A new agent or collector sends no data | Its node or collector is waiting for approval. Approve it under **Infrastructure → Nodes**; a collector can also be approved from its card on **Collection → Collectors**. |
+| Route 53 DNS validation stopped after the upgrade | Read the message on the SSL/TLS page or in the provider test. On a `C:\Stratora` install, install the AWS CLI v2 MSI. Check the owner of `C:\` with `(Get-Acl C:\).Owner`. See [Route 53 DNS validation and the owner of C:\](#route-53-dns-validation-and-the-owner-of-c). |
+| A webhook, geocoder or identity provider that runs on the Stratora server itself stopped working | 2.5.3 no longer sends these requests to the server's own addresses. Run the service on another host. |
 | A Linux agent doesn't come back | Run `sudo systemctl restart stratora-agent`, then check `systemctl status stratora-agent` and `journalctl -u stratora-agent`. |
 
 ### Where the logs are
