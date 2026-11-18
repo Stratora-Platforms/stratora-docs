@@ -167,6 +167,10 @@ From the node list or detail view:
 Rejected nodes remain in the database but are excluded from monitoring and dashboards. You can approve a rejected node later if needed.
 :::
 
+### Nodes installed with a remote collector
+
+The Collector MSI installs a Stratora Agent alongside the collector. Once that agent has registered, and while the collector waits for approval, that agent's node is decided together with it (Stratora pairs them when both enrolled with the same enrollment token and from the same address): in the pending list the node shows **(with collector *name*)**, and approving or rejecting it also approves or rejects the collector. Only an administrator can decide this pair. The collectors themselves are listed on this page under **Collectors waiting for approval**. See [Approving a Remote Collector](../collection/collectors.md#approving-a-remote-collector).
+
 ---
 
 ## Node Fields Reference

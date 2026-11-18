@@ -17,7 +17,7 @@ A **collector** is the component that polls your infrastructure and sends metric
 
 Every Stratora server includes a **local collector** that runs on the same machine as the backend. This handles monitoring for devices reachable from the server's network — typically the primary data center or management VLAN.
 
-The local collector requires no extra installation. It's deployed as part of the standard Stratora server setup.
+The local collector requires no extra installation. It's deployed as part of the standard Stratora server setup, and it is approved at install, so it starts monitoring straight away.
 
 ### Remote Collectors
 
@@ -26,7 +26,8 @@ For devices in networks not reachable from the server — branch offices, factor
 - Runs at the remote site as a Windows service
 - Polls local devices via SNMP, ICMP, and other protocols
 - Sends all collected metrics back to the Stratora server over HTTPS
-- Pulls its configuration from the server every 10 seconds
+- Waits for an administrator's approval after it enrolls (see [Approving a Remote Collector](#approving-a-remote-collector))
+- Once approved, pulls its configuration from the server every 10 seconds
 
 You can deploy as many remote collectors as your environment needs. Each one operates independently — if the WAN link to the server goes down, collectors buffer metrics in memory during temporary connectivity interruptions. For brief outages, metrics are retained and delivered when connectivity resumes. During extended outages or restarts, in-memory buffers may be exhausted, resulting in partial metric gaps.
 
@@ -82,6 +83,30 @@ The installer creates:
 - Configuration file storing the collector's identity and API key
 
 On first startup, the collector registers with the server using the enrollment token and receives a unique API key. See [Enrollment](./enrollment.md) for how this works.
+
+---
+
+## Approving a Remote Collector
+
+A remote collector that enrolls with an enrollment token you created waits for approval. Until an administrator approves it, the collector sends no data and receives no configuration.
+
+To approve it:
+
+1. Open **Infrastructure → Nodes**. When collectors are waiting, a banner at the top of Stratora also tells administrators and links to this list.
+2. Under **Collectors waiting for approval**, find the collector. Each one is shown with the node of the agent installed with it.
+3. Click **Approve** or **Reject**.
+
+You can also approve or reject a pending collector from its card on **Collection → Collectors**.
+
+**The collector and its agent are decided together.** The Collector MSI also installs a Stratora Agent on the same computer, so the collector's own host is monitored. Once that agent has registered, approving the collector also approves that agent's node, and rejecting the collector rejects that node, so you don't have to decide the pair twice. Stratora pairs them only when the collector and the agent enrolled with the same enrollment token and from the same address, as they do when the Collector MSI installs both; otherwise each is approved on its own. In the pending node list, that node shows **(with collector *name*)**, and approving or rejecting it there decides both. A node or collector that has already been approved or rejected is not changed by its partner's decision.
+
+**Approving a collector needs an administrator.** Only the Admin role can approve or reject collectors, and that includes the node of a collector's agent. Operators and viewers can see the list of pending collectors and their nodes, but cannot approve or reject them.
+
+**While it waits, the collector keeps running.** It checks with the server about once a minute, and picks up its configuration within about a minute of being approved. You don't need to restart or reinstall it.
+
+:::note Upgrades
+Collectors that were already enrolled before you upgraded the server stay approved. Only collectors that enroll after the upgrade wait for approval. The server's own local collector is approved at install.
+:::
 
 ---
 
