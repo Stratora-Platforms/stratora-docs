@@ -139,7 +139,7 @@ Clicking any site opens the site detail page, which provides a complete view of 
 
 ### Facility tab
 
-Floor plans for the site's buildings and floors, with its nodes, racks and spaces placed on them and live status. Admins and operators see this tab; viewers do not. See [Facility Maps](../monitoring/facility-maps.md).
+Floor plans for the site's buildings and floors, with its nodes, racks and spaces placed on them and live status. Admins and operators can upload plans and edit the layout; viewers see the plans read-only. See [Facility Maps](../monitoring/facility-maps.md).
 
 ![Site detail — Facility tab with a floor plan and the side panel for a network closet](/img/monitoring/facility-space-overview.png)
 

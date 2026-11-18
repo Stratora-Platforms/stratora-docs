@@ -5,7 +5,7 @@ title: Facility Maps
 
 # Facility Maps
 
-Facility maps show where your infrastructure sits and how it is doing, on your own floor plans. Each [site](../infrastructure/sites.md) has a **Facility** tab. Upload a floor plan for each floor, place nodes, racks and spaces (network closets, MDFs, IDFs, server rooms, rooms and areas) on it, and see their live status at a glance. Select anything on the plan to open a side panel with its health, devices, connections, power and environment readings and alerts.
+Facility maps show where your infrastructure sits and how it is doing, on your own floor plans. Each [site](../infrastructure/sites.md) has a **Facility** tab. Upload a floor plan for each floor, place nodes, racks and spaces (network closets, MDFs, IDFs, server rooms, rooms and areas) on it, and see their live status at a glance. Select anything on the plan to open a side panel with its health, devices, connections, power and environment readings and alerts. Live status on the plan refreshes every 30 seconds. A floor plan can also be shown on a dashboard (see [Floor plans on dashboards](#floor-plans-on-dashboards)).
 
 ![Facility tab: a floor plan with live status markers, and the side panel for the network closet IDF-B open beside it](/img/monitoring/facility-space-overview.png)
 
@@ -21,7 +21,9 @@ Screenshots on this page show a fictional site with example readings.
 |------|--------------|
 | **Admin** | View, upload plans and photos, edit layouts |
 | **Operator** | View, upload plans and photos, edit layouts |
-| **Viewer** | Does not see the Facility tab |
+| **Viewer** | View, read-only |
+
+Viewers see every floor plan of a site, with its markers, live status, hover cards and side panels, like they see topology maps. They have no **Plan** menu, no **Edit layout** and no photo upload, and the server refuses any Facility change from them.
 
 See [User Roles & Permissions](../administration/user-roles-and-permissions.md).
 
@@ -30,11 +32,13 @@ See [User Roles & Permissions](../administration/user-roles-and-permissions.md).
 ## Getting started
 
 1. Go to **Infrastructure → Sites**, open a site and choose the **Facility** tab.
-2. Click **Upload a floor plan**. Choose the floor (or **New floor…** to create one) and the plan image.
-   - The image must be **PNG or JPEG**, up to **25 MB**, **8192 px** on the longest side and 40 megapixels in all. Export a PDF plan as PNG first.
+2. Click **Upload a floor plan**. Choose the floor (or **New floor…** to create one) and the plan: an image, or a PDF.
+   - An image must be **PNG or JPEG**, up to **25 MB**, **8192 px** on the longest side and 40 megapixels in all.
+   - From a **PDF** (up to 50 MB and 200 pages), you import one page: pick it in the preview. Your browser converts that page to a PNG image and uploads the image. The PDF itself is never sent to the server. Password-protected PDFs are refused, and a PDF that is too complex to convert asks you to export the page as PNG instead. **Cancel** stops a conversion at any time.
    - If the site has no buildings or floors yet, the first upload creates "Main building" and "Ground floor". You can rename and add more in **Buildings and floors**.
 3. Add the spaces you want to show (closets, MDFs, IDFs, server rooms, rooms and areas) in **Plan → Buildings and floors → Add a space**. Spaces go under a floor. A floor or an area can hold every type of space, so an IDF can sit inside a production area; any other space can hold rooms, closets and areas.
 4. Click **Edit layout** and place your nodes, racks and spaces on the plan (see [Editing the layout](#editing-the-layout)). Click **Save**.
+5. Optionally, use **Plan → Set scale** so the plan shows a scale bar (see [Setting the scale](#setting-the-scale)).
 
 Racks come from the site's [rack diagrams](./racks.md). A node that is mounted in a rack is placed with its rack, not on its own.
 
@@ -76,6 +80,8 @@ For a **node** the card shows:
 | Environmental sensor | Temperature of the hottest sensor, with that sensor's humidity; if it has none, another sensor's humidity, named for that sensor |
 
 A value that is not collected for a device is left out, never shown as zero. Other device types show status, ping, last seen and alerts.
+
+A node's card also shows the fields the **Nodes** page can show as columns, such as model, serial number, manufacturer, OS, agent version and groups; the same card opens when you hover a device on a topology map. Fields the node has no value for are named together on one line. The card stays fully visible, also in a short browser window or on a phone.
 
 For a **rack** the card shows its devices by status, the worst status, active alerts, and its power and environment readings when they are collected. For a **space** it shows its devices by status, the worst status and active alerts.
 
@@ -172,7 +178,7 @@ On a phone you can view the plan, its markers and their panels. Editing needs a 
 
 ## Editing the layout
 
-Click **Edit layout** (desktop only). The editor works like the [dashboard](./dashboards.md) and [map](./maps.md) builders: your changes are a draft until you click **Save**, which saves the whole layout at once. **Cancel** throws the draft away after asking.
+Click **Edit layout** (on a screen at least 768 px wide). The editor works like the [dashboard](./dashboards.md) and [map](./maps.md) builders: your changes are a draft until you click **Save**, which saves the whole layout at once. **Cancel** throws the draft away after asking.
 
 ![Layout editor: the palette of spaces, nodes and racks on the left, the plan in the middle and the docked Properties panel on the right](/img/monitoring/facility-editor.png)
 
@@ -201,34 +207,59 @@ The **Plan** menu (desktop) holds:
 - **Replace plan**: upload a new image for this floor. Markers keep their places relative to the plan.
 - **Add floor plan**: upload a plan for another floor.
 - **Buildings and floors**: add buildings, floors and spaces, and delete empty floors and buildings.
+- **Set scale** and **Clear scale**: see [Setting the scale](#setting-the-scale).
 - **Delete plan**: removes the plan image and its markers, after asking. The floor stays.
 
 Deleting a plan, floor, building or site also removes its plan image files. Deleting a rack, space or site removes its photos.
+
+### Setting the scale
+
+**Plan → Set scale** calibrates a plan to real distances. Draw a line between two points on the plan whose distance you know, for example the two ends of a wall, and enter that length in metres or feet. The plan then shows a scale bar, and a space with an outline shows its real width, depth and floor area. **Plan → Clear scale** removes the scale, after asking.
+
+When you replace the image of a calibrated plan, the scale is kept if the new image has the same proportions, and cleared if it does not.
+
+---
+
+## Floor plans on dashboards
+
+Dashboards have a **Facility Floor Plan** panel, in the builder's **Maps & Topology** list. In its settings, pick one of the floor plans you can see; they are grouped by site, building and floor, with a search. The panel shows the plan as the site's Facility tab does: the same markers, space outlines, live status, alert badges and hover cards, fitted to the panel. Click a node, rack or space to open the same side panel as on the Facility tab.
+
+The panel is read-only: nothing can be placed or moved from a dashboard. Zoom with the **+** and **−** buttons (or pinch on a touch screen); scrolling over the panel scrolls the dashboard. If the plan was deleted, or has no image yet, the panel says so. Viewers can see the panel, because they can see floor plans. See [Dashboards](./dashboards.md).
+
+## The node side panel elsewhere
+
+The node side panel is not only on the Facility tab. Clicking a node on a dashboard's topology map, rack or rack topology panel, on a topology map's view page, or on a site's **Topology** and **Racks** tabs opens the same node side panel, with the same tabs and actions, while the dashboard or map stays in place underneath. **Open node page** in the panel goes to the node's page. In a dashboard's edit mode a click still opens the node page.
 
 ---
 
 ## Power and environment templates
 
-Stratora 2.5.3 adds four SNMP templates that supply the power and environment readings in the side panel and their built-in alerts:
+Stratora 2.5.3 adds ten SNMP templates for UPSs, rack PDUs and environmental sensors. They supply the power and environment readings in the side panel and the built-in alerts below.
 
 | Template | Device | Readings |
 |----------|--------|----------|
 | **UPS (RFC 1628 UPS-MIB)** | The standard UPS MIB many UPS network cards implement | On battery, battery charge and status, estimated runtime, output load, input and output voltage |
 | **APC Smart-UPS** | APC Smart-UPS and Symmetra with a Network Management Card (PowerNet MIB) | The same, plus the battery fault and replace-battery flags |
+| **Eaton UPS (XUPS-MIB)** | Eaton UPS network cards that implement the XUPS-MIB | On battery, battery charge, low-battery, fault and replace-battery flags, estimated runtime, output load, input and output voltage |
 | **APC Rack PDU (rPDU2)** | APC rack PDUs | Device, phase and bank load state, current, voltage and power |
+| **Eaton ePDU (EATON-EPDU-MIB)** | Eaton ePDUs (G3 and G4) | Total power; current, load and threshold state per line and per breaker; line voltage; neutral current |
+| **Raritan PX (PDU2-MIB)** | Raritan PX2, PX3 and PX4 PDUs | Inlet power, current and voltage; current and voltage per line; breaker current; the PDU's own threshold states |
+| **ServerTech Sentry4 (Sentry4-MIB)** | ServerTech Sentry4 PDUs | Cord power; current and load per line; voltage and power per phase; current and load per branch; the PDU's own threshold states |
 | **Environmental Sensor (ENTITY-SENSOR-MIB)** | Temperature and humidity sensors | Temperature and humidity per sensor, named by the sensor's label |
+| **APC NetBotz (NetBotz50-MIB)** | APC NetBotz 750 and 755 appliances | Temperature and humidity per sensor, named by the sensor's label |
+| **Vertiv Geist (VERTIV-V5-MIB)** | Vertiv Geist Watchdog climate monitors (V5 agent) | Temperature, humidity and airflow per sensor, named by the sensor's label. A unit set to Fahrenheit is converted. |
 
-- All four use **read-only SNMP**: a read-only community or SNMPv3 user. The UPS or PDU network card must allow the collector's address.
-- **Discovery** should recognise APC Smart-UPS and Symmetra UPSs, APC rPDU2 rack PDUs, and UPS cards that report the UPS-MIB as their system object ID. This has not been confirmed on real units. Add other UPS cards and environmental sensors by hand and choose the template.
-- Eaton, Raritan, ServerTech, APC NetBotz and Vertiv Geist devices are not covered.
+- All ten use **read-only SNMP**: a read-only community or SNMPv3 user. The device's network card must allow the collector's address.
+- **Discovery** should recognise APC Smart-UPS and Symmetra UPSs, Eaton UPS cards, UPS cards that report the UPS-MIB as their system object ID, APC rPDU2 rack PDUs, Eaton ePDUs, Raritan PX, ServerTech Sentry4 and APC NetBotz 750/755. These fingerprints are built from the MIBs and have not been confirmed on real units. Add Vertiv Geist units, other UPS cards and generic environmental sensors by hand and choose the template.
+- Not covered: ServerTech Sentry3 PDUs, first-generation APC rack PDUs, and the PDU readings of Geist PDUs.
 
 :::note Not validated on real hardware
-These templates are built from the vendor and standard MIBs and tested against simulated devices built from those MIBs, not recordings of real devices. They have not been tested on real hardware. [Supported Devices](../supported-devices.md) lists them as Code only.
+These templates are built from the vendor and standard MIBs and tested end to end against simulated devices built from those MIBs, not recordings of real devices. They are not yet validated on real hardware. [Supported Devices](../supported-devices.md) lists them as Code only.
 :::
 
 ### Built-in power and environment alerts
 
-These [built-in alert configurations](../alerting/alert-configurations.md#built-in-configurations) ship enabled, with no escalation team: they raise alerts, but nothing is sent until an administrator assigns a team. They apply only to UPS, PDU and environmental sensor nodes that use the templates above.
+These [built-in alert configurations](../alerting/alert-configurations.md#built-in-configurations) ship enabled, with no escalation team: they raise alerts, but nothing is sent until an administrator assigns a team. They apply only to UPS, PDU and environmental sensor nodes that use the templates above. In short: UPS on battery, battery low, runtime low and overload; PDU overload (whole PDU, phase or bank); and temperature and humidity out of range.
 
 | Alert | Warning | Critical | Duration |
 |-------|---------|----------|----------|
@@ -244,7 +275,7 @@ These [built-in alert configurations](../alerting/alert-configurations.md#built-
 | **Environmental Sensor Humidity High** | Above 70 % | Above 80 % | 5 minutes |
 | **Environmental Sensor Humidity Low** | Below 15 % | Below 8 % | 5 minutes |
 
-The PDU alerts use the near-overload and overload thresholds configured on the PDU itself. An RFC 1628 UPS cannot tell a self-test from a power event, so its self-tests also raise UPS On Battery; the APC Smart-UPS template does not report self-tests as on battery. You can change the thresholds, durations and escalation team of each one on the **Alert Configurations** page.
+The PDU alerts use the near-overload and overload thresholds configured on the PDU itself. Eaton ePDUs report no PDU-wide load state, so PDU Overload does not apply to them; PDU Phase Overload and PDU Bank Overload do. An RFC 1628 UPS cannot tell a self-test from a power event, so its self-tests also raise UPS On Battery; the APC Smart-UPS template does not report self-tests as on battery. You can change the thresholds, durations and escalation team of each one on the **Alert Configurations** page.
 
 :::note PDUs added as UPS by an earlier version
 Discovery now adds APC rack and switched PDUs as **PDU**. The upgrade does not change the device type of existing nodes. To get PDU readings and alerts for a PDU that an earlier version added as a UPS, edit the node and set its device type to **PDU** and its template to **APC Rack PDU (rPDU2)**.

@@ -54,8 +54,10 @@ Each device node on the map is linked to a monitored node. The node's border col
 - **Orange** — critical
 - **Red** — offline
 - **Purple** — maintenance
+- **Blue** — discovering
+- **Grey** — unknown: the device has no status data yet. It is never shown as healthy.
 
-Hover over a device to see its name, IP address, status, uptime, response time, and last-seen timestamp. Click to navigate to the node's detail page.
+Hover over a device to see a card with its status and the fields the Nodes page can show, such as IP address, uptime, response time, last seen, model and OS. Click a device to open the node side panel over the map, with its status, alerts, links and events; **Open node page** in the panel goes to the node's detail page. In the builder (edit mode) a click still opens the node page. See [Facility Maps](./facility-maps.md#the-node-side-panel-elsewhere).
 
 ### Zones
 

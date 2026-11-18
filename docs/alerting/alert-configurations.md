@@ -24,7 +24,7 @@ Stratora ships with a catalogue of **built-in alert configurations** that cover 
 | **Reachability** | Whether the node is reachable via ping or agent heartbeat | Node Unreachable, Agent Heartbeat Lost, Collector Offline |
 | **Interface** | Whether a network interface is up or down | Interface Down, High Interface Errors |
 
-UPS, PDU and environmental sensor nodes that use the power and environment templates also get built-in alerts for on battery, low battery, low runtime, overload, and temperature and humidity out of range. See [Facility Maps](../monitoring/facility-maps.md#built-in-power-and-environment-alerts) for their thresholds and durations.
+UPS, PDU and environmental sensor nodes that use the power and environment templates also get built-in alerts: UPS On Battery, UPS Battery Low, UPS Runtime Low, UPS Overload, PDU Overload, PDU Phase Overload, PDU Bank Overload, and Environmental Sensor Temperature High and Low and Humidity High and Low. They ship enabled with no escalation team, so nothing is sent until you assign one. See [Facility Maps](../monitoring/facility-maps.md#built-in-power-and-environment-alerts) for their thresholds and durations.
 
 Built-in configurations:
 - **Apply globally** — they evaluate against every node in the system.
