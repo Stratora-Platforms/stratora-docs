@@ -20,7 +20,9 @@ Stratora deploys on-premises. It scales from a single environment to a fleet of 
 
 ## How it works
 
-Stratora is built around three components: a central **Server** that hosts the UI, the alerting engine, the time-series store, and the metadata database; lightweight **Agents** that push system metrics from each monitored Windows or Linux host over HTTPS; and **Collectors** that poll network devices and forward results to the Server. Collectors can run alongside the Server or be deployed remotely into segmented IT and OT zones. No traffic leaves your perimeter. For a deeper look at how the pieces fit together — including ports, protocols, and authentication — see [Architecture](/docs/architecture).
+Stratora is built around three components: a central **Server** that hosts the UI, the alerting engine, the time-series store, and the metadata database; lightweight **Agents** that push system metrics from each monitored Windows or Linux host over HTTPS; and **Collectors** that poll network devices and forward results to the Server. Collectors can run alongside the Server or be deployed remotely into segmented IT and OT zones. Your monitoring data stays on your network: agents and collectors report only to your own Server, and nothing is sent to a vendor cloud. The Server connects out only for the features that need it, such as the notification channels you set up, world map tiles and the check for new Stratora releases. For a deeper look at how the pieces fit together — including ports, protocols, and authentication — see [Architecture](/docs/architecture).
+
+The Server and the Remote Collector run on Windows Server 2016, 2019, 2022 and 2025 (64-bit). The Remote Collector and the Windows Agent also run on 64-bit Windows 10 and 11. This release was tested on Windows Server 2022. Step-by-step guides: [Stratora Server](/docs/installation/server), [Remote Collector](/docs/installation/remote-collector), [Windows Agent](/docs/installation/windows-agent) and [Linux Agent](/docs/installation/linux-agent).
 
 ## What ships today
 
@@ -32,20 +34,25 @@ What Stratora watches and how it gets the data.
 
 - Multi-protocol coverage: SNMP (v2c and v3), ICMP, the Stratora Agent for Windows and Linux, the vSphere API for VMware vCenter and ESXi, the Proxmox VE API, and WMI or SSH for hosts polled from a [Collector](/docs/collection/collectors)
 - Auto-discovery: scan your network by ICMP, TCP, and SNMP; fingerprint devices by sysObjectID against the [template library](/docs/prerequisites/snmp-devices); bulk-import the results — see [Discovery](/docs/collection/discovery)
-- Built-in device templates for major switch, firewall, access-point, NAS, and virtualization vendors, plus generic templates for ping, HTTP/HTTPS endpoints, and WAN circuits — see [Supported Devices](/docs/supported-devices) for per-vendor recognition and validation status
+- Built-in device templates for major switch, firewall, access-point, NAS, and virtualization vendors, plus generic templates for ping, HTTP/HTTPS endpoints, and WAN circuits. [Supported Devices](/docs/supported-devices) shows how each device is recognized and its [validation level](/docs/supported-devices#validation-levels): **Real-world validated** (tested on a real device), **Simulated** (tested against a recorded SNMP dataset, no physical device) or **Code only** (built from the vendor's MIB documentation and covered by automated tests, not checked against a real device or a recording of one)
+- **Power and environment** templates for UPSs (RFC 1628 UPS-MIB, APC Smart-UPS, Eaton UPS), rack PDUs (APC Rack PDU, Eaton ePDU, Raritan PX, ServerTech Sentry4) and environmental sensors (ENTITY-SENSOR-MIB, APC NetBotz 750/755, Vertiv Geist Watchdog), with built-in alerts for UPS on battery, low battery, low runtime and overload, PDU overload, and temperature and humidity out of range. They are **Code only**: built from the vendor and standard MIBs and tested against simulated devices built from those MIBs, not on real hardware — see [Power and environment templates](/docs/monitoring/facility-maps#power-and-environment-templates)
 - **Virtualization monitoring** across VMware vSphere/vCenter, Proxmox VE, and Microsoft Hyper-V — hypervisors are detected and onboarded through the guided add-paths (setup wizard, IPAM subnet scan, or network discovery, each binding a stored credential), and every platform gets an auto-generated dashboard of hosts, VMs with run-state, datastores, and capacity — see [Virtualization](/docs/collection/virtualization)
-- Lightweight [Agents](/docs/collection/agents) for Windows (Windows Server 2016, 2019, 2022 and 2025, and Windows 10 and 11, 64-bit; this release was tested on Windows Server 2022) and the major modern Linux distributions, with auto-registration and admin approval
-- A centralized [credentials vault](/docs/collection/credentials) for SNMP, SSH, WMI, vSphere, and S3/Azure credentials — AES-256-GCM at rest, with key-rotation support
+- Lightweight [Agents](/docs/collection/agents) for Windows (Windows Server 2016, 2019, 2022 and 2025, and Windows 10 and 11, 64-bit; this release was tested on Windows Server 2022) and Linux (`.deb` for Debian and Ubuntu, `.rpm` for RHEL-family distributions; this release was tested on Rocky Linux 8, Debian 12 and Ubuntu 24.04 LTS), with token enrollment and admin approval of each new node
+- [Remote Collectors](/docs/collection/collectors) wait for an administrator's [approval](/docs/collection/collectors#approving-a-remote-collector) before they receive configuration or send data. When a site's remote collector stops reporting, its nodes [fail over to the server's collector](/docs/infrastructure/sites#collector-failover) and move back when it returns; turn this off for sites the server cannot reach, such as segmented or OT networks
+- A centralized [credentials vault](/docs/collection/credentials) for SNMP, SSH, WMI, vSphere, Proxmox VE, and S3/Azure credentials — AES-256-GCM at rest, with key-rotation support
 
 ### Visualization and dashboards
 
 Stratora generates the visualizations you need without forcing you to build them from scratch — and keeps them current as your infrastructure changes.
 
-- The [Home dashboard](/docs/monitoring/home) — your daily-driver overview, with the platform's health score, an Infrastructure Brief that triages what needs attention, recommended next actions, per-site breakdowns, and top-resource utilization.
+- The [Home dashboard](/docs/monitoring/home) — your daily-driver overview, with the platform's health score and a world map of your sites, a Needs Attention card that triages active alerts, recommended next actions, per-site breakdowns, and the resources currently over their alert thresholds.
 - Per-node and per-site [dashboards](/docs/monitoring/dashboards) are generated automatically from the templates assigned to each device. No dashboard building required, and they stay in sync as nodes are added, removed, or change state.
 - [Network topology maps](/docs/monitoring/maps) start with an auto-populated layout — every node already placed on the canvas, sorted into dynamic zones by type (network switches, access points, Windows servers, Linux servers, and so on). You can drill into any node directly from the map, watch status update in real time, and customize the layout with real connections labeled by the monitored interface. Your customizations persist; the underlying zone and status data keeps updating beneath them.
-- [Rack diagrams](/docs/monitoring/racks) show your devices in their physical U-slot positions, with health-state coloring per slot. You place each device once; from there, Stratora keeps the rack current — devices that get decommissioned drop off the diagram automatically rather than lingering as ghost entries.
+- [Rack diagrams](/docs/monitoring/racks) show your devices in their physical U-slot positions, with health-state coloring per slot. You place each device once; when you delete a device from Stratora, it drops off the diagram automatically rather than lingering as a ghost entry.
 - A world map view shows your sites geographically, color-coded by site health. Sites you've defined appear on the map automatically once they have coordinates set; sites you remove disappear from the map without leaving stale markers.
+- [Facility maps](/docs/monitoring/facility-maps) put your own floor plans on each site's [Facility tab](/docs/infrastructure/sites#facility-tab). Upload a plan for each floor, add buildings, floors and spaces (rooms, network closets, MDFs, IDFs, server rooms and areas), place nodes, racks and spaces on it, and see their live status, refreshed every 30 seconds. Select a marker for a side panel with its status, alerts, power and environment readings, and events. Viewers see plans read-only, and a plan can also be a read-only dashboard panel.
+- The [Maps page](/docs/monitoring/maps#the-maps-page) lists network, world and facility maps under **All**, **Network**, **World** and **Facility** tabs, with search, a site filter and sorting. **New Map → Facility Map** asks for a site and opens its floor plan upload — see [Facility maps on the Maps page](/docs/monitoring/facility-maps#facility-maps-on-the-maps-page).
+- [Search](/docs/monitoring/search) in the top bar (**Ctrl+K**) finds nodes, sites, maps, facility maps, buildings, floors and spaces, dashboards, alerts, IPAM records, people and settings from any page. Each user sees only results for pages they may open, and results show names and labels only.
 
 ### Incident response and on-call orchestration
 
@@ -62,7 +69,7 @@ Alerting that ships ready to use. No empty rule engine to populate before the fi
 How alerts reach the people who need to know.
 
 - Email via SMTP
-- SMS via Twilio (works in bidirectional mode, polling mode for air-gapped deployments, or outbound-only mode)
+- SMS via Twilio (works in bidirectional mode, polling mode for networks that accept no inbound connections from the internet, or outbound-only mode)
 - Voice call via Twilio — the alert is read aloud over the phone with text-to-speech
 - Microsoft Teams via incoming webhooks, delivered as Adaptive Card v1.4 messages
 - Slack via incoming webhooks, delivered as Block Kit messages
@@ -97,15 +104,16 @@ Operator-friendly access control with first-class identity-provider integration.
 - [Role-based access control](/docs/administration/user-roles-and-permissions) with three roles: Admin (full access), Operator (manage nodes, dashboards, alerts; no credential reveal), and Viewer (read-only)
 - [Local accounts](/docs/administration/users) with first-login forced password change
 - [Identity providers](/docs/administration/identity-providers): LDAP / Active Directory and OIDC SSO (validated against Entra ID; works with any OIDC-compliant provider), with group-to-role mapping
-- Component enrollment with token-based registration for Agents and Collectors — no shared credentials to manage
+- Component enrollment with token-based registration for Agents and Collectors — no shared credentials to manage. New remote collectors and new agent nodes wait for an administrator's approval
 - Multi-site, multi-environment, multi-collector deployments out of the box
+- [Upgrades](/docs/administration/upgrading-stratora): 2.5.3 upgrades directly from 2.5.1 and 2.5.2. After a server upgrade, the first administrator to sign in sees a [post-upgrade check page](/docs/administration/upgrading-stratora#the-post-upgrade-check-page) that confirms the new version runs, the database is up to date and collectors and agents report again. An **Out of date** badge and filter on the Collectors and Nodes pages show which clients still need upgrading
 
 ## Where Stratora is heading {#where-stratora-is-heading}
 
 These are directions we are working toward, not commitments or dates. Each item says what ships today and what the direction is.
 
 - **Cisco Meraki.** Today, Meraki MS switches, MR access points and MX appliances are monitored over SNMP (interfaces and reachability). Their templates are Code only: not tested on a real Meraki device (see [Supported Devices](/docs/supported-devices)). Direction: validate them on live hardware.
-- **Power and environment.** Today, SNMP templates for UPSs (RFC 1628 UPS-MIB, APC Smart-UPS, Eaton UPS), rack PDUs (APC Rack PDU, Eaton ePDU, Raritan PX, ServerTech Sentry4) and environmental sensors (ENTITY-SENSOR-MIB, APC NetBotz 750/755, Vertiv Geist Watchdog) ship with built-in alerts. They are Code only: tested against simulated devices built from the MIBs, not on real hardware. Direction: validate them on real hardware.
+- **Power and environment.** Today, the UPS, PDU and environmental sensor templates ship as Code only (see [Monitoring and collection](#monitoring-and-collection)). Direction: validate them on real hardware.
 - **Network discovery from remote collectors.** Today, discovery scans and credentialed probes run only from the central Server, so subnets that only a remote collector can reach are not scanned. Direction: discovery and credentialed probing that run on each remote collector.
 - **Alert acknowledgement from your phone.** Today, you can acknowledge or escalate an alert by replying to its SMS, in the Twilio bidirectional and polling modes (see [External Notifications](/docs/integrations/external-notifications#ack-and-escalate-via-sms-reply)). Voice calls are announcement-only. Direction: acknowledgement with a keypad press during a call.
 - **Veeam Backup & Replication.** Not supported today. Direction: backup-job health in the same alerting and dashboards as the rest of your infrastructure.
@@ -114,6 +122,7 @@ We prioritize what customers ask for. If a vendor or capability matters to you a
 
 ## Where to go next
 
-- **Ready to install?** Start at [Getting Started](/docs/getting-started).
+- **Ready to install?** Start at [Getting Started](/docs/getting-started), then follow the [Stratora Server install guide](/docs/installation/server).
+- **Upgrading from 2.5.1 or 2.5.2?** See [Upgrading Stratora](/docs/administration/upgrading-stratora).
 - **Want a deeper look at how it all fits together?** See [Architecture](/docs/architecture).
 - **Looking for what shipped recently?** See the [Changelog](/docs/changelog).
