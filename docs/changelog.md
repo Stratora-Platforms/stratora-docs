@@ -260,7 +260,7 @@ These are fixed in 2.5.3.
   local relay is unchanged.
 - **Map tiles.** If your network inspects outbound HTTPS with its own certificate authority, the
   world map shows blank tiles.
-- **Audit log retention** now follows Settings > Data Retention. An upgraded server keeps at
+- **Audit log retention** now follows Administration > Data Retention. An upgraded server keeps at
   least 90 days of audit log until you next save that page.
 - **Route 53 DNS-01 on a `C:\Stratora` install.** The bundled AWS CLI folder there is refused.
   Install the AWS CLI v2 MSI, then run the provider test. See the [SSL certificates guide](/docs/administration/ssl-tls-certificates).
@@ -307,7 +307,7 @@ These are fixed in 2.5.3.
   on the first check. If the condition still holds, a new alert is raised with fresh
   notifications.
 - On a collector upgraded in place from 2.5.2 where a standalone agent once took over the bundled
-  agent's enrolment, the bundled agent may need to be enrolled again.
+  agent's enrolment, the bundled agent may need to be enrolled again. [Upgrading Stratora](/docs/administration/upgrading-stratora) gives the steps.
 
 #### Linux agent
 - There is no 2.5.2 Linux agent package: the 2.5.2 release shipped the 2.5.1 packages. Upgrade
