@@ -16,7 +16,7 @@ Delivery is **at-least-once and durable**: events are staged in a transactional 
 
 ## What gets forwarded
 
-Every event Stratora records is forwarded to every enabled destination (subject to that destination's filter). Events fall into six categories:
+Every event Stratora records is forwarded to every enabled destination (subject to that destination's filter). Events fall into seven categories:
 
 | Category | What it covers | Example event types |
 |---|---|---|
@@ -26,6 +26,7 @@ Every event Stratora records is forwarded to every enabled destination (subject 
 | **Escalation** | On-call escalation | `escalation.step_advanced`, `escalation.exhausted`, `escalation.stopped` |
 | **Notification** | Delivery of email / SMS / voice / Slack / Teams / webhook | `notification.attempt`, `notification.delivered`, `notification.failed` |
 | **System** | Server lifecycle and maintenance | `system.shutdown`, `system.upgraded`, `audit.retention_purged`, `system.cursor_reset` |
+| **Node** | A node's health status changed (healthy, warning, critical, offline, discovering, unknown); severity follows the new status | `node.health_changed` |
 
 The [**Event catalog**](./event-catalog.md) lists every type with its category, severity, and wire MSGID. Use categories and severity to build receiver routing rules, and the per-destination filter (below) to forward only what a given destination needs.
 

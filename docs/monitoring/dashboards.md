@@ -207,7 +207,7 @@ To duplicate an existing dashboard, open it and select **Clone** from the action
 
 ### Deleting
 
-Open the dashboard and select **Delete** from the actions menu. Deleted dashboards cannot be recovered.
+Open the dashboard and select **Delete** from the actions menu. Only the dashboard's owner or an admin can delete it. Deleted dashboards cannot be recovered.
 
 ---
 
@@ -218,9 +218,16 @@ Dashboards have two visibility levels:
 | Visibility | Who Can See | Who Can Edit |
 |------------|-------------|-------------|
 | **Personal** | Only the creator | Only the creator |
-| **Shared** | All users | Admins and Operators |
+| **Shared** | All users | The owner and admins |
+| **Shared**, with **Allow everyone to edit** | All users | Every admin and operator. Viewers stay read-only |
 
 New dashboards default to personal. To share a dashboard, change its visibility from the dashboard settings or actions menu.
+
+- **Only the owner or an admin** can delete a dashboard, change who it is shared with, or make it the default dashboard. That also applies to a dashboard everyone can edit.
+- An editor can change a dashboard's name, description, folder, panels and layout. Auto-generated dashboards are not edited directly: clone them to edit.
+- **Edit**, **Delete** and **Change Visibility** appear only for users who are allowed to use them.
+- The dashboard page, the dashboard cards and the list show **Created by** (the owner) and **Last edited by**, with the time. The owner never changes when someone else edits the dashboard; a clone belongs to whoever cloned it. A change to sharing doesn't count as an edit.
+- **Every saved edit is audited** in the [audit log](../administration/audit-logs.md): renames, folder moves, panel changes and layout saves, including the owner's own. A drag or resize is logged once, when the layout is saved.
 
 ### Folders
 

@@ -10,7 +10,7 @@ This is the complete list of events Stratora records and can forward to a [syslo
 
 - a stable **event type** (e.g. `alert.fired`) — match on it for specific events;
 - a **wire MSGID** — what lands in the syslog `MSGID` field. Audit events use the bare action (`create`, `login`, …) so existing receiver rules keep matching; every other event uses its dotted type;
-- a **category** (the six sections below) — the unit a [destination filter](./configuration.md#step-4--filtering) matches on; and
+- a **category** (the seven sections below) — the unit a [destination filter](./configuration.md#step-4--filtering) matches on; and
 - a **syslog severity** — also filterable, and carried in the PRI of every forwarded message.
 
 Use the category and severity columns to build receiver-side routing rules, and the [per-destination filter](./configuration.md#step-4--filtering) to forward only what each destination needs.
@@ -27,20 +27,22 @@ filter forwards an event when its severity value is **at or below** the threshol
 | Value | Name | Used for |
 |---|---|---|
 | 2 | critical | A fired critical alert |
-| 3 | error | Notification/escalation delivery failures |
-| 4 | warning | Security negatives, destructive ops, downgrades, filter/credential changes, evaluator skip onset |
-| 5 | notice | Configuration CRUD, login/logout, alert resolve/ack |
-| 6 | informational | Delivery attempts/success, escalation steps, system start/stop/upgrade |
+| 3 | error | Notification/escalation delivery failures, a node going offline |
+| 4 | warning | Security negatives, destructive ops, downgrades, filter/credential changes, evaluator skip onset, a node going critical |
+| 5 | notice | Configuration CRUD, login/logout, alert resolve/ack, a node going to warning |
+| 6 | informational | Delivery attempts/success, escalation steps, system start/stop/upgrade, a node becoming healthy |
 
 A `✓` in the **Dynamic** column means the severity can be raised from the
 payload at emit time (an `alert.fired` follows the alert's own severity; a
 role-changing user update escalates to warning; a version downgrade escalates to
-warning).
+warning; a `node.health_changed` follows the node's new status).
 
 ## Security
 
 | Event type | MSGID (wire) | Severity | Dynamic | Description |
 |---|---|---|---|---|
+| `agent.hostname_refused` | `agent.hostname_refused` | 4 (warning) |  | Agent heartbeat reported a hostname another node already has; the rename was refused and the node kept its hostname |
+| `agent.ingest_refused` | `agent.ingest_refused` | 4 (warning) |  | Metric write refused (403) from an agent that is not linked to a node (registration never completed or was refused, or its node was deleted); at most once per agent every 10 minutes, suppressed count in details |
 | `audit.decrypt` | `decrypt` | 4 (warning) |  | Audit log action 'decrypt' |
 | `audit.login` | `login` | 5 (notice) |  | Audit log action 'login' |
 | `audit.login_failed` | `login_failed` | 4 (warning) |  | Audit log action 'login_failed' |
@@ -134,4 +136,10 @@ warning).
 | `system.cursor_reset` | `system.cursor_reset` | 4 (warning) |  | Syslog destination cursor was beyond the transaction horizon (dump/restore) and was reset to head |
 | `system.shutdown` | `system.shutdown` | 6 (informational) |  | Server graceful shutdown |
 | `system.upgraded` | `system.upgraded` | 6 (informational) | ✓ | Server version changed since last run (from/to/direction in details; downgrade raised to warning=4) |
+
+## Node
+
+| Event type | MSGID (wire) | Severity | Dynamic | Description |
+|---|---|---|---|---|
+| `node.health_changed` | `node.health_changed` | 6 (informational) | ✓ | A node's health status changed (from/to in details; severity follows the new status: offline=3, critical=4, warning=5, otherwise 6) |
 

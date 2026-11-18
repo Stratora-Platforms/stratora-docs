@@ -35,6 +35,8 @@ Previous alert states like "acknowledged" and "muted" are now **metadata flags**
 
 ![Alert detail modal — full dispatch history with email, SMS, voice, and webhook channels alongside the lifecycle and related alerts](/img/alerting/alert-detail-modal.png)
 
+The Alerts page lists the newest activity first. Open alerts come first; inside the open and resolved groups, alerts are ordered by their latest event (when they fired, or when they resolved), so an alert that resolved a moment ago is near the top even if it fired long ago.
+
 The alerts list can be filtered by state to focus on resolved history when reviewing past incidents:
 
 ![Alerts list filtered to Resolved — historical alerts with severity, node, condition, age, and resolution timestamp](/img/alerting/alerts-list-resolved.png)

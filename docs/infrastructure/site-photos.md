@@ -28,6 +28,10 @@ Navigate to a site and click the **Photos** tab.
 - Supported formats: JPEG, PNG, WEBP
 - File type is validated by content, not extension
 
+:::note Known issue: viewers see the upload area
+A user with the Viewer role sees the upload area on a site's **Photos** tab. The server refuses the upload: viewers cannot add photos.
+:::
+
 ## Managing Photos
 
 | Action | How |

@@ -28,6 +28,7 @@ Navigate to **Infrastructure → Sites** and click **Add Site**.
 | Address | No | Physical street address |
 | Latitude / Longitude | No | Coordinates for world map positioning |
 | Preferred Collector | No | Default collector for nodes at this site |
+| Fail over to the server's collector | No | On by default. Turn it off for sites the server cannot reach, such as segmented or OT networks. See [Collector failover](#collector-failover) |
 
 :::tip
 If you set a **preferred collector** on the site, new nodes added to that site will automatically be assigned to that collector. This is the easiest way to ensure remote-site nodes are polled by the correct local collector.
@@ -92,6 +93,18 @@ In distributed deployments, you typically have one collector per physical site. 
 - New nodes added to the site are automatically assigned to the correct collector
 - Discovery scans at the site use the local collector's network reach
 - Operators don't need to manually pick a collector for every node
+
+### Collector failover
+
+When a site's preferred remote collector stops reporting, the site's nodes fail over to the server's own collector and move back once the preferred collector reports again. A site whose preferred collector runs 2.5.3 or later fails over about 3-4 minutes after the collector's last heartbeat; with an older collector it takes about 10-11 minutes. Any outage longer than 3 minutes, including a planned reboot of the collector host, moves the site's nodes to the server's collector and back. See [Collectors → Failover to the server's collector](../collection/collectors.md#failover-to-the-servers-collector).
+
+The site setting **Fail over to the server's collector**, on the **Details** step of the site form, controls this. It is on by default, so existing sites keep failing over.
+
+Turn it off for sites the server cannot reach, such as segmented or OT networks. The server's collector cannot poll such nodes, so after a failover they would raise Node Unreachable alerts. With the setting off:
+
+- The site never fails over. Its nodes stay on the preferred collector through an outage, and have no data while it is down.
+- The built-in **Collector Offline** alert covers the outage; the nodes' Node Unreachable alerts are held while it is open. If Collector Offline is disabled, or set to fire first later than 590 seconds, the nodes can raise Node Unreachable after 10 minutes without data.
+- Turning the setting off while the site is failed over moves its nodes back to the preferred collector within a minute.
 
 ### Setting the Preferred Collector
 

@@ -139,6 +139,18 @@ Each collector reports its health to the server, including:
 
 View collector health from **Collection → Collectors** or from the site detail view.
 
+### Out of date collectors
+
+A collector that runs an older version than the server ships shows an **Out of date** badge on **Collection → Collectors**, and the page shows how many are out of date under the total. To list only those, choose **Out of date** in the version filter, or open `/collectors?version=outdated`. Upgrade them after each server upgrade; see [Upgrading Stratora](../administration/upgrading-stratora.md). A collector that hasn't reported a version yet, or that runs a development build, is not counted as out of date.
+
+### Renaming a collector
+
+Administrators can rename a collector: on **Collection → Collectors**, select one collector and choose **Rename**. The dialog shows the collector's host name next to the name. A name the server refuses (longer than 128 characters, or with a control character, a double quote, a backslash or `$`) is shown under the field. Other users don't see the **Rename** button.
+
+:::note Known issue: the Deploy Collector wizard's name
+A site's **Deploy Collector** wizard asks for a collector name, but the collector registers with its computer's host name. Rename it on the Collectors page afterwards.
+:::
+
 ---
 
 ## Assigning Collectors to Sites
@@ -146,6 +158,16 @@ View collector health from **Collection → Collectors** or from the site detail
 Each [site](../infrastructure/sites.md) can have a **preferred collector**. When you add a node to a site, it's automatically assigned to that site's preferred collector. This is the recommended approach for multi-site deployments — one collector per site, with the assignment handled automatically.
 
 You can also override the collector assignment on individual nodes if needed.
+
+### Failover to the server's collector
+
+When a site's preferred remote collector stops reporting, the site's nodes move to the server's own (local) collector, so they stay monitored if the server can reach them. They move back once the collector reports again, about 1-2 minutes after it returns.
+
+- **Remote collectors on 2.5.3 or later** fail over after 3 minutes without a heartbeat, so the nodes move about 3-4 minutes after the last heartbeat. If one remote collector serves two or more sites, it takes about 5-6 minutes.
+- **Remote collectors on 2.5.2 or earlier** keep the old timing until they are upgraded: their sites fail over about 10-11 minutes after the last heartbeat. Keep the built-in **Collector Offline** alert enabled for them.
+- Any outage of a 2.5.3 collector longer than 3 minutes, **including a planned reboot or upgrade of its host**, moves its sites to the server's collector and back afterwards.
+
+For sites the server cannot reach, such as segmented or OT networks, turn off **Fail over to the server's collector** in the site's settings. See [Sites → Collector failover](../infrastructure/sites.md#collector-failover).
 
 ---
 
