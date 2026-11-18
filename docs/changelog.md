@@ -21,7 +21,8 @@ Stratora 2.5.3 adds **Facility maps**, **power and environment monitoring**, **f
 ### Highlights
 
 - **Facility maps.** Each site has a new Facility tab. Upload a floor plan, place nodes, racks
-  and rooms on it, and see their live status. A floor plan can also be a dashboard panel.
+  and rooms on it, and see their live status. A floor plan can also be a dashboard panel. Floor
+  plans are listed on the Maps page, and the top-bar search finds them.
 - **Stronger security by default.** Agents and collectors now verify the Stratora server's
   certificate. Their API keys and device passwords are encrypted on disk. A fresh install no
   longer uses `admin`/`admin`.
@@ -61,6 +62,21 @@ Stratora 2.5.3 adds **Facility maps**, **power and environment monitoring**, **f
 - Dashboards have a new **Facility Floor Plan** panel. It is read-only.
 - Clicking a node on a dashboard topology map, rack panel or map view opens the same node side
   panel instead of leaving the page.
+
+#### Maps and search
+- The Maps page has a new **Facility** tab: All / Network / World / Facility, with counts. Each
+  site's floor plans are listed under All and Facility. A facility map card shows its site, how
+  many nodes, racks and spaces are placed on it and when it last changed. Selecting it opens the
+  plan on the site's Facility tab.
+- **Search maps...**, the site filter, Name and Recent sorting and the grid and list views work
+  for facility maps too.
+- **New Map > Facility Map** asks for a site and opens that site's floor plan upload.
+- The search in the top bar now also finds facility maps, buildings, floors and spaces, alert
+  definitions, maintenance windows and schedules, reports, discovery jobs, IPAM supernets, and,
+  for administrators, syslog destinations and identity providers. It finds network and world
+  maps by their site's name too.
+- Search results follow permissions: a user sees a result only if they may open the page it
+  links to. Results show names and labels only.
 
 #### Power and environment
 - New SNMP templates: UPS (RFC 1628 UPS-MIB), APC Smart-UPS, APC Rack PDU (rPDU2), Environmental
@@ -131,6 +147,11 @@ These are fixed in 2.5.3.
 - Many smaller hardening fixes.
 
 #### Installers and upgrades
+- A fresh Server install no longer fails and rolls back (error 1603) on Windows with the default
+  password complexity policy. This happened in about 1 install in 280, also with 2.5.1 and
+  2.5.2. The installer now always generates passwords that meet the complexity rules. If a
+  stricter password policy refuses one, the installer tries new ones, then stops with a message
+  that asks you to check the password policy. Upgrades were not affected.
 - A server upgrade whose database changes would fail now stops before it changes anything.
 - A failed server upgrade rolls back to the old server with its services.
 - The database step of a server upgrade now works on databases with many tables. Before, it
