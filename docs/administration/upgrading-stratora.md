@@ -123,7 +123,7 @@ If your network inspects outbound HTTPS with its own certificate authority, the 
 
 ### Audit log retention
 
-The audit log now follows **Settings → Data Retention**. An upgraded server keeps at least 90 days of audit log until you next save that page. See [Audit Logs](./audit-logs.md).
+The audit log now follows **Administration → Data Retention**. An upgraded server keeps at least 90 days of audit log until you next save that page. See [Audit Logs](./audit-logs.md).
 
 ### Route 53 DNS validation and the owner of C:\
 
