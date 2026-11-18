@@ -41,7 +41,7 @@ You can't install an older version over a newer one. Each installer stops with a
 
 ### Check the Windows version
 
-Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported. Stratora 2.5.3 was tested on Windows Server 2022.
+Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported. Remote collectors and Windows agents are also supported on 64-bit Windows 10 and 11. This release was tested on Windows Server 2022.
 
 ### Take a snapshot first
 
