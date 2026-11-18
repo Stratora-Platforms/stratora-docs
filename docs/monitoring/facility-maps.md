@@ -35,6 +35,9 @@ See [User Roles & Permissions](../administration/user-roles-and-permissions.md).
 2. Click **Upload a floor plan**. Choose the floor (or **New floor…** to create one) and the plan: an image, or a PDF.
    - An image must be **PNG or JPEG**, up to **25 MB**, **8192 px** on the longest side and 40 megapixels in all.
    - From a **PDF** (up to 50 MB and 200 pages), you import one page: pick it in the preview. Your browser converts that page to a PNG image and uploads the image. The PDF itself is never sent to the server. Password-protected PDFs are refused, and a PDF that is too complex to convert asks you to export the page as PNG instead. **Cancel** stops a conversion at any time.
+
+   ![Upload a floor plan: a two-page PDF, with page 2 chosen in the preview](/img/monitoring/facility-upload-pdf.png)
+
    - If the site has no buildings or floors yet, the first upload creates "Main building" and "Ground floor". You can rename and add more in **Buildings and floors**.
 3. Add the spaces you want to show (closets, MDFs, IDFs, server rooms, rooms and areas) in **Plan → Buildings and floors → Add a space**. Spaces go under a floor. A floor or an area can hold every type of space, so an IDF can sit inside a production area; any other space can hold rooms, closets and areas.
 4. Click **Edit layout** and place your nodes, racks and spaces on the plan (see [Editing the layout](#editing-the-layout)). Click **Save**.
@@ -143,7 +146,7 @@ The power and environmental devices in the space or rack, with their status and 
 - **PDU**: input voltage, power and current;
 - **Environmental sensor**: temperature and humidity per sensor.
 
-![Environment tab for the network closet IDF-B: a UPS with its battery, runtime and load, and a temperature sensor reading 36 °C](/img/monitoring/facility-space-environment.png)
+![Environment tab for the network closet IDF-B: a UPS with its battery, runtime and load, and a temperature sensor reading 42 °C](/img/monitoring/facility-space-environment.png)
 
 Readings come from devices that use the UPS, rack PDU and environmental sensor templates (see [Power and environment templates](#power-and-environment-templates)). For other devices the panel says that no readings are collected for that device type. A reading is only shown while fresh data arrives: a device that stops reporting shows no reading rather than an old value. Temperatures follow your temperature unit setting.
 
@@ -210,11 +213,17 @@ The **Plan** menu (desktop) holds:
 - **Set scale** and **Clear scale**: see [Setting the scale](#setting-the-scale).
 - **Delete plan**: removes the plan image and its markers, after asking. The floor stays.
 
+![The Plan menu on the Facility tab](/img/monitoring/facility-plan-menu.png)
+
 Deleting a plan, floor, building or site also removes its plan image files. Deleting a rack, space or site removes its photos.
 
 ### Setting the scale
 
 **Plan → Set scale** calibrates a plan to real distances. Draw a line between two points on the plan whose distance you know, for example the two ends of a wall, and enter that length in metres or feet. The plan then shows a scale bar, and a space with an outline shows its real width, depth and floor area. **Plan → Clear scale** removes the scale, after asking.
+
+![Set the plan's scale: the line drawn on the plan is 599 px long, entered as 12 metres](/img/monitoring/facility-set-scale.png)
+
+![A calibrated plan with its scale bar in the bottom-left corner](/img/monitoring/facility-scale-bar.png)
 
 When you replace the image of a calibrated plan, the scale is kept if the new image has the same proportions, and cleared if it does not.
 
@@ -226,9 +235,13 @@ Dashboards have a **Facility Floor Plan** panel, in the builder's **Maps & Topol
 
 The panel is read-only: nothing can be placed or moved from a dashboard. Zoom with the **+** and **−** buttons (or pinch on a touch screen); scrolling over the panel scrolls the dashboard. If the plan was deleted, or has no image yet, the panel says so. Viewers can see the panel, because they can see floor plans. See [Dashboards](./dashboards.md).
 
+![A dashboard with a Facility Floor Plan panel next to power and environment status](/img/monitoring/facility-dashboard-panel.png)
+
 ## The node side panel elsewhere
 
 The node side panel is not only on the Facility tab. Clicking a node on a dashboard's topology map, rack or rack topology panel, on a topology map's view page, or on a site's **Topology** and **Racks** tabs opens the same node side panel, with the same tabs and actions, while the dashboard or map stays in place underneath. **Open node page** in the panel goes to the node's page. In a dashboard's edit mode a click still opens the node page.
+
+![The node side panel opened from a Facility Floor Plan panel on a dashboard](/img/monitoring/facility-dashboard-node-panel.png)
 
 ---
 
