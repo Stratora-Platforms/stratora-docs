@@ -32,6 +32,8 @@ Looking for guidance on configuring SNMP on the device side — which version to
 SNMP v1 and v2c send the community string in clear on the network. The SNMP v1/v2c credential forms say so and recommend SNMPv3 with authentication and privacy (authPriv) where that matters.
 :::
 
+![Create Credential with SNMPv2c selected: the form recommends SNMPv3](/img/collection/credentials-snmp-v2c.png)
+
 ---
 
 ## Creating and Managing Credentials

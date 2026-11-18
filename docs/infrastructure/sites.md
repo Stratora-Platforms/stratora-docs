@@ -100,6 +100,8 @@ When a site's preferred remote collector stops reporting, the site's nodes fail 
 
 The site setting **Fail over to the server's collector**, on the **Details** step of the site form, controls this. It is on by default, so existing sites keep failing over.
 
+![Edit site, Details step, with the Fail over to the server's collector setting](/img/infrastructure/site-edit-failover.png)
+
 Turn it off for sites the server cannot reach, such as segmented or OT networks. The server's collector cannot poll such nodes, so after a failover they would raise Node Unreachable alerts. With the setting off:
 
 - The site never fails over. Its nodes stay on the preferred collector through an outage, and have no data while it is down.

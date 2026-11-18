@@ -97,6 +97,8 @@ By default a destination forwards **every event of every category**. The Filteri
 | Categories | No | A checklist of the seven event categories (Security, Configuration, Alerts, Escalation, Notification, System, Node health). Leave **all unchecked** to forward every category (the default). Check one or more to forward **only** those categories. |
 | Minimum severity | No | The least-severe level to forward. Syslog severity is *lower = more severe*, so a higher setting forwards more. Options run from **Everything (debug and above)** — the default — down to **Critical and above**. |
 
+![Add Syslog Destination, Filtering step, with the Alerts and Node health categories selected](/img/integrations/syslog-node-health-filter.png)
+
 An event is forwarded when **both** conditions hold: its category is allowed (or no category filter is set) **and** its severity is at or above the minimum. A live summary at the bottom of the step restates the current rule in plain language, e.g. *"This destination will forward Security, Configuration at warning and above."*
 
 Filtering is a send-time decision: a filtered-out event is skipped cleanly. It is **not** counted as a dropped event, and it never adds to the destination's [lag](./index.md#delivery-and-reliability).

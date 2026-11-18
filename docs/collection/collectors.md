@@ -147,6 +147,8 @@ A collector that runs an older version than the server ships shows an **Out of d
 
 Administrators can rename a collector: on **Collection → Collectors**, select one collector and choose **Rename**. The dialog shows the collector's host name next to the name. A name the server refuses (longer than 128 characters, or with a control character, a double quote, a backslash or `$`) is shown under the field. Other users don't see the **Rename** button.
 
+![Rename collector dialog with the collector's host name and the new name](/img/collection/collectors-rename.png)
+
 :::note Known issue: the Deploy Collector wizard's name
 A site's **Deploy Collector** wizard asks for a collector name, but the collector registers with its computer's host name. Rename it on the Collectors page afterwards.
 :::

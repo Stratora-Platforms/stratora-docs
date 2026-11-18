@@ -113,6 +113,8 @@ Permanent deletion removes the user from the database entirely. The user's actio
 
 **What the user owned moves to you.** When you permanently delete a user, the dashboards, dashboard folders and topology maps they owned become yours, the administrator who deletes them, in the same step. Their content and sharing do not change, and other users' dashboards and maps are not touched. The delete confirmation says so before you confirm, and each change of owner is written to the audit log with the old and the new owner.
 
+![Permanently Delete User dialog: what is removed, and the dashboards, folders and topology maps that move to the admin who deletes the user](/img/administration/users-delete.png)
+
 A user who has signed in before can be permanently deleted too.
 
 ---
