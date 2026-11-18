@@ -244,8 +244,8 @@ These are fixed in 2.5.3.
   before you run it. See "Downloads and checksums".
 - **Install folder through a link:** if your server's install folder, or a folder above it, is a
   junction, symbolic link or mounted folder, the upgrade stops before it changes anything. The
-  message names the link and gives the steps to move to a real folder. See "The Server install
-  folder is a link or a mounted folder" in the documentation.
+  message names the link and gives the steps to move to a real folder. See
+  [The Server install folder is a link or a mounted folder](/docs/administration/server-install-folder-link).
 - **Owner of the system drive (Route 53 DNS-01 users).** See "Route 53 DNS validation and the
   owner of C:\\" below. You can check the owner before you upgrade.
 
