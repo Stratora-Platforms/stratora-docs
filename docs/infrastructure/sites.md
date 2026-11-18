@@ -154,7 +154,16 @@ Clicking any site opens the site detail page, which provides a complete view of 
 
 ### Facility tab
 
-Floor plans for the site's buildings and floors, with its nodes, racks and spaces placed on them and live status. Admins and operators can upload plans and edit the layout; viewers see the plans read-only. See [Facility Maps](../monitoring/facility-maps.md).
+Floor plans for the site's buildings and floors, with its nodes, racks and spaces (rooms, network closets, MDFs, IDFs, server rooms and areas) placed on them and live status. On this tab you:
+
+- upload a floor plan for each floor, as an image or a page of a PDF, and set its scale;
+- add spaces, and place nodes, racks and spaces on the plan with **Edit layout**;
+- hover a marker for a summary card, or click it for a side panel with its overview, devices, links, environment readings and events;
+- replace or delete a plan from the **Plan** menu.
+
+Admins and operators (`facility:edit`) can upload plans and edit the layout; viewers (`facility:view`) see the plans read-only. On a phone you can view plans; editing needs a screen at least 768 px wide.
+
+Each floor plan also appears as a facility map on **Monitoring → Maps**, where **New Map → Facility Map** opens this tab with the floor plan upload for the site you pick. The search box at the top of every page finds the site's floor plans, buildings, floors and spaces, and opens them here. See [Facility Maps](../monitoring/facility-maps.md).
 
 ![Site detail — Facility tab with a floor plan and the side panel for a network closet](/img/monitoring/facility-space-overview.png)
 

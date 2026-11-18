@@ -87,7 +87,7 @@ Collectors and agents that are not upgraded yet keep working with the upgraded s
 
 **Never upgrade a collector or agent before its server.** From 2.5.3, collectors and agents verify the server through its server trust key. An upgraded collector or agent learns that key from a 2.5.3 server on its first start, and until it has, it sends nothing and keeps its Telegraf service stopped. With a server that is still on 2.5.2 or older, it would stay that way.
 
-After the server upgrade, if any collector or agent runs an older version than the server ships, Stratora shows each administrator a summary the next time they open it, with how many there are and links to the **Collectors** and **Nodes** pages filtered to them (`/collectors?version=outdated`, `/nodes?version=outdated`). You can open this summary again at any time from **About**. On both pages, an **Out of date** badge marks each one, and the version filter lists only those.
+After the server upgrade, each administrator first sees the [post-upgrade check page](#the-post-upgrade-check-page). Then, if any collector or agent has reported an older version than the server ships, Stratora shows the [Collector and agent updates available](#collector-and-agent-updates-available) reminder, with how many there are and links to the **Collectors** and **Nodes** pages filtered to them (`/collectors?version=outdated`, `/nodes?version=outdated`). You can open the reminder again at any time from **About**. On both pages, an **Out of date** badge marks each one, and the version filter lists only those.
 
 ---
 
@@ -124,6 +124,10 @@ If your network inspects outbound HTTPS with its own certificate authority, the 
 ### Audit log retention
 
 The audit log now follows **Administration → Data Retention**. An upgraded server keeps at least 90 days of audit log until you next save that page. See [Audit Logs](./audit-logs.md).
+
+### Metric retention
+
+The upgrade keeps how long VictoriaMetrics, the metric store, keeps metrics. On a server installed with an earlier version whose **Data Retention** page was never saved, that is the earlier default of 12 months, which VictoriaMetrics counts as 372 days, while the page's own default is 365 days. The **Data Retention** page then shows the 372 days under **Current Status** and warns that saving reduces retention. Saving 365 days removes at most the 7 oldest days of metrics (those 366 to 372 days old). New 2.5.3 installations start at 365 days. See [Data Retention](./data-retention.md).
 
 ### Route 53 DNS validation and the owner of C:\
 
@@ -225,11 +229,58 @@ Follow the recovery steps in that file. They restart the services one by one and
 
 ### 4. Confirm the server upgrade
 
-1. Sign in to Stratora as an administrator. The first time an administrator opens Stratora on the new version, a check page opens. It waits for the backend, database, metric store and web server, confirms that the new version runs with every database change applied and without `UPGRADE-COMPLETED-WITH-ERRORS.txt`, and shows whether the server's collector, the remote collectors and the agents report again. When everything passes it continues by itself; a failed check says what to do. **Continue** is always there, and the checks stop after 3 minutes. Operators and viewers never see this page.
+1. Sign in to Stratora as an administrator. The first time an administrator opens Stratora on the new version, the post-upgrade check page opens (see [The post-upgrade check page](#the-post-upgrade-check-page) below). Wait for **Upgrade successful** or **Upgrade complete**, or click **Continue to Stratora** at any time. Operators and viewers never see this page.
 2. Open **Administration → About**. **Version** shows the new version. If it still shows the old one, reload the page without the cache (Ctrl+Shift+R).
 3. In **Services** (`services.msc`), or with `Get-Service Stratora*`, check that StratoraBackend, StratoraNginx, StratoraPostgreSQL and StratoraVictoriaMetrics are **Running**.
 4. Check that the install folder has no `UPGRADE-COMPLETED-WITH-ERRORS.txt`.
-5. As an administrator, you see the summary of collectors and agents that still run an older version. Upgrade them next.
+5. As an administrator, you see the [Collector and agent updates available](#collector-and-agent-updates-available) reminder if collectors or agents still run an older version. Upgrade them next.
+
+### The post-upgrade check page
+
+The first time an administrator opens Stratora after a server upgrade, Stratora shows a check page before anything else, once per browser tab session and server version. It checks the server in three groups:
+
+| Group | Checks |
+|-------|--------|
+| **Services** | **Backend** (the version it runs), **Database (PostgreSQL)** and **Metric store (VictoriaMetrics)** (both **Healthy** when they answer), **Web server (NGINX)** |
+| **Upgrade** | **Server version** (and the version it was upgraded from), **Database migrations** (all applied), **Upgrade result** (no `UPGRADE-COMPLETED-WITH-ERRORS.txt`), **This server's collector and agent version**, **Server certificate** |
+| **Collectors and agents** | **This server's collector**, **Remote collectors**, **Agents**: whether each has reported since the upgrade |
+
+The page refreshes by itself. What it shows:
+
+- **Upgrade successful**, "Waiting for collectors and agents to report...": the services and every upgrade check have passed. Only the collector and agent rows still spin while they report in.
+- **N of M reporting**, or **Not reporting yet**, on a collector or agent row, with **Not reporting:** and the names of the ones that have not reported, as the Collectors and Nodes pages show them. The first 10 are named, then "and N more". When all have reported, the row says **All N reporting**.
+- **Older version: X collectors, Y agents**, under the collector and agent rows: the collectors and agents that have reported an older version since the upgrade. Only the parts that are not zero are shown. Each part opens the **Out of date** filter of the Collectors or Nodes page. They keep working; upgrade them next (see [Upgrade the collectors](#upgrade-the-collectors) and [Upgrade the agents](#upgrade-the-agents)).
+- **Upgrade complete**, "Everything is running.": every check passed, including every collector and agent reporting. The page continues to Stratora by itself after a few seconds, unless you click **Stay on this page**. An **Older version** line can still be shown: reporting and version are separate.
+- **Some checks did not finish** (amber): the checks stop after 3 minutes. If only collectors or agents are still to report, the page says the server is running and that they usually reconnect by themselves. **Check again** runs the checks once more.
+- **The upgrade needs attention**: a check failed. Each failed check shows in full what to do, with a link to this guide; see [If something looks wrong](#if-something-looks-wrong).
+
+**Continue to Stratora** is always there, so you can leave the page at any time, and the **Upgrade guide** link opens this page.
+
+![Post-upgrade check page: Upgrade successful, with 2 of 3 agents reporting, the agent that has not reported named, and Older version: 1 collector, 1 agent](/img/administration/post-upgrade-check-waiting.png)
+
+![Post-upgrade check page after 3 minutes: Some checks did not finish, with the agent row's advice and Check again](/img/administration/post-upgrade-check-did-not-finish.png)
+
+![Post-upgrade check page: Upgrade complete, with every service, upgrade check, collector and agent passed](/img/administration/post-upgrade-check-complete.png)
+
+On a phone the groups are stacked and the page scrolls, with **Continue to Stratora** kept at the bottom of the screen.
+
+![Post-upgrade check page on a phone: Upgrade successful, with Continue to Stratora at the bottom](/img/administration/post-upgrade-check-phone.png)
+
+### Collector and agent updates available
+
+After the check page, if at least one collector or agent has reported an older version than the server ships, each administrator sees a reminder titled **Collector and agent updates available**. It opens over whichever page they are on.
+
+- For **Collectors** and for **Agents** it shows how many of them run an older version, for example "1 of 2 on an older version", and the current version the server ships. **Review collectors** and **Review nodes** open the Collectors and Nodes pages filtered to **Out of date**.
+- A collector or agent that has not reported since the server upgrade is listed as **not reporting since the upgrade, version unknown**. It is never counted as on an older version, because the version it reported before the upgrade may no longer be true. Once it reports, it is counted by the version it reports.
+- One that reports no comparable version, such as a development build, is listed as one that could not be compared.
+
+![Collector and agent updates available: 1 of 2 collectors and 1 of 3 agents on an older version, and 1 agent not reporting since the upgrade, version unknown](/img/administration/upgrade-reminder-not-reporting.png)
+
+![Collector and agent updates available, once every agent has reported: 1 of 2 collectors and 2 of 3 agents on an older version](/img/administration/upgrade-reminder.png)
+
+**Dismissing it.** Close the reminder with **Continue**, the close button or **Esc**, or by following one of its links. Once an administrator closes it, it doesn't open again for them on that server version. Open it again at any time from **Administration → About** (see [After the upgrade](#after-the-upgrade)).
+
+The reminder's counts and the **Out of date** filters on the Collectors and Nodes pages are worked out separately, so they can differ, for example while a collector or agent has not yet reported since the upgrade. Use the filtered pages to find the ones to upgrade.
 
 ---
 
@@ -346,8 +397,8 @@ Open **Infrastructure → Nodes**. The agent reports its version with every hear
 
 ### Check that nothing is out of date
 
-- **The upgrade reminder.** After a server upgrade, if at least one collector or agent runs an older version than the server ships, each administrator sees a summary the next time they open Stratora, titled "Upgrade your collectors and agents". It shows how many collectors and agents run an older version than the server ships, and the latest versions. **Review collectors** and **Review nodes** open the two pages filtered to them. Once you close it, it doesn't come back for that server version.
-- **Open it again from About.** **Administration → About** has a **Collectors and agents** row that shows how many need upgrading. Select it to open the summary again.
+- **The upgrade reminder.** After a server upgrade, if at least one collector or agent has reported an older version than the server ships, each administrator sees **Collector and agent updates available** (see [above](#collector-and-agent-updates-available)). **Review collectors** and **Review nodes** open the two pages filtered to them. Once you close it, it doesn't come back for that server version.
+- **Open it again from About.** **Administration → About** has a **Collectors and agents** row that shows how many need upgrading. Select it to open the reminder again.
 
 ![About page: the Collectors and agents row shows how many need upgrading](/img/administration/about-collectors-agents.png)
 - **The Out of date badge and filter.** On **Collection → Collectors** and **Infrastructure → Nodes**, an **Out of date** badge marks each collector and agent on an older version, and the version filter lists only those. The Collectors page also shows how many are out of date under the total.
@@ -356,9 +407,9 @@ The upgrade is complete when both filtered pages are empty and the **About** row
 
 **Then commit or delete the pre-upgrade snapshots.** Once the server, every collector and every agent check out, you no longer need the snapshots you took in [Take a snapshot first](#take-a-snapshot-first). Commit or delete them, as your platform requires.
 
-A collector or agent that hasn't reported a version yet, or that runs a development build, is not counted as out of date.
+A collector or agent that hasn't reported a version yet, that has not reported since the server upgrade, or that runs a development build, is not counted as out of date by the reminder.
 
-### If something failed
+### If something looks wrong
 
 | What you see | What to do |
 |--------------|------------|
