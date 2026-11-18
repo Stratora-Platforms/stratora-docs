@@ -17,7 +17,7 @@ The same retention period also applies to the [audit log](./audit-logs.md): audi
 
 Data retention operates at the VictoriaMetrics storage layer using its native `-retentionPeriod` parameter. When you change the retention period:
 
-1. **Immediate query inaccessibility** — data older than the new retention period becomes non-queryable as soon as the change takes effect. Dashboards, reports, and API queries will no longer return data outside the retention window.
+1. **Immediate query inaccessibility** — data older than the new retention period becomes non-queryable as soon as the change takes effect, that is, once VictoriaMetrics has started with the new retention (see [Changing the Retention Period](#changing-the-retention-period)). Dashboards, reports, and API queries will no longer return data outside the retention window.
 2. **Async disk cleanup** — physical deletion from disk happens during VictoriaMetrics' background compaction cycles. This is eventual, not instantaneous.
 3. **Optional forced compaction** — you can trigger an immediate compaction to accelerate disk reclamation.
 
@@ -50,9 +50,15 @@ The minimum retention period is **30 days**. The maximum is **3,650 days** (10 y
 
 1. Select a compliance preset or enter a custom number of days
 2. Click **Save**
-3. Stratora updates the VictoriaMetrics configuration and restarts the metrics service automatically
+3. Stratora saves the policy and writes the new retention into the VictoriaMetrics (metric store) service configuration
 
-The change takes effect within seconds. No manual service restarts are required.
+VictoriaMetrics applies the new metric retention when it starts. On a standard Stratora server, other Stratora services (the backend and the web server) depend on the StratoraVictoriaMetrics service, so the page does not restart it: restarting it would stop the backend that runs the save. The page then says **Saved — takes effect the next time VictoriaMetrics starts.** The new retention takes effect the next time the metric store starts, for example after a server restart.
+
+To apply it now, the page shows the PowerShell commands to run, with a **Copy** button. Run them in PowerShell opened with **Run as administrator** on the Stratora server. They restart StratoraVictoriaMetrics and the services that depend on it, so metric collection and the web interface pause briefly.
+
+Where no running Stratora service depends on VictoriaMetrics, the page restarts it right away and the new retention takes effect within seconds.
+
+**Current Status** shows the retention VictoriaMetrics is configured with when it differs from the saved policy, for example on a server upgraded from an earlier version whose page was never saved.
 
 ### The audit log follows this value
 
@@ -75,6 +81,8 @@ Without forced compaction, VictoriaMetrics will eventually clean up old data dur
 2. Stratora waits for VictoriaMetrics to become healthy after its restart
 3. A force-merge request is sent to VictoriaMetrics
 4. The compaction runs in the background — this may take some time depending on data volume
+
+The forced compaction runs only when the page restarted VictoriaMetrics. When the save only takes effect at the next start (the usual case on a standard server), no compaction is triggered: the page says so, and data outside the new retention window stops being queryable once VictoriaMetrics starts and is removed during its background compaction.
 
 The compaction status is shown on the data retention page:
 
