@@ -34,7 +34,7 @@ What Stratora watches and how it gets the data.
 - Auto-discovery: scan your network by ICMP, TCP, and SNMP; fingerprint devices by sysObjectID against the [template library](/docs/prerequisites/snmp-devices); bulk-import the results — see [Discovery](/docs/collection/discovery)
 - Built-in device templates for major switch, firewall, access-point, NAS, and virtualization vendors, plus generic templates for ping, HTTP/HTTPS endpoints, and WAN circuits — see [Supported Devices](/docs/supported-devices) for per-vendor recognition and validation status
 - **Virtualization monitoring** across VMware vSphere/vCenter, Proxmox VE, and Microsoft Hyper-V — hypervisors are detected and onboarded through the guided add-paths (setup wizard, IPAM subnet scan, or network discovery, each binding a stored credential), and every platform gets an auto-generated dashboard of hosts, VMs with run-state, datastores, and capacity — see [Virtualization](/docs/collection/virtualization)
-- Lightweight [Agents](/docs/collection/agents) for Windows Server 2016+ and the major modern Linux distributions, with auto-registration and admin approval
+- Lightweight [Agents](/docs/collection/agents) for Windows (Windows Server 2016, 2019, 2022 and 2025, and Windows 10 and 11, 64-bit; this release was tested on Windows Server 2022) and the major modern Linux distributions, with auto-registration and admin approval
 - A centralized [credentials vault](/docs/collection/credentials) for SNMP, SSH, WMI, vSphere, and S3/Azure credentials — AES-256-GCM at rest, with key-rotation support
 
 ### Visualization and dashboards
@@ -100,16 +100,17 @@ Operator-friendly access control with first-class identity-provider integration.
 - Component enrollment with token-based registration for Agents and Collectors — no shared credentials to manage
 - Multi-site, multi-environment, multi-collector deployments out of the box
 
-## Where Stratora is heading
+## Where Stratora is heading {#where-stratora-is-heading}
 
-What ships today covers the core operational workflows teams rely on. We're actively investing in additional coverage:
+These are directions we are working toward, not commitments or dates. Each item says what ships today and what the direction is.
 
-- **Cisco Meraki support** — first-class support for Meraki MS switches, MR access points, and MX appliances, validated against live hardware.
-- **Veeam Backup & Replication monitoring** — bringing backup-job health into the same alerting and dashboards your infrastructure already lives in.
-- **Network discovery from remote collectors** — discovery and credentialed probing local to each collector, so segmented networks don't pay a round-trip to the central server.
-- **Alert acknowledgment via voice and SMS** — close the loop on alerts from your phone, with a keypad press on a call or an SMS reply, without exposing webhooks on the internet.
+- **Cisco Meraki.** Today, Meraki MS switches, MR access points and MX appliances are monitored over SNMP (interfaces and reachability). Their templates are Code only: not tested on a real Meraki device (see [Supported Devices](/docs/supported-devices)). Direction: validate them on live hardware.
+- **Power and environment.** Today, SNMP templates for UPSs (RFC 1628 UPS-MIB, APC Smart-UPS, Eaton UPS), rack PDUs (APC Rack PDU, Eaton ePDU, Raritan PX, ServerTech Sentry4) and environmental sensors (ENTITY-SENSOR-MIB, APC NetBotz 750/755, Vertiv Geist Watchdog) ship with built-in alerts. They are Code only: tested against simulated devices built from the MIBs, not on real hardware. Direction: validate them on real hardware.
+- **Network discovery from remote collectors.** Today, discovery scans and credentialed probes run only from the central Server, so subnets that only a remote collector can reach are not scanned. Direction: discovery and credentialed probing that run on each remote collector.
+- **Alert acknowledgement from your phone.** Today, you can acknowledge or escalate an alert by replying to its SMS, in the Twilio bidirectional and polling modes (see [External Notifications](/docs/integrations/external-notifications#ack-and-escalate-via-sms-reply)). Voice calls are announcement-only. Direction: acknowledgement with a keypad press during a call.
+- **Veeam Backup & Replication.** Not supported today. Direction: backup-job health in the same alerting and dashboards as the rest of your infrastructure.
 
-We prioritize what customers ask for — if a vendor or capability matters to you and isn't on this list, that's exactly the kind of signal we want.
+We prioritize what customers ask for. If a vendor or capability matters to you and isn't on this list, tell us.
 
 ## Where to go next
 

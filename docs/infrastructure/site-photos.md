@@ -7,10 +7,6 @@ sidebar_label: Site Photos
 
 Each site can store photos for documentation purposes — rack photos, floorplans, equipment documentation, or any visual reference material for a location.
 
-:::note Screenshot being refreshed
-The Photos tab screenshot is being refreshed and will return in an upcoming docs update.
-:::
-
 ## Configuring Photo Storage
 
 Before uploading photos, in **Administration → Settings**, scroll to the **Site Photos** section and configure:
