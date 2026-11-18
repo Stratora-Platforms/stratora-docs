@@ -350,6 +350,8 @@ Open **Infrastructure → Nodes**. The agent reports its version with every hear
 
 - **The upgrade reminder.** After a server upgrade, if at least one collector or agent runs an older version than the server ships, each administrator sees a summary the next time they open Stratora, titled "Upgrade your collectors and agents". It shows how many collectors and agents run an older version than the server ships, and the latest versions. **Review collectors** and **Review nodes** open the two pages filtered to them. Once you close it, it doesn't come back for that server version.
 - **Open it again from About.** **Administration → About** has a **Collectors and agents** row that shows how many need upgrading. Select it to open the summary again.
+
+![About page: the Collectors and agents row shows how many need upgrading](/img/administration/about-collectors-agents.png)
 - **The Out of date badge and filter.** On **Collection → Collectors** and **Infrastructure → Nodes**, an **Out of date** badge marks each collector and agent on an older version, and the version filter lists only those. The Collectors page also shows how many are out of date under the total.
 
 The upgrade is complete when both filtered pages are empty and the **About** row says the collectors and agents are up to date.
