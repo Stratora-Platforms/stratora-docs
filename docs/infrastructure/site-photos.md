@@ -7,10 +7,6 @@ sidebar_label: Site Photos
 
 Each site can store photos for documentation purposes — rack photos, floorplans, equipment documentation, or any visual reference material for a location.
 
-:::note Screenshot being refreshed
-The Photos tab screenshot is being refreshed and will return in an upcoming docs update.
-:::
-
 ## Configuring Photo Storage
 
 Before uploading photos, in **Administration → Settings**, scroll to the **Site Photos** section and configure:
@@ -27,6 +23,10 @@ Navigate to a site and click the **Photos** tab.
 - Drag and drop images onto the upload zone, or click to browse
 - Supported formats: JPEG, PNG, WEBP
 - File type is validated by content, not extension
+
+:::note Known issue: viewers see the upload area
+A user with the Viewer role sees the upload area on a site's **Photos** tab. The server refuses the upload: viewers cannot add photos.
+:::
 
 ## Managing Photos
 

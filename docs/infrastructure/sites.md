@@ -28,6 +28,7 @@ Navigate to **Infrastructure → Sites** and click **Add Site**.
 | Address | No | Physical street address |
 | Latitude / Longitude | No | Coordinates for world map positioning |
 | Preferred Collector | No | Default collector for nodes at this site |
+| Fail over to the server's collector | No | On by default. Turn it off for sites the server cannot reach, such as segmented or OT networks. See [Collector failover](#collector-failover) |
 
 :::tip
 If you set a **preferred collector** on the site, new nodes added to that site will automatically be assigned to that collector. This is the easiest way to ensure remote-site nodes are polled by the correct local collector.
@@ -93,6 +94,20 @@ In distributed deployments, you typically have one collector per physical site. 
 - Discovery scans at the site use the local collector's network reach
 - Operators don't need to manually pick a collector for every node
 
+### Collector failover
+
+When a site's preferred remote collector stops reporting, the site's nodes fail over to the server's own collector and move back once the preferred collector reports again. A site whose preferred collector runs 2.5.3 or later fails over about 3-4 minutes after the collector's last heartbeat; with an older collector it takes about 10-11 minutes. Any outage longer than 3 minutes, including a planned reboot of the collector host, moves the site's nodes to the server's collector and back. See [Collectors → Failover to the server's collector](../collection/collectors.md#failover-to-the-servers-collector).
+
+The site setting **Fail over to the server's collector**, on the **Details** step of the site form, controls this. It is on by default, so existing sites keep failing over.
+
+![Edit site, Details step, with the Fail over to the server's collector setting](/img/infrastructure/site-edit-failover.png)
+
+Turn it off for sites the server cannot reach, such as segmented or OT networks. The server's collector cannot poll such nodes, so after a failover they would raise Node Unreachable alerts. With the setting off:
+
+- The site never fails over. Its nodes stay on the preferred collector through an outage, and have no data while it is down.
+- The built-in **Collector Offline** alert covers the outage; the nodes' Node Unreachable alerts are held while it is open. If Collector Offline is disabled, or set to fire first later than 590 seconds, the nodes can raise Node Unreachable after 10 minutes without data.
+- Turning the setting off while the site is failed over moves its nodes back to the preferred collector within a minute.
+
 ### Setting the Preferred Collector
 
 1. Go to the site's detail view
@@ -107,7 +122,7 @@ You can override the preferred collector on individual nodes. The site preferenc
 
 ## Site Detail Page
 
-Clicking any site opens the site detail page, which provides a complete view of everything at that location across eight tabs.
+Clicking any site opens the site detail page, which provides a complete view of everything at that location across nine tabs.
 
 | Tab | Content |
 |-----|---------|
@@ -116,6 +131,7 @@ Clicking any site opens the site detail page, which provides a complete view of 
 | **Nodes** | All nodes at this site — health status, type, IP address, last seen |
 | **Topology** | Network topology map scoped to this site |
 | **Racks** | Rack diagrams for this site |
+| **Facility** | Floor plans with live status for nodes, racks and spaces (see [Facility Maps](../monitoring/facility-maps.md)) |
 | **Alerts** | Active and recently resolved alerts for nodes at this site |
 | **Reports** | Shortcuts to run site-scoped Site Health and Disk Capacity reports |
 | **Photos** | Site photo gallery (see [Site Photos](./site-photos)) |
@@ -136,6 +152,12 @@ Clicking any site opens the site detail page, which provides a complete view of 
 
 ![Site detail — Racks tab with rack diagrams for this site](/img/infrastructure/site-detail-racks.png)
 
+### Facility tab
+
+Floor plans for the site's buildings and floors, with its nodes, racks and spaces placed on them and live status. Admins and operators can upload plans and edit the layout; viewers see the plans read-only. See [Facility Maps](../monitoring/facility-maps.md).
+
+![Site detail — Facility tab with a floor plan and the side panel for a network closet](/img/monitoring/facility-space-overview.png)
+
 ### Alerts tab
 
 ![Site detail — Alerts tab showing active alerts at this site](/img/infrastructure/site-detail-alerts.png)
@@ -146,9 +168,7 @@ Clicking any site opens the site detail page, which provides a complete view of 
 
 ### Photos tab
 
-:::note Screenshot being refreshed
-The Photos tab screenshot is being refreshed and will return in an upcoming docs update.
-:::
+The site's photo gallery. See [Site Photos](./site-photos).
 
 ### Networks
 

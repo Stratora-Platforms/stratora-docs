@@ -133,10 +133,18 @@ You can also view the audit trail for a specific resource — for example, all c
 
 ## Retention
 
-Audit log entries are retained for **90 days by default**. Retention is configured server-side via the `audit.retention_days` setting in `config.yaml`; there is no UI control for audit log retention. The retention cleanup runs automatically on the server's scheduled maintenance cycle.
+The audit log follows the retention period on **Administration → Data Retention**, the same value that applies to metric data. There is no separate setting for it, and no configuration file to edit.
+
+- A fresh installation keeps **365 days** of audit log, the Data Retention default.
+- The minimum is **30 days**, the same as the Data Retention page's minimum.
+- Entries older than the retention period are deleted once a day. A change applies at the next daily cleanup, without a restart.
+- **After an upgrade to 2.5.3.** Earlier versions kept 90 days of audit log, whatever the Data Retention value was. An upgraded server whose Data Retention value is below 90 days keeps at least 90 days of audit log until an administrator next saves the Data Retention page, and the page says so. From that save on, the audit log keeps the saved value.
+- **Before a save deletes audit entries**, the Data Retention page warns which entries go: when the new value is shorter than what the audit log keeps now, entries between the two ages are deleted at the next daily cleanup.
+
+Each change to the retention period is itself recorded in the audit log, with the audit retention before and after the change.
 
 :::tip
-For compliance purposes, consider your regulatory requirements before shortening audit log retention. Standards like HIPAA, SOX, and PCI DSS have specific requirements for how long audit trails must be preserved. Adjust `audit.retention_days` accordingly and restart the Stratora backend service for the new value to take effect.
+For compliance purposes, consider your regulatory requirements before shortening the retention period. Standards like HIPAA, SOX, and PCI DSS have specific requirements for how long audit trails must be preserved. Because the audit log follows the Data Retention value, shortening metric retention also shortens audit log retention.
 :::
 
 ---

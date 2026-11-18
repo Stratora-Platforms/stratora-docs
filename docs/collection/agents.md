@@ -16,11 +16,13 @@ Unlike SNMP-based monitoring (which is polled by a [collector](./collectors.md))
 
 ## Supported Platforms
 
-| Platform | Installer | Tested Versions |
-|----------|-----------|-----------------|
-| Windows Server / Desktop | MSI (x64) | Windows Server 2016, 2019, 2022, 2025; Windows 10, 11 |
-| Ubuntu / Debian | `.deb` | Ubuntu 22.04 LTS, 24.04 LTS; Debian 12 (Bookworm), Debian 13 (Trixie) |
-| RHEL / Rocky / Alma | `.rpm` | RHEL 9.x; Rocky 8.x, 9.x; AlmaLinux 9.x |
+| Platform | Installer | Supported | Tested with 2.5.3 |
+|----------|-----------|-------------|-------------------|
+| Windows Server / Desktop | MSI (x64) | Windows Server 2016, 2019, 2022, 2025; Windows 10, 11 (64-bit) | Windows Server 2022 |
+| Debian / Ubuntu | `.deb` | amd64 with systemd | Debian 12, Ubuntu 24.04 LTS |
+| RHEL family | `.rpm` | amd64 with systemd | Rocky Linux 8 (SELinux enforcing) |
+
+Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported, and so are 64-bit Windows 10 and 11. This release was tested on Windows Server 2022. Linux distributions other than those listed were not tested with this release. Step-by-step install, upgrade and uninstall guides: [Windows Agent](/docs/installation/windows-agent) and [Linux Agent](/docs/installation/linux-agent). The Stratora server and every Remote Collector already include an agent, so you don't install one there.
 
 Per-platform prerequisites — firewall rules, supported distributions, and what to enable before deploying the agent — are documented in [Windows hosts](/docs/prerequisites/windows-hosts) and [Linux hosts](/docs/prerequisites/linux-hosts).
 
@@ -80,10 +82,10 @@ curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/
 sudo dpkg -i /tmp/stratora-agent.deb
 ```
 
-2. Write the agent configuration and start the service:
+2. Create the agent configuration file (owned by the `stratora` user, mode `0600`), write the configuration and start the service:
 
 ```bash
-sudo tee /etc/stratora/agent.json << 'EOF'
+sudo install -m 0600 -o stratora -g stratora /dev/null /etc/stratora/agent.json && sudo tee /etc/stratora/agent.json > /dev/null << 'EOF'
 { "server_url": "https://stratora.example.com", "enrollment_token": "enroll_xxxxx", "site_name": "Main Office" }
 EOF
 sudo systemctl enable --now stratora-agent
@@ -98,10 +100,10 @@ curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/
 sudo rpm -i /tmp/stratora-agent.rpm
 ```
 
-2. Write the agent configuration and start the service:
+2. Create the agent configuration file (owned by the `stratora` user, mode `0600`), write the configuration and start the service:
 
 ```bash
-sudo tee /etc/stratora/agent.json << 'EOF'
+sudo install -m 0600 -o stratora -g stratora /dev/null /etc/stratora/agent.json && sudo tee /etc/stratora/agent.json > /dev/null << 'EOF'
 { "server_url": "https://stratora.example.com", "enrollment_token": "enroll_xxxxx", "site_name": "Main Office" }
 EOF
 sudo systemctl enable --now stratora-agent
@@ -134,13 +136,15 @@ If the agent doesn't appear, check:
 - **StratoraAgent** — Windows service managing the agent lifecycle (register/heartbeat, hostname detection, role detection, Telegraf config generation)
 - **stratora-agent-telegraf** — Windows service running the embedded Telegraf instance that collects and ships metrics
 - **stratora-tray.exe** — system-wide tray indicator (launched at logon for every interactive user) that shows agent connection status and links to logs
-- Installed to `C:\Program Files\Stratora\`, with configuration and logs under `C:\ProgramData\Stratora\`
+- Installed to `C:\Program Files\Stratora\`, with the configuration (`config.json`) in that folder
+- Agent log at `C:\Program Files\Stratora\logs\agent.log` (when it reaches 10 MB it is renamed to `agent.<date>-<time>.log` and a new one starts)
+- `C:\ProgramData\Stratora\`: the agent writes only its status file, `agent-status.json`, there. The installer also creates a `C:\ProgramData\Stratora\logs` folder, but the agent does not write its log there.
 
 ### Linux
 
 - **stratora-agent** — systemd service at `/opt/stratora/bin/stratora-agent`, running as the `stratora` user
 - Embedded Telegraf managed as a subprocess (linked to the system package's `telegraf` binary at install time if available)
-- Configuration at `/etc/stratora/agent.json`
+- Configuration at `/etc/stratora/agent.json` (owner `stratora`, mode `0600`; the agent and the package keep it that way)
 - State at `/var/lib/stratora/`
 - Logs via journald: `journalctl -u stratora-agent -f`
 
@@ -205,12 +209,7 @@ The agent is strictly push-only — it establishes outbound connections to the S
 
 **DNS:** The agent must be able to resolve the Stratora server FQDN configured in `server_url`. If DNS is unavailable, use a literal IP address.
 
-**TLS:** HTTPS is mandatory.
-
-- **Linux:** if the Stratora server uses a self-signed certificate, set `"insecure_skip_verify": true` in `/etc/stratora/agent.json` to suppress verification. Default is verify-on.
-- **Windows:** the Windows agent currently does not verify the server's TLS certificate regardless of validity. Production deployments should still use a valid certificate, because Linux agents and the browser-side UI do enforce verification.
-
-Production deployments should use a valid certificate instead of relying on the Windows agent's skip behavior.
+**TLS:** HTTPS is mandatory, and both the Windows and the Linux agent always verify the server's certificate; this can't be turned off. They trust the server through its server trust key, whose pin is part of the enrollment token (`enroll_<secret>.sha256:<pin>`), so a self-signed server certificate works from the first connection. Copy the whole token. The Linux agent ignores an `insecure_skip_verify` setting from earlier versions, with a warning. See [SSL / TLS Certificates](../administration/ssl-tls-certificates.md#how-collectors-and-agents-trust-the-server).
 
 **HTTP/HTTPS proxy:** The current agent HTTP client is configured with an explicit `http.Transport` that does **not** honor `HTTP_PROXY` / `HTTPS_PROXY` environment variables. Deploying behind a forward proxy is not supported in this release — the agent host must have direct outbound HTTPS reachability to the Stratora server.
 
@@ -218,33 +217,35 @@ Production deployments should use a valid certificate instead of relying on the 
 
 ## Updating the Agent
 
+For the full upgrade procedure and the upgrade order (server first, then every collector and agent), see [Upgrading Stratora](../administration/upgrading-stratora.md).
+
 Agents upgrade in-place. Configuration, the enrolled component ID, and the component API key are preserved across upgrades, so **an upgraded agent does not re-enroll** and keeps its existing node record.
 
 ### Windows
 
-Run the new `StratoraAgent-X.Y.Z.msi` installer (interactively or silently) — WiX's `MajorUpgrade` schedule removes the older product after the new one is installed. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade; there is a brief metric gap (typically &lt;30 seconds) while the new Telegraf binary takes over.
+Download `StratoraAgent.msi` from your upgraded server (**Collection → Agents**, or `/api/v1/downloads/agent/windows`) and run it. The command line below is the simpler way: the interactive installer asks for a server URL and an enrollment token even on an upgrade, although the upgrade keeps the agent's enrollment and does not use them. The installer removes the older version inside the same installation and only then installs the new files. If the upgrade fails or is cancelled, Windows Installer puts the older version back. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade, so there is a brief gap in that host's metrics.
 
 ```cmd
-msiexec /i StratoraAgent-X.Y.Z.msi /qn
+msiexec /i StratoraAgent.msi /qn
 ```
 
-The config file under `C:\Program Files\Stratora\` is explicitly preserved — the installer does not declare `RemoveFile` entries on the config component, specifically to prevent MajorUpgrade from deleting enrolled credentials.
+The upgrade keeps the agent's `config.json` and its install folder, including a custom one.
 
 ### Linux
 
-Install the new package directly over the old one:
+Download the new package from your upgraded server and install it directly over the old one:
 
 ```bash
 # Debian / Ubuntu
-sudo dpkg -i stratora-agent_X.Y.Z_amd64.deb
-sudo systemctl restart stratora-agent
+curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/agent/linux-deb
+sudo dpkg -i /tmp/stratora-agent.deb
 
 # RHEL / Rocky / Alma
-sudo rpm -U stratora-agent-X.Y.Z-1.x86_64.rpm
-sudo systemctl restart stratora-agent
+curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/agent/linux-rpm
+sudo rpm -U /tmp/stratora-agent.rpm
 ```
 
-The postinst scripts reload systemd and keep `/etc/stratora/agent.json` in place. The embedded Telegraf subprocess is restarted by the agent on its next startup cycle.
+The packages keep `/etc/stratora/agent.json` in place and restart the agent on the new version by themselves. The `.deb` also starts an enrolled agent that an older package stopped during the upgrade, and leaves a stopped agent off when it is masked, or when you disabled it before an upgrade from 2.5.3 or later (an upgrade from 2.5.1 or 2.5.2 enables the service again). The `.rpm` restarts a running agent and enables the service. See [Upgrading Stratora](../administration/upgrading-stratora.md#linux-agent-debian--ubuntu-deb) for the details.
 
 ### After upgrade
 
@@ -296,7 +297,7 @@ To change how a node appears, update the hostname on the server itself (`hostnam
 
 When a monitored server is renamed, the Stratora agent continues reporting under the original node record using its stored node ID. Routine hostname changes are reflected automatically via the agent's heartbeat — no action is required in this case.
 
-Re-enrollment on the **same hostname** is also clean: the existing node and component records are updated in place and a new API key is issued (see [Enrollment → Re-Enrollment](./enrollment.md#re-enrollment)). You can reimage a server and reinstall the agent with the same enrollment token without creating a duplicate.
+Re-enrollment on the **same hostname** is also clean: the existing node and component records are updated in place and a new API key is issued (see [Enrollment → Re-Enrollment](./enrollment.md#re-enrollment)). You can reimage a server and reinstall the agent without creating a duplicate, with an enrollment token created with **Allow replacing an existing component**; an ordinary token is refused for a hostname that is already enrolled.
 
 The **only** scenario that produces a duplicate node entry is when the agent configuration is wiped **and** the host's hostname has changed between the original enrollment and the re-enrollment (for example, an OS reinstall on a renamed server). In that case, Stratora has no way to correlate the new hostname with the old node, so it creates a fresh node under the new hostname.
 

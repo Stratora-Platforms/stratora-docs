@@ -406,10 +406,10 @@ Stratora 2.5.2 is a patch release on top of 2.5.1 with three fixes. **Upgrading 
 - SHA-256 (Stratora-Server-2.5.2.msi): 3c310a4359182b005a8edf8ad1b24d045eab02759cc2fb43483701d67402b7bb
 
 ### Known issues
-- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. A fix is planned for an upcoming release.
+- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. Not fixed in this release.
 - **Let's Encrypt renewal doesn't redeploy the certificate to NGINX.** After each renewal, re-upload the renewed certificate under Administration → SSL / TLS Certificate (full steps in the [2.5.0 notes](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.5.0)).
-- **Some status alerts still show raw codes** for certain values (for example RAID status); full labels are coming.
-- **FortiGate VPN tunnel panel** can read "No ports found"; under investigation.
+- **Some status alerts still show raw codes** for certain values (for example RAID status). Not fixed in this release.
+- **FortiGate VPN tunnel panel** can read "No ports found". Not fixed in this release.
 - **After a Repair from Programs & Features, start the Stratora services or reboot.** In Services, start every service whose name begins with "Stratora", or run `Get-Service Stratora* | Start-Service`.
 - **Hardware status can be wrong when Dell and HPE controllers share a collector.** When Dell iDRAC and HPE iLO devices are monitored by the same collector, a server's hardware status (fans, power supplies, temperature) can be reported incorrectly: healthy components may show as failed, or failures as healthy. Workaround: monitor Dell and HPE management controllers from separate collectors until the fix ships.
 - **QNAP memory readings can be wrong when several QNAP devices share a collector.** With two or more QNAP NAS devices monitored by the same collector, memory usage is reported incorrectly and the memory alert cannot fire. Workaround: monitor each QNAP device from a separate collector until the fix ships.
@@ -433,10 +433,10 @@ Stratora 2.5.1 is a patch release on top of 2.5.0. **Upgrading from 2.4.x? 2.5.1
 - **The setup wizard now opens automatically only on a brand-new installation.** After an upgrade, or when a user is asked to change their password, Stratora opens Home normally. If setup hasn't been completed, Home shows a "Start setup" or "Continue setup" prompt.
 
 ### Known issues (carried forward from 2.5.0)
-- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. A fix is planned for an upcoming release.
+- **Collector offline can clear existing alerts for its nodes.** Keep the built-in Collector Offline alert enabled; when it fires, treat auto-resolved alerts for that collector's nodes as unconfirmed until the collector is back. Not fixed in this release.
 - **Let's Encrypt renewal doesn't redeploy the certificate to NGINX.** After each renewal, re-upload the renewed certificate under Administration → SSL / TLS Certificate (full steps in the [2.5.0 notes](https://github.com/Stratora-Platforms/stratora-releases/releases/tag/v2.5.0)).
-- **Some status alerts still show raw codes** for certain values (for example RAID status); full labels are coming.
-- **FortiGate VPN tunnel panel** can read "No ports found"; under investigation.
+- **Some status alerts still show raw codes** for certain values (for example RAID status). Not fixed in this release.
+- **FortiGate VPN tunnel panel** can read "No ports found". Not fixed in this release.
 - **After a Repair from Programs & Features, start the Stratora services or reboot.** In Services, start every service whose name begins with "Stratora", or run `Get-Service Stratora* | Start-Service`.
 
 ## v2.5.0 — October 5, 2026
@@ -486,11 +486,11 @@ Stratora 2.5.0 turns audit-log forwarding into a complete **event stream**, rede
 
 **Let's Encrypt renewal does not redeploy the certificate to NGINX.** A renewed certificate is written to the ACME store but not applied automatically. **Workaround — re-upload the renewed certificate:** after each renewal, and before the current certificate expires, take the newest `<domain>-chain.pem` and `<domain>-key.pem` from `C:\Program Files\Stratora\acme-data\certs\`, then in **Administration → SSL / TLS Certificate → Upload Certificate** (format **PEM**) choose `<domain>-chain.pem` as the **Certificate File (.crt, .pem)** and `<domain>-key.pem` as the **Private Key File (.key)** (leave the optional chain field empty), click **Validate Certificate**, then **Upload & Apply**. Stratora installs the certificate and restarts NGINX for you.
 
-**Status-alert value labels (partial).** Status alerts without a numeric value no longer show a raw number; some enumerated status values (for example RAID status) still show the raw code rather than a friendly label. Full labels are coming in an upcoming release.
+**Status-alert value labels (partial).** Status alerts without a numeric value no longer show a raw number; some enumerated status values (for example RAID status) still show the raw code rather than a friendly label. Not fixed in this release.
 
-**FortiGate VPN tunnel panel.** The FortiGate VPN tunnel panel can read "No ports found" due to an incorrect SNMP OID; interface, CPU, and memory monitoring are unaffected. Under investigation.
+**FortiGate VPN tunnel panel.** The FortiGate VPN tunnel panel can read "No ports found" due to an incorrect SNMP OID; interface, CPU, and memory monitoring are unaffected. Not fixed in this release.
 
-**After a "Repair", start the Stratora services (or reboot).** Running **Repair** from Programs & Features (or `msiexec /fa`) completes successfully but leaves the Stratora Windows services stopped. To recover, open **Services** and start every service whose name begins with "Stratora" — or reboot the server. (As an Administrator, `Get-Service Stratora* | Start-Service` does the same.) A fix is coming in the next release.
+**After a "Repair", start the Stratora services (or reboot).** Running **Repair** from Programs & Features (or `msiexec /fa`) completes successfully but leaves the Stratora Windows services stopped. To recover, open **Services** and start every service whose name begins with "Stratora" — or reboot the server. (As an Administrator, `Get-Service Stratora* | Start-Service` does the same.) Not fixed in this release.
 
 ## v2.4.4 — September 11, 2026
 
@@ -511,11 +511,11 @@ Monitor Dell iDRAC and HPE iLO service processors over SNMP — server health wi
 
 Environmental alerting ships as **built-in alerts keyed on the controller's own health status** (normal / fault), not user-set thresholds — the BMC reports each sensor's own good/bad state, so there is no custom temperature threshold to set on BMC readings, and BMC alerts are not built through the custom alert picker.
 
-Monitoring is over SNMP only. IPMI is a deliberate exclusion for security reasons; Redfish support is on the roadmap.
+Monitoring is over SNMP only. IPMI is a deliberate exclusion for security reasons, and Redfish is not supported.
 
 ### Device compatibility matrix
 
-The Supported Devices page now states, per device, how far each template has been validated — real hardware, real-capture replay, or MIB-derived. It is the authoritative answer to "is my device supported, and how confirmed is it": a MIB-derived template was built from vendor documentation and not yet confirmed against physical equipment. Check it before relying on a device class in production.
+The Supported Devices page now states, per device, how far each template has been validated — real hardware, real-capture replay, or MIB-derived (now shown as Real-world validated / Simulated / Code only). It is the authoritative answer to "is my device supported, and how confirmed is it": a MIB-derived template was built from vendor documentation and not yet confirmed against physical equipment. Check it before relying on a device class in production.
 
 ### New built-in alerts
 
@@ -545,9 +545,9 @@ Memory readings are now consistent across platforms: every memory surface (panel
 
 ### Known issues
 
-- **Alert text shows a numeric status code for hardware faults.** A fired temperature/fan/PSU alert names the component but renders its status as a number (e.g. "(fan): 2.0") in the alert summary, while the dashboard shows the word ("Fault"). Both built-in and custom alerts are affected. A fix is targeted for an upcoming alerting release.
+- **Alert text shows a numeric status code for hardware faults.** A fired temperature/fan/PSU alert names the component but renders its status as a number (e.g. "(fan): 2.0") in the alert summary, while the dashboard shows the word ("Fault"). Both built-in and custom alerts are affected. Not fixed in this release; 2.5.0 fixed it in part (see its Known issues).
 - **An alert scoped to a whole group, site, or globally may include device types the metric can't measure** — those members simply never fire. (An alert scoped to a single device of the wrong type is now rejected when you save it.) Scope alerts to the device types the metric applies to.
-- **FortiGate VPN tunnel panel shows "No ports found."** The VPN tunnel panel specifically does not populate; this does **not** affect the rest of FortiGate monitoring — interfaces, CPU, and memory all work. It is a known issue, pre-existing since a March 2026 release and under investigation, not a regression in 2.4.4.
+- **FortiGate VPN tunnel panel shows "No ports found."** The VPN tunnel panel specifically does not populate; this does **not** affect the rest of FortiGate monitoring — interfaces, CPU, and memory all work. It is a known issue, present since a March 2026 release, not a regression in 2.4.4. Not fixed in this release.
 
 **Upgrading:** in-place upgrade from v2.4.3. Existing monitored infrastructure, dashboards, and settings are preserved.
 
@@ -874,7 +874,7 @@ This is a security fix. We recommend upgrading promptly.
 
 **Voice notifications use inline TwiML.** Voice alert calls no longer make an outbound fetch for call instructions, which removes a public DNS dependency and simplifies on-premises deployments.
 
-**Hostname pronunciation in voice announcements.** Voice alerts now announce node identifiers character-by-character (e.g., "D-E-V-zero-one" instead of "devzeroone"), so on-call responders can write them down without replaying the message.
+**Hostname pronunciation in voice announcements.** Voice alerts now announce node identifiers character-by-character (e.g., "A-P-P-zero-one" instead of "appzeroone"), so on-call responders can write them down without replaying the message.
 
 **Mobile phone field on contact records.** Contacts can now record both a primary phone and a mobile phone, separately addressable for SMS and voice routing.
 
@@ -893,7 +893,7 @@ This is a security fix. We recommend upgrading promptly.
 ### Fixed
 
 - Collector failover incorrectly mutated agent and HTTP node target types under retry storms.
-- User setting writes intermittently corrupted JSON values stored in the user_settings table.
+- Saving user settings could intermittently corrupt the stored settings.
 - Test alert dispatch now flows through the same engine as production alerts, so test results reflect real production behavior.
 - Invalid license files are now rejected with a clear error rather than silently falling back to a degraded license tier.
 - License expiry now uses wall-clock time consistently across the platform.
@@ -941,7 +941,7 @@ The 2.1.10 server includes a database migration that runs automatically on first
 - Collector 2.1.9.2
 
 ### Fixed
-- **Escalation Teams page failed to load on tenants with rotation teams** — a `pgx` v5 scan-plan gap caused the Escalation Teams page, alert configuration modal, onboarding wizard Alerts step, and on-call status API to error on any tenant whose escalation teams had a non-null rotation start date. Fixed at the database layer; wire format unchanged, no migration required.
+- **Escalation Teams page failed to load on tenants with rotation teams** — the Escalation Teams page, alert configuration modal, onboarding wizard Alerts step, and on-call status API returned an error on any tenant whose escalation teams had a rotation start date. Fixed; API responses unchanged, no migration required.
 
 ---
 
@@ -1034,7 +1034,6 @@ The 2.1.10 server includes a database migration that runs automatically on first
 - "Stabilizing" visual state in node list, node detail, site nodes, topology maps, and dashboard panels.
 
 ### Changed
-- The alert evaluator's stabilization check is now a single helper driven by the node's `stabilization_until` timestamp instead of four copy-pasted grace-period blocks. Behavior is unchanged for customers; this is internal consolidation that prevents future drift between evaluators.
 - Server MSI now supports in-place upgrades. The installer detects upgrade scenarios and preserves database credentials, SSL certificates, and service registrations across the upgrade. Services are stopped automatically before binary replacement.
 - Fresh installs without a legacy collectors table no longer fail during initial schema setup.
 
@@ -1091,23 +1090,23 @@ The 2.1.10 server includes a database migration that runs automatically on first
 - Save-time configuration warnings when rotation members lack phone/email for targeted channels.
 - Dispatch-time audit log entries when SMS/Voice notifications are skipped due to missing phone numbers.
 - SMS/Voice targeting chips (On-Call #1, All Members, Specific contacts) now fully honored by backend dispatch.
-- oncall_notify_sms / oncall_notify_voice toggles exposed in UI for rotation teams.
-- Slack/Teams channels now support ContactPicker for individual contacts alongside freeform webhook URLs.
+- "Notify by SMS" / "Notify by Voice" toggles exposed in UI for rotation teams.
+- Slack/Teams channels can now target individual contacts from the contact picker alongside freeform webhook URLs.
 
 ### Contact Registry
 
 - IdP sync merge path — existing manual contacts promoted to managed on email match at login.
 - Bulk import now logs aggregate audit entry with imported/merged/skipped/errors counts.
 - Two-step modal redesign (Basic Info → Notification Channels).
-- Phone number normalization via react-phone-number-input (country code enforcement, auto-formatting).
-- ContactPicker filters to only show contacts with the required channel configured.
+- Phone numbers are normalized on entry (country code required, automatic formatting).
+- The contact picker shows only contacts that have the required channel configured.
 
 ### Fixes
 
-- User menu dropdown clipped by overflow-hidden on TopNavBar flex container.
-- UpsertContactFromIdP: email no longer NULL on fresh IdP contact creation.
+- User menu dropdown is no longer clipped by the top navigation bar.
+- Contacts created by identity provider sign-in now get their email address.
 - Toast regressions: acknowledged alerts no longer re-appear; dismissing via "View" works correctly; tab sleep/wake no longer causes burst toasts; toasts no longer render above modals.
-- Escalation teams: clone preserves junction-backed ContactIDs; ConfirmDialog renders via createPortal; SMS/Voice dispatch respects target_type and oncall_position_offset; delete of in-use teams succeeds.
+- Escalation teams: cloning a team keeps its selected contacts; the save-time warning dialog appears in front of the team editor; SMS/Voice dispatch respects the targeting chip and on-call position; deleting a team that is in use succeeds.
 
 ### Changed
 

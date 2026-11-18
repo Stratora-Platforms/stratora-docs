@@ -17,7 +17,7 @@ A **collector** is the component that polls your infrastructure and sends metric
 
 Every Stratora server includes a **local collector** that runs on the same machine as the backend. This handles monitoring for devices reachable from the server's network — typically the primary data center or management VLAN.
 
-The local collector requires no extra installation. It's deployed as part of the standard Stratora server setup.
+The local collector requires no extra installation. It's deployed as part of the standard Stratora server setup, and it is approved at install, so it starts monitoring straight away.
 
 ### Remote Collectors
 
@@ -26,7 +26,8 @@ For devices in networks not reachable from the server — branch offices, factor
 - Runs at the remote site as a Windows service
 - Polls local devices via SNMP, ICMP, and other protocols
 - Sends all collected metrics back to the Stratora server over HTTPS
-- Pulls its configuration from the server every 10 seconds
+- Waits for an administrator's approval after it enrolls (see [Approving a Remote Collector](#approving-a-remote-collector))
+- Once approved, pulls its configuration from the server every 10 seconds
 
 You can deploy as many remote collectors as your environment needs. Each one operates independently — if the WAN link to the server goes down, collectors buffer metrics in memory during temporary connectivity interruptions. For brief outages, metrics are retained and delivered when connectivity resumes. During extended outages or restarts, in-memory buffers may be exhausted, resulting in partial metric gaps.
 
@@ -36,10 +37,12 @@ You can deploy as many remote collectors as your environment needs. Each one ope
 
 The fastest way to deploy a collector is from the **Deploy Collector** modal in the UI. Navigate to **Collection → Collectors** and click the **Deploy Collector** button. The modal provides two modes:
 
-- **Silent Install** — generates a ready-to-run PowerShell command with your server URL, enrollment token, collector name, and site pre-filled. Copy and run on the target server.
+- **Silent Install** — generates a ready-to-run `msiexec` command with your server URL, enrollment token and collector name filled in. Copy and run it on the target server from a Command Prompt opened with **Run as administrator**. The installer has no site setting: once the collector is approved, make it a site's [preferred collector](../infrastructure/sites.md#preferred-collector).
 - **Interactive Install** — download the MSI and run it manually. The modal shows your server URL for reference.
 
 The MSI can also be downloaded directly at `/api/v1/downloads/collector/windows`.
+
+For the full steps (prerequisites, every installer property, custom folders, upgrade, repair and uninstall), see [Install a Remote Collector](/docs/installation/remote-collector).
 
 ### MSI Installer
 
@@ -70,7 +73,7 @@ msiexec /i StratoraCollector.msi /qn SERVER_URL="https://stratora.example.com" E
 | `/l*v C:\temp\install.log` | Verbose logging to file |
 
 :::tip
-For mass deployments, create a multi-use enrollment token with an appropriate use limit and expiration window. See [Enrollment](./enrollment.md) for details.
+Each Remote Collector install uses **two** uses of its enrollment token: one for the collector and one for the agent installed with it. Create a multi-use token with at least two uses per collector and a short expiration window, and copy the whole token, including the part after `.sha256:`. See [Enrollment](./enrollment.md) for details.
 :::
 
 ### What Gets Installed
@@ -82,6 +85,30 @@ The installer creates:
 - Configuration file storing the collector's identity and API key
 
 On first startup, the collector registers with the server using the enrollment token and receives a unique API key. See [Enrollment](./enrollment.md) for how this works.
+
+---
+
+## Approving a Remote Collector
+
+A remote collector that enrolls with an enrollment token you created waits for approval. Until an administrator approves it, the collector sends no data and receives no configuration.
+
+To approve it:
+
+1. Open **Infrastructure → Nodes**. When collectors are waiting, a banner at the top of Stratora also tells administrators and links to this list.
+2. Under **Collectors waiting for approval**, find the collector. Each one is shown with the node of the agent installed with it.
+3. Click **Approve** or **Reject**.
+
+You can also approve or reject a pending collector from its card on **Collection → Collectors**.
+
+**The collector and its agent are decided together.** The Collector MSI also installs a Stratora Agent on the same computer, so the collector's own host is monitored. Once that agent has registered, approving the collector also approves that agent's node, and rejecting the collector rejects that node, so you don't have to decide the pair twice. Stratora pairs them only when the collector and the agent enrolled with the same enrollment token and from the same address, as they do when the Collector MSI installs both; otherwise each is approved on its own. In the pending node list, that node shows **(with collector *name*)**, and approving or rejecting it there decides both. A node or collector that has already been approved or rejected is not changed by its partner's decision.
+
+**Approving a collector needs an administrator.** Only the Admin role can approve or reject collectors, and that includes the node of a collector's agent. Operators and viewers can see the list of pending collectors and their nodes, but cannot approve or reject them.
+
+**While it waits, the collector keeps running.** It checks with the server about once a minute, and picks up its configuration within about a minute of being approved. You don't need to restart or reinstall it.
+
+:::note Upgrades
+Collectors that were already enrolled before you upgraded the server stay approved. Only collectors that enroll after the upgrade wait for approval. The server's own local collector is approved at install.
+:::
 
 ---
 
@@ -137,6 +164,20 @@ Each collector reports its health to the server, including:
 
 View collector health from **Collection → Collectors** or from the site detail view.
 
+### Out of date collectors
+
+A collector that runs an older version than the server ships shows an **Out of date** badge on **Collection → Collectors**, and the page shows how many are out of date under the total. To list only those, choose **Out of date** in the version filter, or open `/collectors?version=outdated`. Upgrade them after each server upgrade; see [Upgrading Stratora](../administration/upgrading-stratora.md). A collector that hasn't reported a version yet, or that runs a development build, is not counted as out of date.
+
+### Renaming a collector
+
+Administrators can rename a collector: on **Collection → Collectors**, select one collector and choose **Rename**. The dialog shows the collector's host name next to the name. A name the server refuses (longer than 128 characters, or with a control character, a double quote, a backslash or `$`) is shown under the field. Other users don't see the **Rename** button.
+
+![Rename collector dialog with the collector's host name and the new name](/img/collection/collectors-rename.png)
+
+:::note Known issue: the Deploy Collector wizard's name
+A site's **Deploy Collector** wizard asks for a collector name, but the collector registers with its computer's host name. Rename it on the Collectors page afterwards.
+:::
+
 ---
 
 ## Assigning Collectors to Sites
@@ -144,6 +185,16 @@ View collector health from **Collection → Collectors** or from the site detail
 Each [site](../infrastructure/sites.md) can have a **preferred collector**. When you add a node to a site, it's automatically assigned to that site's preferred collector. This is the recommended approach for multi-site deployments — one collector per site, with the assignment handled automatically.
 
 You can also override the collector assignment on individual nodes if needed.
+
+### Failover to the server's collector
+
+When a site's preferred remote collector stops reporting, the site's nodes move to the server's own (local) collector, so they stay monitored if the server can reach them. They move back once the collector reports again, about 1-2 minutes after it returns.
+
+- **Remote collectors on 2.5.3 or later** fail over after 3 minutes without a heartbeat, so the nodes move about 3-4 minutes after the last heartbeat. If one remote collector serves two or more sites, it takes about 5-6 minutes.
+- **Remote collectors on 2.5.2 or earlier** keep the old timing until they are upgraded: their sites fail over about 10-11 minutes after the last heartbeat. Keep the built-in **Collector Offline** alert enabled for them.
+- Any outage of a 2.5.3 collector longer than 3 minutes, **including a planned reboot or upgrade of its host**, moves its sites to the server's collector and back afterwards.
+
+For sites the server cannot reach, such as segmented or OT networks, turn off **Fail over to the server's collector** in the site's settings. See [Sites → Collector failover](../infrastructure/sites.md#collector-failover).
 
 ---
 

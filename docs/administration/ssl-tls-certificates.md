@@ -22,6 +22,21 @@ During installation, Stratora generates a self-signed certificate so HTTPS works
 
 The self-signed certificate is suitable for initial setup and internal use. Browsers will show a certificate warning because it isn't signed by a trusted certificate authority.
 
+**Stratora renews its own self-signed certificate.** The backend checks it when it starts and once a day. When it has expired, expires within 30 days, is not valid yet, or doesn't match its key, Stratora renews it with the same host names plus the server's current ones, restarts the web server, and records the renewal in the audit log. Collectors and agents keep working without being enrolled again. Stratora only renews a certificate it created: it never replaces a certificate you uploaded or got from Let's Encrypt.
+
+---
+
+## How Collectors and Agents Trust the Server
+
+Collectors and agents always verify the Stratora server's certificate; this can't be turned off. From 2.5.3 they trust the server through its **server trust key**, `data\server-trust.key` in the install folder, which the server creates at its first start and uses to vouch for whatever certificate it serves:
+
+- Every enrollment token carries the trust key's pin: a token looks like `enroll_<secret>.sha256:<pin>`. Always copy the whole token. With the pin, a collector or agent accepts the server's certificate from its first connection, self-signed or not.
+- The pin is shown on **Administration → About** and when you create a token.
+- When the certificate changes (a renewal, a Let's Encrypt certificate, an upload), collectors and agents on 2.5.3 or later pick up the new one by themselves. Nothing needs doing on their hosts.
+- Keep `data\server-trust.key` in your backups with the rest of the `data` folder. A server that loses it has to enroll every collector and agent again.
+
+Collectors and agents **older than 2.5.3** check the server's certificate against their host's own trust store instead. When you upload a certificate that the server's own trust store doesn't trust, **Upload & Apply** first lists the enrolled collectors and agents that may still check it that way (older than 2.5.3, an unknown version, or not in contact since the server was upgraded) and asks you to confirm. Add the issuing certificate authority to the trust store on those hosts (on Windows: Trusted Root Certification Authorities, Local Computer), or upgrade them and let them connect once, then upload again or apply anyway.
+
 ---
 
 ## Let's Encrypt (Automated Certificates)
@@ -29,6 +44,8 @@ The self-signed certificate is suitable for initial setup and internal use. Brow
 Stratora includes a bundled ACME client ([win-acme](https://www.win-acme.com/)) for automated certificate issuance and renewal from Let's Encrypt.
 
 Navigate to **Administration → SSL / TLS Certificates** to configure.
+
+Wildcard names (`*.example.com`) are refused with "wildcard certificates aren't supported on Windows". So is a name whose first label is a Windows device name (`con`, `prn`, `aux`, `nul`, `com1` to `com9`, `lpt1` to `lpt9`). Request a certificate for the server's own name.
 
 ![Let's Encrypt section — client-ready status, domain and email fields, HTTP-01 / DNS-01 challenge selector, Request Certificate button, and the Auto-Renewal toggle showing the next scheduled check and managed certificates list](/img/administration/ssl-tls-letsencrypt-section.png)
 
@@ -47,7 +64,7 @@ The simplest method — Let's Encrypt verifies domain ownership by placing a fil
 
 ### DNS-01 Challenge
 
-For servers that aren't publicly accessible on port 80, or for wildcard certificates. Let's Encrypt verifies domain ownership via a DNS TXT record.
+For servers that aren't publicly accessible on port 80. Let's Encrypt verifies domain ownership via a DNS TXT record.
 
 #### Manual DNS-01
 
@@ -80,7 +97,7 @@ For fully automated issuance and renewal, configure one of the supported DNS pro
 
 Per-provider notes:
 
-- **AWS Route 53** — the AWS CLI is bundled with Stratora, so no separate installation is required. The IAM credentials need Route 53 record-change permissions.
+- **AWS Route 53** — Stratora runs the AWS CLI for Route 53. The Server bundles a copy, but Stratora uses it only from a folder that nobody but SYSTEM, Administrators and TrustedInstaller can change; otherwise install the AWS CLI v2 MSI. See [Route 53 and the AWS CLI](#route-53-and-the-aws-cli) below. The IAM credentials need Route 53 record-change permissions.
 - **GoDaddy** — requires a GoDaddy account eligible for API access. GoDaddy restricts production API keys to accounts with 10+ domains, a reseller / Discount Domain Club plan, or a paid tier; ineligible accounts receive a clear "not eligible for API access" error.
 - **Namecheap** — requires API access enabled and this server's public IP allowlisted in the Namecheap dashboard.
 :::
@@ -97,6 +114,24 @@ Per-provider notes:
 DNS provider credentials are encrypted at rest with AES-256-GCM.
 
 ![DNS Provider section — configured provider card showing name, type chip, and active status, with an Add Provider button to add additional providers](/img/administration/ssl-tls-dns-provider.png)
+
+#### Route 53 and the AWS CLI
+
+Route 53 DNS validation runs the AWS CLI (`aws.exe`). Stratora uses either the copy the Server installs in the `aws-cli` folder of its install folder, or an AWS CLI v2 installed with its MSI in `C:\Program Files\Amazon\AWSCLIV2`. It uses a copy only from a folder that nobody but SYSTEM, Administrators and TrustedInstaller can change, and that includes the folders above it. It never uses an `aws` found on the PATH. Without such a copy, Route 53 DNS validation refuses to run: the provider test (**Test connection** on the provider card) and the SSL/TLS page show a message that names the cause and the steps to fix it. Other DNS providers are not affected.
+
+**A server installed in `C:\Stratora`.** There, the bundled `aws-cli` folder is refused. Do not change its permissions in place. Instead:
+
+1. Install the AWS CLI v2 with its MSI from AWS. It installs to `C:\Program Files\Amazon\AWSCLIV2`, which Stratora uses next.
+2. Restart the Stratora backend (`Restart-Service StratoraBackend` from PowerShell opened with **Run as administrator**).
+3. Run **Test connection** on the Route 53 provider. It must succeed.
+
+**The owner of `C:\`.** On a standard Windows install the root of the system drive is owned by TrustedInstaller. If `C:\` has a different owner, Route 53 DNS validation refuses to run. Route 53 validation that worked before an upgrade to 2.5.3 can stop after it. With such an owner, the server can also log an "install folder permissions" warning that names `C:\` and its owner. To check the owner, run this in PowerShell:
+
+```powershell
+(Get-Acl C:\).Owner
+```
+
+A standard install shows `NT SERVICE\TrustedInstaller`. If it shows another owner, follow the steps in the message on the SSL/TLS page.
 
 ---
 

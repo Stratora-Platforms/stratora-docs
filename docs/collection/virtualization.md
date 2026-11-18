@@ -69,6 +69,35 @@ The other members are discovered and appear automatically on the next poll, and 
 
 ---
 
+## vCenter and Proxmox certificates
+
+The collector verifies the certificate of every vCenter and Proxmox VE endpoint it polls, for the inventory probe and the metrics. It accepts either:
+
+- a certificate that a CA trusted by the **collector host** has issued, and that names the node's address or its host name in Stratora; or
+- a self-signed certificate that an administrator has trusted for that credential and endpoint.
+
+**Trusting a self-signed certificate.** When you add or validate a node, **Test Connection** shows an untrusted certificate's fingerprint, subject and expiry, without sending the credential to that endpoint. Compare the fingerprint with the one the host shows, then select **Trust this certificate**. For a self-signed Proxmox cluster, onboarding offers to trust all the cluster's nodes at once.
+
+**Trusted certificates.** Each vCenter and Proxmox credential has a **Trusted certificates** panel on **Collection → Credentials**. It lists the certificates trusted for that credential, and the endpoints whose certificate is not trusted yet:
+
+- An endpoint that presents a different certificate from the one trusted for it is refused ("certificate changed") and listed with **Trust the new certificate**. Trust it only if you expected the certificate to change, for example after a renewal.
+- An endpoint without a trusted certificate, for example another node of a self-signed Proxmox cluster, is refused and listed so you can trust it.
+
+**Credentials created before 2.5.3** keep polling after the upgrade: the collector trusts the certificate that each endpoint presents first and lists it in the panel for you to confirm. To stop this for a credential, select **Stop trusting new endpoints automatically** in its panel.
+
+**On the node page.** A vCenter or Proxmox node shows how its endpoint's certificate is trusted, in a badge in the node header:
+
+| Badge | Meaning |
+|-------|---------|
+| **Auto-trusted (first use)** | The collector trusted the certificate automatically at its first connection. Compare the fingerprint with the one the host shows, then confirm it under **Trusted certificates**. |
+| **Confirmed** | An administrator trusted the certificate. Certificates confirmed before the upgrade to 2.5.3 show as Confirmed. |
+| **Trusted on collector's report** | An administrator trusted the certificate on the collector's report alone, because the server could not reach the host to check it. Make sure the fingerprint is the one the host shows. |
+| **Not trusted** | The collector saw the certificate but it is not trusted, so the collector does not poll the endpoint with this credential. |
+
+The badge's tooltip and popover show the fingerprint and when it was trusted, and link to the credential's **Trusted certificates** panel. For a Proxmox cluster member, the badge shows the certificate under the cluster's credential. Users without access to credentials, such as viewers, see no badge.
+
+---
+
 ## Hyper-V (agent-based)
 
 Hyper-V hosts are monitored by the **Stratora Windows Agent** — there are no credentials to manage; the agent itself is the trust.

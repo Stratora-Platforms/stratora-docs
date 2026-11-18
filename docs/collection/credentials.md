@@ -21,12 +21,18 @@ Looking for guidance on configuring SNMP on the device side — which version to
 |------|--------|----------|
 | **SNMPv2c** | Community string | Network device polling (switches, firewalls, NAS, APs) |
 | **SNMPv3** | Username, security level, auth/privacy protocols and passwords, context name | Secure SNMP polling with authentication and encryption |
-| **VMware API** | Username, password, SSL verification option | vCenter and ESXi monitoring via vSphere API |
-| **Proxmox VE API Token** | Token ID (`user@realm!name`), token secret; use a cluster-wide token | Proxmox VE host and cluster monitoring via the PVE API |
+| **VMware API** | Username, password | vCenter and ESXi monitoring via vSphere API. The vCenter certificate is always verified; see [vCenter and Proxmox certificates](./virtualization.md#vcenter-and-proxmox-certificates) |
+| **Proxmox VE API Token** | Token ID (`user@realm!name`), token secret; use a cluster-wide token | Proxmox VE host and cluster monitoring via the PVE API. The PVE certificate is always verified; see [vCenter and Proxmox certificates](./virtualization.md#vcenter-and-proxmox-certificates) |
 | **WMI** | Username, password, domain | Windows device monitoring via WMI |
 | **SSH** | Username, password or private key, passphrase | Linux device monitoring |
 | **S3 / MinIO** | Access key, secret key, region, endpoint | S3-compatible storage monitoring |
 | **Azure Blob** | Account name, account key or SAS token or service principal | Azure storage monitoring |
+
+:::tip Prefer SNMPv3
+SNMP v1 and v2c send the community string in clear on the network. The SNMP v1/v2c credential forms say so and recommend SNMPv3 with authentication and privacy (authPriv) where that matters.
+:::
+
+![Create Credential with SNMPv2c selected: the form recommends SNMPv3](/img/collection/credentials-snmp-v2c.png)
 
 ---
 

@@ -87,6 +87,9 @@ Click any node to open its detail view. The layout adapts based on the device te
 - **Assigned collector** — which collector is polling this node
 - **Active alerts** — any currently firing alerts with severity and duration
 - **Node groups** — color-coded group badges showing which [groups](./node-groups.md) this node belongs to
+- **All node fields** — every field the Nodes page can show as a column (such as model, serial number, manufacturer, OS, agent version, groups, and SNMP contact and location), grouped as Status, Monitoring, Inventory and SNMP, with "—" for a value the node doesn't have
+
+The hover card that opens when you hover a node on a topology map shows the same fields.
 
 ### Key Metrics by Type
 
@@ -166,6 +169,10 @@ From the node list or detail view:
 :::warning
 Rejected nodes remain in the database but are excluded from monitoring and dashboards. You can approve a rejected node later if needed.
 :::
+
+### Nodes installed with a remote collector
+
+The Collector MSI installs a Stratora Agent alongside the collector. Once that agent has registered, and while the collector waits for approval, that agent's node is decided together with it (Stratora pairs them when both enrolled with the same enrollment token and from the same address): in the pending list the node shows **(with collector *name*)**, and approving or rejecting it also approves or rejects the collector. Only an administrator can decide this pair. The collectors themselves are listed on this page under **Collectors waiting for approval**. See [Approving a Remote Collector](../collection/collectors.md#approving-a-remote-collector).
 
 ---
 

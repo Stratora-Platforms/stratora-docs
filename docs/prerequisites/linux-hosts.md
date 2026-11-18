@@ -10,13 +10,13 @@ Prerequisites for Linux hosts that you'll monitor with the Stratora Agent.
 
 ## Supported Linux distributions
 
-| Family | Versions | Package |
+| Distribution | Package | Tested with 2.5.3 |
 |---|---|---|
-| Debian | 12 (Bookworm), 13 (Trixie) | `.deb` |
-| Ubuntu | 22.04 LTS, 24.04 LTS | `.deb` |
-| RHEL | 9.x | `.rpm` |
-| Rocky Linux | 8.x, 9.x | `.rpm` |
-| AlmaLinux | 9.x (binary-compatible RHEL 9 derivative) | `.rpm` |
+| Rocky Linux 8 (SELinux enforcing) | `.rpm` | Yes |
+| Debian 12 (Bookworm) | `.deb` | Yes |
+| Ubuntu 24.04 LTS | `.deb` | Yes |
+
+Only these were tested with Stratora 2.5.3. Other distributions and versions that use the same package formats with systemd, such as RHEL, AlmaLinux, Rocky Linux 9, Debian 13 or Ubuntu 22.04, were not tested with this release. See [Install the Linux Agent](/docs/installation/linux-agent#supported-distributions) for what was tested on each.
 
 Architecture: amd64 only. ARM-based hosts are not supported in this release.
 
@@ -25,7 +25,8 @@ Architecture: amd64 only. ARM-based hosts are not supported in this release.
 - `root` or `sudo` to install the package
 - `systemd` — the agent runs as a systemd service unit
 - At least 200 MB of free disk space for the agent binary and its log directory
-- No package dependencies — the agent ships as a static binary with no external runtime requirements
+- **Telegraf**, installed from the [InfluxData repository](https://docs.influxdata.com/telegraf/v1/install/) before the agent. The agent collects metrics through Telegraf, which its package does not include; the package links the system's `telegraf` into `/opt/stratora/bin` when it is installed. Without Telegraf the agent enrolls but sends no metrics.
+- No other package dependencies — the agent itself is a static binary
 
 ## Network — outbound from the host
 
@@ -46,7 +47,7 @@ Without ICMP reachability, the agent will enroll and push metrics correctly, but
 
 ## SELinux and AppArmor
 
-- **SELinux**: the agent runs as a confined service via its systemd unit. No custom SELinux policy is required for the default install layout (`/opt/stratora/`, `/etc/stratora/`, `/var/lib/stratora/`, `/var/log/stratora/`).
+- **SELinux**: no custom SELinux policy is required for the default install layout (`/opt/stratora/`, `/etc/stratora/`, `/var/lib/stratora/`, `/var/log/stratora/`). The agent's program gets the standard `bin_t` type. In testing on Rocky Linux 8 in enforcing mode, installing and uninstalling the agent produced no AVC denials.
 - **AppArmor**: no profile is shipped with the agent, and no profile is required.
 
 ## SSH prerequisites (only if monitoring Linux hosts via SSH from a Collector)
@@ -61,6 +62,7 @@ For most fleets, the agent path is simpler than SSH polling and is the recommend
 
 ## Where to go next
 
-- Agent installation: [Agents](/docs/collection/agents)
+- Agent installation: [Install the Linux Agent](/docs/installation/linux-agent)
+- What the agent collects: [Agents](/docs/collection/agents)
 - Network port matrix: [Network](/docs/prerequisites/network)
 - Verifying reachability: [Verification](/docs/prerequisites/verification)

@@ -61,6 +61,8 @@ Read-only access to monitoring data. Viewers can see dashboards, node status, al
 | Create, edit, and delete sites | ✅ | ✅ | ❌ |
 | View IPAM subnets and addresses | ✅ | ✅ | ✅ |
 | Manage IPAM (add/edit/scan subnets) | ✅ | ✅ | ❌ |
+| View the Facility tab (floor plans), read-only | ✅ | ✅ | ✅ |
+| Upload floor plans and photos, edit facility layouts | ✅ | ✅ | ❌ |
 
 ### Collection & Deployment
 
@@ -110,6 +112,7 @@ Read-only access to monitoring data. Viewers can see dashboards, node status, al
 | Reveal enrollment token values | ✅ | ❌ | ❌ |
 | View registered components (agents/collectors) | ✅ | ✅ | ✅ |
 | Revoke component API keys | ✅ | ❌ | ❌ |
+| Approve or reject remote collectors (and the agent installed with each) | ✅ | ❌ | ❌ |
 
 ### Administration
 

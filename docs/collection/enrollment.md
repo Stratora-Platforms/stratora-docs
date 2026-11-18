@@ -36,6 +36,8 @@ sequenceDiagram
 ```
 
 After enrollment:
+- A remote **collector** waits for an administrator's approval before it receives configuration or sends data. See [Approving a Remote Collector](./collectors.md#approving-a-remote-collector). The server's own local collector is approved at install.
+- An **agent's node** arrives with **Pending** approval status, and its metrics appear once the node is approved. See [Nodes → Approval Workflow](../infrastructure/nodes.md#approval-workflow).
 - The **enrollment token** can be discarded (or reused for more installs if it's multi-use)
 - The **API key** (`sk_stra_xxxxx`) is the component's permanent credential for all communication with the server
 - The server stores only a **bcrypt hash** of the API key — the plain-text key exists only on the component itself
@@ -46,14 +48,21 @@ After enrollment:
 
 ### Creating a Token
 
-Navigate to **Collection → Enrollment API** and click **Create Token**.
+Navigate to **Collection → Enrollment**, tab **Enrollment Tokens**, and click **Create Token**.
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | Description | No | Label for the token's purpose (e.g., "Q1 branch office rollout") |
 | Multi-use | No | Whether the token can be used by more than one component (default: single-use) |
 | Max uses | No | For multi-use tokens, an optional cap on total registrations |
-| Expiration | No | How long the token is valid (default: 24 hours; set to 0 for no expiry) |
+| Allow replacing an existing component | No | Lets an agent or collector enroll under the host name of one that is already registered, for example after a reinstall. The one enrolled under that name now stops working. Off by default. |
+| Expiration | No | How long the token is valid: 1 hour, 24 hours, 7 days, 30 days, or never |
+
+### The Token and Its Pin
+
+A token looks like `enroll_<secret>.sha256:<pin>`. The part after `.sha256:` is the pin of the server's trust key: with it, the collector or agent verifies the server from its first connection, even with a self-signed certificate. **Always copy the whole token.** A token cut at `.sha256:` still enrolls, but the agent or collector then has to trust the server's certificate through its host's own trust store. See [SSL / TLS Certificates](../administration/ssl-tls-certificates.md#how-collectors-and-agents-trust-the-server).
+
+A Remote Collector install uses **two** uses of a token: one for the collector and one for the agent installed with it.
 
 ### Single-Use vs. Multi-Use
 
@@ -78,14 +87,16 @@ For automated deployments, create a multi-use token with a reasonable expiration
 
 ## Re-Enrollment
 
-If a collector or agent needs to be reinstalled on the same host (e.g., after a rebuild), re-enrollment is automatic. When a component registers with a **hostname that already exists** in `remote_components`:
+If a collector or agent needs to be reinstalled on the same host (e.g., after a rebuild), it can take over its existing record. The token must have **Allow replacing an existing component** turned on: an ordinary token that enrolls a host name already registered as the same type is refused, the token use is not spent, and the existing agent or collector keeps working. When a component registers with a **hostname that already exists** and a token that allows replacing:
 
 - The existing component record is updated in place (not duplicated)
 - A **new API key** is generated and the old one is invalidated
 - For agents, the matching node in `nodes` is also updated (matched on the reported hostname)
 - The component resumes normal operation with the new key
+- A collector that was waiting for approval still waits, and an approved collector stays approved
+- A component that an administrator rejected cannot enroll again under the same host name until you delete or revoke it
 
-This means you can reimage a server and reinstall the agent with the same enrollment token — it just works.
+This means you can reimage a server and reinstall the agent without a duplicate node: use a single-use token with **Allow replacing an existing component** for that reinstall. A Remote Collector reinstall needs a multi-use token with at least 2 uses and that option, because the collector and the agent installed with it each use one. The Stratora server's own agent and collector cannot be replaced this way.
 
 :::note
 Re-enrollment only matches on hostname. If the host has been **renamed** between the original enrollment and the re-enrollment (for example, an OS reinstall that also changed the hostname), Stratora cannot correlate the new name with the old record and a duplicate node will be created. See [Server Renames and Agent Re-enrollment](./agents.md#server-renames-and-agent-re-enrollment) for the cleanup procedure.

@@ -1,29 +1,23 @@
 ---
-sidebar_label: Integrations Hub
-title: Integrations Hub
+sidebar_label: Overview
+title: Integrations
 ---
 
-# Integrations Hub
+# Integrations
 
-:::info Coming Soon
-The Integrations Hub is under active development and will be available in a future release.
-:::
+Stratora connects to other systems in two ways: it sends alert notifications to people and tools, and it forwards the events it records to syslog receivers.
 
-The **Integrations Hub** will provide a centralized place to connect Stratora with third-party platforms, IT service management tools, and external systems.
+## Alert notifications
 
-Planned capabilities include:
+Configured in **Settings → External Notifications** and used on escalation team steps. See [External Notifications](./external-notifications.md).
 
-- **Ticketing systems** — automatically create and update tickets in platforms like ConnectWise, Autotask, and ServiceNow when alerts fire
-- **PSA integrations** — sync device inventory and alert status with professional services automation tools
-- **API connectors** — connect to custom internal systems via configurable API endpoints
-- **Bi-directional sync** — push alert data out and pull configuration or asset data in
+- **Email (SMTP)**, with customizable HTML [email templates](./email-templates.md) and branding.
+- **Slack** and **Microsoft Teams**, through incoming webhooks.
+- **Generic webhooks**: a JSON payload sent by HTTP POST to any URL, for tools that accept webhooks, such as ticketing or automation platforms.
+- **SMS and voice calls** through your own Twilio account. Voice calls are announcement-only.
 
----
+## Event forwarding to syslog
 
-## What's Available Today
+Every event Stratora records (sign-ins, configuration changes, alerts, escalations, notification delivery, and system events) can be forwarded to syslog destinations over UDP, TCP or TCP with TLS. See [Syslog Destinations](./syslog-destinations/index.md), with setup notes for Splunk, Elastic and Graylog.
 
-While the Integrations Hub is in development, Stratora already supports delivering alerts to external systems through:
-
-- **[External Notifications](./external-notifications.md)** — Email (SMTP), Slack, Microsoft Teams, and generic webhooks configured on escalation team steps
-- **[Email Templates](./email-templates.md)** — customizable HTML email templates with branding and dynamic variables
-- **Generic Webhooks** — JSON payloads to any HTTP endpoint, enabling custom integrations with any system that accepts webhooks
+Stratora has no built-in connectors for ticketing or PSA platforms. To send alerts to one, use a generic webhook.

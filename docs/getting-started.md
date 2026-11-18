@@ -14,12 +14,12 @@ Already running Stratora? See [Upgrading Stratora](/docs/administration/upgradin
 
 Before installing, you'll need:
 
-- **Windows Server 2016 or later** (64-bit) with 4 CPU cores, 16 GB RAM, and 200 GB of disk
+- **Windows Server** with 4 CPU cores, 16 GB RAM, and 200 GB of disk. Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported. This release was tested on Windows Server 2022.
 - **Outbound HTTPS** from each monitored host to this server
 - **SNMP credentials** for any network devices you plan to monitor
 - **Local administrator** privileges to run the installer
 
-Need network port specifics, host firewall rules, or device-side SNMP configuration? See the full [Prerequisites](/docs/prerequisites/overview).
+Need network port specifics, host firewall rules, or device-side SNMP configuration? See the full [Prerequisites](/docs/prerequisites/overview). For every installer option, the install folder rules, repair and uninstall, see [Install the Stratora Server](/docs/installation/server).
 
 ## Installation
 
@@ -31,13 +31,13 @@ Download the latest Stratora MSI installer from the latest release here: https:/
 msiexec /i Stratora-Server-X.Y.Z.msi /qn
 ```
 
-Replace `X.Y.Z` with the version you downloaded. The installer configures all required Stratora services automatically.
+Replace `X.Y.Z` with the version you downloaded. Add `INSTALLFOLDER="D:\Stratora"` to install somewhere other than the default `C:\Program Files\Stratora`; the installer refuses some folders, listed in [Install the Stratora Server](/docs/installation/server#choose-the-install-folder). The installer configures all required Stratora services automatically.
 
 ### 2. Verify Services
 
 ![Verify Services](/img/getting-started/services.png)
 
-After installation, confirm all Stratora services are running:
+After installation, confirm all Stratora services are running. The collector and agent services appear a minute or two after the installer finishes, because the server installs its own collector and agent in the background:
 
 - **Stratora Backend API** — core API and web interface
 - **Stratora VictoriaMetrics** — time-series storage
@@ -50,7 +50,13 @@ After installation, confirm all Stratora services are running:
 
 ### 3. Access the Web Interface
 
-Open a browser and navigate to `https://your-server-hostname`. Log in with the default credentials — username `admin`, password `admin`. You will be prompted to set a new password on first login.
+Stratora has no default password. When the backend first starts, it creates a one-time password for the `admin` account in `data\initial-admin-password.txt` in the install folder, readable only by administrators. On the server, read it from PowerShell opened with **Run as administrator**:
+
+```powershell
+Get-Content "C:\Program Files\Stratora\data\initial-admin-password.txt"
+```
+
+Then open a browser at `https://your-server-hostname` and sign in as `admin` with that password. You are asked to set your own password straight away, and the file is then deleted.
 
 ## Setup Wizard
 
@@ -137,7 +143,7 @@ Deploy Stratora agents to Windows and Linux servers for deep OS-level monitoring
 
 ![Setup Wizard — Step 6: Agents (Linux)](/img/getting-started/setup-wizard-step-6-agents-linux.png)
 
-**Agents enroll automatically and begin reporting metrics within seconds (typically under 60).** This step is skippable — you can deploy agents later.
+**Agents enroll automatically.** Each new agent's node then waits for approval under **Infrastructure → Nodes**, and its metrics appear within about a minute of the approval. Copy each enrollment token whole, including the part after `.sha256:`. This step is skippable — you can deploy agents later. Full steps: [Windows Agent](/docs/installation/windows-agent) and [Linux Agent](/docs/installation/linux-agent).
 
 ### Step 7: Network (IPAM Subnets)
 
@@ -239,7 +245,8 @@ As your environment grows:
 - **Re-run the wizard** from the Home page to add more sites, subnets, or credentials
 - **Run discovery scans** from **Collection → Discovery Jobs** for ad-hoc network scanning
 - **Schedule recurring scans** from **Infrastructure → IPAM** to automatically detect new devices
-- **Deploy agents** to additional servers using an enrollment token from **Collection → Enrollment API**
+- **Deploy agents** to additional servers using an enrollment token from **Collection → Enrollment**
+- **Deploy remote collectors** for networks the server can't reach — see [Remote Collector](/docs/installation/remote-collector)
 - **Onboard hypervisors** (VMware vSphere/vCenter, Proxmox VE, Hyper-V) via the guided add-paths — see [Virtualization](/docs/collection/virtualization)
 
 ### Monitoring Configuration
@@ -258,7 +265,7 @@ If you prefer to configure everything manually or skipped the wizard:
 2. **Add SNMP credentials** in **Collection → Credentials**
 3. **Define subnets** in **Infrastructure → IPAM**
 4. **Run a discovery scan** in **Collection → Discovery Jobs** — select subnets and credentials, start the scan, then import discovered devices
-5. **Deploy agents** using enrollment tokens from **Collection → Enrollment API** (install commands are also available from **Collection → Agents**)
+5. **Deploy agents** using enrollment tokens from **Collection → Enrollment** (install commands are also available from **Collection → Agents**)
 6. **Create escalation teams** in **Alerting → Escalation Teams**
 7. **Configure alert rules** in **Alerting → Alert Configurations**
 
