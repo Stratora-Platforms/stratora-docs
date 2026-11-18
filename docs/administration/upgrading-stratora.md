@@ -64,6 +64,12 @@ Get-Service Stratora* | Start-Service
 
 Store the copy where only administrators can read it.
 
+### Database dumps
+
+If you also back up the database with a PostgreSQL dump (for example `pg_dump`), protect the dump file as you protect `data\server-keys.json`, the file in the `data` folder that holds the server's encryption keys: only SYSTEM and Administrators may read it, and it is stored only where administrators can read it. A dump contains the Microsoft Teams webhook addresses of queued notifications that have not finished, that is, notifications still waiting to be sent or to be retried. Anyone who has such an address can post to that Teams channel.
+
+From 2.5.3, a queue entry no longer keeps the webhook address once it has finished (sent, or out of retries), and finished queue entries are removed after 24 hours.
+
 ### Plan for a short monitoring gap
 
 While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors buffer a limited amount of data while the server is unavailable. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
