@@ -496,7 +496,7 @@ This is a security fix. We recommend upgrading promptly.
 
 **Voice notifications use inline TwiML.** Voice alert calls no longer make an outbound fetch for call instructions, which removes a public DNS dependency and simplifies on-premises deployments.
 
-**Hostname pronunciation in voice announcements.** Voice alerts now announce node identifiers character-by-character (e.g., "D-E-V-zero-one" instead of "devzeroone"), so on-call responders can write them down without replaying the message.
+**Hostname pronunciation in voice announcements.** Voice alerts now announce node identifiers character-by-character (e.g., "A-P-P-zero-one" instead of "appzeroone"), so on-call responders can write them down without replaying the message.
 
 **Mobile phone field on contact records.** Contacts can now record both a primary phone and a mobile phone, separately addressable for SMS and voice routing.
 
@@ -515,7 +515,7 @@ This is a security fix. We recommend upgrading promptly.
 ### Fixed
 
 - Collector failover incorrectly mutated agent and HTTP node target types under retry storms.
-- User setting writes intermittently corrupted JSON values stored in the user_settings table.
+- Saving user settings could intermittently corrupt the stored settings.
 - Test alert dispatch now flows through the same engine as production alerts, so test results reflect real production behavior.
 - Invalid license files are now rejected with a clear error rather than silently falling back to a degraded license tier.
 - License expiry now uses wall-clock time consistently across the platform.
@@ -563,7 +563,7 @@ The 2.1.10 server includes a database migration that runs automatically on first
 - Collector 2.1.9.2
 
 ### Fixed
-- **Escalation Teams page failed to load on tenants with rotation teams** — a `pgx` v5 scan-plan gap caused the Escalation Teams page, alert configuration modal, onboarding wizard Alerts step, and on-call status API to error on any tenant whose escalation teams had a non-null rotation start date. Fixed at the database layer; wire format unchanged, no migration required.
+- **Escalation Teams page failed to load on tenants with rotation teams** — the Escalation Teams page, alert configuration modal, onboarding wizard Alerts step, and on-call status API returned an error on any tenant whose escalation teams had a rotation start date. Fixed; API responses unchanged, no migration required.
 
 ---
 
@@ -656,7 +656,6 @@ The 2.1.10 server includes a database migration that runs automatically on first
 - "Stabilizing" visual state in node list, node detail, site nodes, topology maps, and dashboard panels.
 
 ### Changed
-- The alert evaluator's stabilization check is now a single helper driven by the node's `stabilization_until` timestamp instead of four copy-pasted grace-period blocks. Behavior is unchanged for customers; this is internal consolidation that prevents future drift between evaluators.
 - Server MSI now supports in-place upgrades. The installer detects upgrade scenarios and preserves database credentials, SSL certificates, and service registrations across the upgrade. Services are stopped automatically before binary replacement.
 - Fresh installs without a legacy collectors table no longer fail during initial schema setup.
 
@@ -713,23 +712,23 @@ The 2.1.10 server includes a database migration that runs automatically on first
 - Save-time configuration warnings when rotation members lack phone/email for targeted channels.
 - Dispatch-time audit log entries when SMS/Voice notifications are skipped due to missing phone numbers.
 - SMS/Voice targeting chips (On-Call #1, All Members, Specific contacts) now fully honored by backend dispatch.
-- oncall_notify_sms / oncall_notify_voice toggles exposed in UI for rotation teams.
-- Slack/Teams channels now support ContactPicker for individual contacts alongside freeform webhook URLs.
+- "Notify by SMS" / "Notify by Voice" toggles exposed in UI for rotation teams.
+- Slack/Teams channels can now target individual contacts from the contact picker alongside freeform webhook URLs.
 
 ### Contact Registry
 
 - IdP sync merge path — existing manual contacts promoted to managed on email match at login.
 - Bulk import now logs aggregate audit entry with imported/merged/skipped/errors counts.
 - Two-step modal redesign (Basic Info → Notification Channels).
-- Phone number normalization via react-phone-number-input (country code enforcement, auto-formatting).
-- ContactPicker filters to only show contacts with the required channel configured.
+- Phone numbers are normalized on entry (country code required, automatic formatting).
+- The contact picker shows only contacts that have the required channel configured.
 
 ### Fixes
 
-- User menu dropdown clipped by overflow-hidden on TopNavBar flex container.
-- UpsertContactFromIdP: email no longer NULL on fresh IdP contact creation.
+- User menu dropdown is no longer clipped by the top navigation bar.
+- Contacts created by identity provider sign-in now get their email address.
 - Toast regressions: acknowledged alerts no longer re-appear; dismissing via "View" works correctly; tab sleep/wake no longer causes burst toasts; toasts no longer render above modals.
-- Escalation teams: clone preserves junction-backed ContactIDs; ConfirmDialog renders via createPortal; SMS/Voice dispatch respects target_type and oncall_position_offset; delete of in-use teams succeeds.
+- Escalation teams: cloning a team keeps its selected contacts; the save-time warning dialog appears in front of the team editor; SMS/Voice dispatch respects the targeting chip and on-call position; deleting a team that is in use succeeds.
 
 ### Changed
 
