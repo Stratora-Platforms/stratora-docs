@@ -60,7 +60,7 @@ If the installer stopped an **upgrade**, move the server's files into a real fol
 
 Before you start:
 
-- Plan a maintenance window: Stratora is stopped while its files move, and the upgrade you run afterwards can take a while (about 15 minutes in our testing, mostly database changes).
+- Plan a maintenance window: Stratora is stopped while its files move, and the upgrade you run afterwards takes about 4-7 minutes on a normal server, and up to about 15 minutes in our testing on a server whose database has very many tables.
 - Make sure the drive that holds the path has room for the server's files (the `data` folder can be large).
 - Take a backup or a VM checkpoint of the server.
 - Run every command below **as an administrator**. Run `rmdir`, `mountvol` and `robocopy` in an elevated **Command Prompt** (`cmd.exe`), not in PowerShell: in PowerShell, `rmdir` is a different command that can delete the contents of the folder a link leads to.
@@ -190,7 +190,7 @@ Run the new Server installer as you did before, for example:
 msiexec /i Stratora-Server-X.Y.Z.msi /l*v upgrade.log
 ```
 
-The upgrade can take a while (about 15 minutes in our testing, mostly database changes); let it finish. The installer checks the folder again. If it still stops, read the new Event ID 4245 message: it names the folder that is still a link or a mounted volume folder.
+A normal upgrade takes about 4-7 minutes; on a server whose database has very many tables it can take up to about 15 minutes in our testing. Let it finish. The installer checks the folder again. If it still stops, read the new Event ID 4245 message: it names the folder that is still a link or a mounted volume folder.
 
 ### Step 4: Check the server
 
