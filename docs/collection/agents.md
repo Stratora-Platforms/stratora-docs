@@ -16,11 +16,13 @@ Unlike SNMP-based monitoring (which is polled by a [collector](./collectors.md))
 
 ## Supported Platforms
 
-| Platform | Installer | Tested Versions |
-|----------|-----------|-----------------|
-| Windows Server / Desktop | MSI (x64) | Windows Server 2016, 2019, 2022, 2025; Windows 10, 11 |
-| Ubuntu / Debian | `.deb` | Ubuntu 22.04 LTS, 24.04 LTS; Debian 12 (Bookworm), Debian 13 (Trixie) |
-| RHEL / Rocky / Alma | `.rpm` | RHEL 9.x; Rocky 8.x, 9.x; AlmaLinux 9.x |
+| Platform | Installer | Supported | Tested with 2.5.3 |
+|----------|-----------|-------------|-------------------|
+| Windows Server / Desktop | MSI (x64) | Windows Server 2016, 2019, 2022, 2025; Windows 10, 11 (64-bit) | Windows Server 2022 |
+| Debian / Ubuntu | `.deb` | amd64 with systemd | Debian 12, Ubuntu 24.04 LTS |
+| RHEL family | `.rpm` | amd64 with systemd | Rocky Linux 8 (SELinux enforcing) |
+
+Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported, and so are 64-bit Windows 10 and 11. This release was tested on Windows Server 2022. Linux distributions other than those listed were not tested with this release. Step-by-step install, upgrade and uninstall guides: [Windows Agent](/docs/installation/windows-agent) and [Linux Agent](/docs/installation/linux-agent). The Stratora server and every Remote Collector already include an agent, so you don't install one there.
 
 Per-platform prerequisites — firewall rules, supported distributions, and what to enable before deploying the agent — are documented in [Windows hosts](/docs/prerequisites/windows-hosts) and [Linux hosts](/docs/prerequisites/linux-hosts).
 
@@ -207,12 +209,7 @@ The agent is strictly push-only — it establishes outbound connections to the S
 
 **DNS:** The agent must be able to resolve the Stratora server FQDN configured in `server_url`. If DNS is unavailable, use a literal IP address.
 
-**TLS:** HTTPS is mandatory.
-
-- **Linux:** if the Stratora server uses a self-signed certificate, set `"insecure_skip_verify": true` in `/etc/stratora/agent.json` to suppress verification. Default is verify-on.
-- **Windows:** the Windows agent currently does not verify the server's TLS certificate regardless of validity. Production deployments should still use a valid certificate, because Linux agents and the browser-side UI do enforce verification.
-
-Production deployments should use a valid certificate instead of relying on the Windows agent's skip behavior.
+**TLS:** HTTPS is mandatory, and both the Windows and the Linux agent always verify the server's certificate; this can't be turned off. They trust the server through its server trust key, whose pin is part of the enrollment token (`enroll_<secret>.sha256:<pin>`), so a self-signed server certificate works from the first connection. Copy the whole token. The Linux agent ignores an `insecure_skip_verify` setting from earlier versions, with a warning. See [SSL / TLS Certificates](../administration/ssl-tls-certificates.md#how-collectors-and-agents-trust-the-server).
 
 **HTTP/HTTPS proxy:** The current agent HTTP client is configured with an explicit `http.Transport` that does **not** honor `HTTP_PROXY` / `HTTPS_PROXY` environment variables. Deploying behind a forward proxy is not supported in this release — the agent host must have direct outbound HTTPS reachability to the Stratora server.
 
@@ -300,7 +297,7 @@ To change how a node appears, update the hostname on the server itself (`hostnam
 
 When a monitored server is renamed, the Stratora agent continues reporting under the original node record using its stored node ID. Routine hostname changes are reflected automatically via the agent's heartbeat — no action is required in this case.
 
-Re-enrollment on the **same hostname** is also clean: the existing node and component records are updated in place and a new API key is issued (see [Enrollment → Re-Enrollment](./enrollment.md#re-enrollment)). You can reimage a server and reinstall the agent with the same enrollment token without creating a duplicate.
+Re-enrollment on the **same hostname** is also clean: the existing node and component records are updated in place and a new API key is issued (see [Enrollment → Re-Enrollment](./enrollment.md#re-enrollment)). You can reimage a server and reinstall the agent without creating a duplicate, with an enrollment token created with **Allow replacing an existing component**; an ordinary token is refused for a hostname that is already enrolled.
 
 The **only** scenario that produces a duplicate node entry is when the agent configuration is wiped **and** the host's hostname has changed between the original enrollment and the re-enrollment (for example, an OS reinstall on a renamed server). In that case, Stratora has no way to correlate the new hostname with the old node, so it creates a fresh node under the new hostname.
 

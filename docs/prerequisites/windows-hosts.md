@@ -14,12 +14,14 @@ A **Hyper-V host is just a Windows host** running the Stratora Agent — the age
 
 ## Supported Windows versions
 
-The Stratora Agent supports the following 64-bit Windows versions:
+The Stratora Agent supports these 64-bit Windows versions:
 
-- Windows Server 2016, 2019, 2022, 2025
+- Windows Server 2016, 2019, 2022 and 2025
 - Windows 10, Windows 11
 
-32-bit Windows is not supported.
+This release was tested on Windows Server 2022. 32-bit Windows is not supported.
+
+You don't need the standalone agent on the Stratora server or on a Remote Collector's computer: both already include an agent, and the agent installer refuses to install next to a Remote Collector.
 
 ## Install prerequisites
 
@@ -63,6 +65,7 @@ For most fleets, the agent path is simpler than WMI and is the recommended choic
 
 ## Where to go next
 
-- Agent installation: [Agents](/docs/collection/agents)
+- Agent installation: [Install the Windows Agent](/docs/installation/windows-agent)
+- What the agent collects: [Agents](/docs/collection/agents)
 - Network port matrix: [Network](/docs/prerequisites/network)
 - Verifying reachability: [Verification](/docs/prerequisites/verification)
