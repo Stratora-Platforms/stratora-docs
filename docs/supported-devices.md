@@ -84,7 +84,7 @@ Environmental alerting (temperature, fan, PSU) is available on the **Server BMC*
 | Generic | — | WAN Circuit | Any host | **Real-world validated** | Reachability (device down, packet loss, latency, jitter) |
 | Out-of-band (IPMI · Redfish) | non-SNMP BMCs (Supermicro · Lenovo · Cisco · generic) | — | — | **Not supported** | Dell iDRAC + HPE iLO are supported over SNMP (rows above). IPMI is a deliberate exclusion for security reasons; Redfish is not supported |
 
-Every row is derived from a device template's validation record. The Alerts column lists only the built-in alerts Stratora evaluates for that device's collected data; Reachability (device down) applies to every device. Hyper-V, Proxmox, and Nutanix are monitored through their own agent/API collectors rather than an SNMP template, so they are covered separately, not in this SNMP-oriented matrix.
+Every row is derived from a device template's validation record. The Alerts column lists only the built-in alerts Stratora evaluates for that device's collected data; Reachability (device down) applies to every device. Hyper-V and Proxmox are monitored through their own agent/API collectors rather than an SNMP template, so they are covered separately, not in this SNMP-oriented matrix.
 
 ## Features at a different level
 

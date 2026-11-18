@@ -14,7 +14,29 @@ Stratora provides two types of interactive maps for visualizing your infrastruct
 
 Both map types use the same **three-panel builder pattern** as dashboards: a left sidebar for browsing available items, a center canvas for placement, and a right panel for properties and configuration. Both support edit/view mode separation and can be embedded as panels inside dashboards.
 
-To see devices on your own floor plans instead, use the site's Facility tab: see [Facility Maps](./facility-maps.md).
+The Maps page also lists **facility maps**: the floor plans of your sites, with live status for the nodes, racks and spaces placed on them. They are built on each site's Facility tab: see [Facility Maps](./facility-maps.md).
+
+---
+
+## The Maps page
+
+**Monitoring → Maps** lists every map you can see.
+
+- **Tabs.** **All**, **Network**, **World** and **Facility**, each with its count. The **Facility** tab and facility maps appear for users who can see floor plans (`facility:view`).
+- **Search maps...** filters the list as you type. **All Sites** narrows it to one site's maps.
+- **Name** and **Recent** sort the list; click again to reverse the order.
+- The **grid** and **list** buttons switch between cards and a table.
+- **New Map** offers **Network Map**, **World Map** and, for users with `facility:edit`, **Facility Map**.
+
+Each card shows the map's type badge (**Network**, **World** or **Facility**), its name, its site, how many elements, pins or placed items it has, and when it last changed. Click a card to open the map. For network and world maps, **Edit**, **Rename**, **Duplicate** and **Delete** are on the card and in the list view, for users who may change maps.
+
+### Facility maps
+
+A facility map's card has a **Facility** badge and shows its site, building and floor, how many nodes, racks and spaces are placed on it ("N placed"), and its last change. Clicking it opens the plan on the site's Facility tab, at that floor. **Edit** (with `facility:edit`) opens the plan in the layout editor there. The Maps page has no **Rename**, **Duplicate** or **Delete** for facility maps: plans are replaced and deleted on the site's Facility tab.
+
+**New Map → Facility Map** asks for a site, then opens that site's Facility tab with **Upload a floor plan** open. See [Facility maps on the Maps page](./facility-maps.md#facility-maps-on-the-maps-page).
+
+<!-- SCREENSHOT TODO (maps-facility-tab): Maps page, Facility tab selected, grid view, 1440x900, Halden data. Same shot as on the Facility Maps page. See the shot list in the PR. -->
 
 ---
 
@@ -35,7 +57,7 @@ A topology map is a visual diagram of your infrastructure — devices, connectio
 
 ### Building a Topology Map
 
-1. Navigate to **Monitoring → Maps** and click **New Topology Map**
+1. Navigate to **Monitoring → Maps** and click **New Map → Network Map**. Give it a name (a description and site are optional) and click **Create Network Map**
 2. The builder opens with three panels:
    - **Left sidebar** — browse available devices to place on the canvas
    - **Center canvas** — the interactive diagram area with pan and zoom
@@ -129,7 +151,7 @@ Pin colors reflect real-time health based on node reachability:
 
 ### Building a World Map
 
-1. Navigate to **Monitoring → Maps** and click **New World Map**
+1. Navigate to **Monitoring → Maps** and click **New Map → World Map**. Give it a name (a description and site are optional) and click **Create World Map**
 2. The builder opens with three panels:
    - **Left sidebar** — browse sites, network maps, and other world maps available for pinning
    - **Center canvas** — interactive geographic map with pan and zoom

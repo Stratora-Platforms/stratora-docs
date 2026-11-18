@@ -242,7 +242,7 @@ Navigate to **Settings → External Notifications → SMS & Voice**.
 | Mode | Inbound Handling | Best For |
 |------|-----------------|----------|
 | **Bidirectional** | Twilio sends inbound SMS directly to Stratora via webhook | Internet-accessible deployments |
-| **Polling** | Stratora polls a Twilio Sync Map for reply actions | Air-gapped or outbound-only networks |
+| **Polling** | Stratora polls a Twilio Sync Map for reply actions | Networks that accept no inbound connections from the internet but can reach Twilio over outbound HTTPS |
 | **Outbound Only** | No inbound handling — SMS body omits reply instructions | Send-only alerting |
 
 ### Bidirectional Mode Setup
@@ -270,7 +270,7 @@ If you point `external_url` at an **internal** name (so in-app email links resol
 
 ### Polling Mode Setup
 
-Polling mode is designed for air-gapped or segmented networks where Stratora cannot receive inbound connections from the internet.
+Polling mode is designed for segmented networks where Stratora cannot receive inbound connections from the internet. Stratora still needs outbound HTTPS to Twilio to send messages and poll for replies, so it does not work on a fully air-gapped network.
 
 1. **Create a Sync Service** in the Twilio Console, copy the Service SID
 2. **Create a Sync Map** named `alert-actions` (or configure a custom name)

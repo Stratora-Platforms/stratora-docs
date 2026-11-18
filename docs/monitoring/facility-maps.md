@@ -7,6 +7,14 @@ title: Facility Maps
 
 Facility maps show where your infrastructure sits and how it is doing, on your own floor plans. Each [site](../infrastructure/sites.md) has a **Facility** tab. Upload a floor plan for each floor, place nodes, racks and spaces (network closets, MDFs, IDFs, server rooms, rooms and areas) on it, and see their live status at a glance. Select anything on the plan to open a side panel with its health, devices, connections, power and environment readings and alerts. Live status on the plan refreshes every 30 seconds. A floor plan can also be shown on a dashboard (see [Floor plans on dashboards](#floor-plans-on-dashboards)).
 
+A facility map is one floor plan of a site. You reach facility maps in three ways:
+
+- **From the site**: **Infrastructure → Sites**, open the site, **Facility** tab. This is where plans are uploaded, laid out, replaced and deleted.
+- **From the Maps page**: **Monitoring → Maps** lists every facility map you can see, next to network and world maps, and **New Map → Facility Map** starts a new one (see [Facility maps on the Maps page](#facility-maps-on-the-maps-page)).
+- **From search**: the search box at the top of every page finds facility maps, buildings, floors and spaces (see [Finding facility maps with search](#finding-facility-maps-with-search)).
+
+Whichever way you come in, the plan opens on the site's Facility tab.
+
 ![Facility tab: a floor plan with live status markers, and the side panel for the network closet IDF-B open beside it](/img/monitoring/facility-space-overview.png)
 
 Facility maps are included in every edition: Community, Pro and Enterprise.
@@ -17,11 +25,16 @@ Screenshots on this page show a fictional site with example readings.
 
 ## Who can use it
 
-| Role | Facility tab |
-|------|--------------|
-| **Admin** | View, upload plans and photos, edit layouts |
-| **Operator** | View, upload plans and photos, edit layouts |
-| **Viewer** | View, read-only |
+Two permissions control facility maps:
+
+- **`facility:view`** lets a user see floor plans: on the site's Facility tab, on the Maps page, in search and in dashboard panels.
+- **`facility:edit`** lets a user upload, replace and delete plans, add and delete spaces, floors and buildings, set the scale, upload photos and edit layouts. It also gives **New Map → Facility Map** and **Edit** on the Maps page.
+
+| Role | Permissions | Facility maps |
+|------|-------------|---------------|
+| **Admin** | `facility:view`, `facility:edit` | View, upload plans and photos, edit layouts |
+| **Operator** | `facility:view`, `facility:edit` | View, upload plans and photos, edit layouts |
+| **Viewer** | `facility:view` | View, read-only |
 
 Viewers see every floor plan of a site, with its markers, live status, hover cards and side panels, like they see topology maps. They have no **Plan** menu, no **Edit layout** and no photo upload, and the server refuses any Facility change from them.
 
@@ -31,14 +44,15 @@ See [User Roles & Permissions](../administration/user-roles-and-permissions.md).
 
 ## Getting started
 
-1. Go to **Infrastructure → Sites**, open a site and choose the **Facility** tab.
+1. Go to **Infrastructure → Sites**, open a site and choose the **Facility** tab. Or, on **Monitoring → Maps**, choose **New Map → Facility Map** and pick the site (see [New Map → Facility Map](#new-map--facility-map)).
 2. Click **Upload a floor plan**. Choose the floor (or **New floor…** to create one) and the plan: an image, or a PDF.
    - An image must be **PNG or JPEG**, up to **25 MB**, **8192 px** on the longest side and 40 megapixels in all.
    - From a **PDF** (up to 50 MB and 200 pages), you import one page: pick it in the preview. Your browser converts that page to a PNG image and uploads the image. The PDF itself is never sent to the server. Password-protected PDFs are refused, and a PDF that is too complex to convert asks you to export the page as PNG instead. **Cancel** stops a conversion at any time.
 
    ![Upload a floor plan: a two-page PDF, with page 2 chosen in the preview](/img/monitoring/facility-upload-pdf.png)
 
-   - If the site has no buildings or floors yet, the first upload creates "Main building" and "Ground floor". You can rename and add more in **Buildings and floors**.
+   - If the site has no buildings or floors yet, the first upload creates "Main building" and "Ground floor". On a site that has floors, pick a floor that has no plan yet, or choose **New floor…** and give the floor a name and, optionally, a level (-20 to 300). A new floor goes into the site's building.
+   - A plan is named after its floor.
 3. Add the spaces you want to show (closets, MDFs, IDFs, server rooms, rooms and areas) in **Plan → Buildings and floors → Add a space**. Spaces go under a floor. A floor or an area can hold every type of space, so an IDF can sit inside a production area; any other space can hold rooms, closets and areas.
 4. Click **Edit layout** and place your nodes, racks and spaces on the plan (see [Editing the layout](#editing-the-layout)). Click **Save**.
 5. Optionally, use **Plan → Set scale** so the plan shows a scale bar (see [Setting the scale](#setting-the-scale)).
@@ -208,10 +222,12 @@ When you upload a photo or a floor plan image, Stratora removes the location, ca
 The **Plan** menu (desktop) holds:
 
 - **Replace plan**: upload a new image for this floor. Markers keep their places relative to the plan.
-- **Add floor plan**: upload a plan for another floor.
-- **Buildings and floors**: add buildings, floors and spaces, and delete empty floors and buildings.
+- **Add floor plan**: upload a plan for another floor, or create a new floor with it (**New floor…**).
+- **Buildings and floors**: lists the site's buildings, floors and spaces, adds spaces, and deletes spaces and empty floors and buildings. A floor or building that still has a floor plan cannot be deleted: delete the plan first.
 - **Set scale** and **Clear scale**: see [Setting the scale](#setting-the-scale).
 - **Delete plan**: removes the plan image and its markers, after asking. The floor stays.
+
+The Facility tab has no rename or duplicate for floor plans, buildings, floors or spaces. To give a plan another image, use **Replace plan**. To start a floor over, delete its plan and upload a new one.
 
 ![The Plan menu on the Facility tab](/img/monitoring/facility-plan-menu.png)
 
@@ -226,6 +242,73 @@ Deleting a plan, floor, building or site also removes its plan image files. Dele
 ![A calibrated plan with its scale bar in the bottom-left corner](/img/monitoring/facility-scale-bar.png)
 
 When you replace the image of a calibrated plan, the scale is kept if the new image has the same proportions, and cleared if it does not.
+
+---
+
+## Facility maps on the Maps page
+
+**Monitoring → Maps** lists facility maps next to [network and world maps](./maps.md). Each floor plan you can see is one facility map. The Maps page shows them and links to them; the plans themselves still live on their site's Facility tab.
+
+<!-- SCREENSHOT TODO (maps-facility-tab): Maps page, Facility tab selected, grid view, 1440x900, Halden data. See the shot list in the PR. -->
+
+### Tabs
+
+The tabs at the top read **All**, **Network**, **World** and **Facility**, each with its count. **All** lists every map; **Facility** lists only facility maps. Users without `facility:view` see no **Facility** tab and no facility maps.
+
+### Facility map cards
+
+<!-- SCREENSHOT TODO (maps-facility-cards): close-up of two or three facility map cards in grid view, 1440x900, Halden data. See the shot list in the PR. -->
+
+A facility map's card, or its row in the list view, shows:
+
+- a **Facility** badge;
+- the plan's name, with its building and floor under it when they differ from the name;
+- its **site**;
+- how many nodes, racks and spaces are placed on it, for example "12 placed";
+- when it last changed.
+
+### Search, filter, sort and view
+
+The controls above the list work for facility maps as they do for the other maps:
+
+- **Search maps...** filters the list as you type.
+- **All Sites** narrows the list to one site's maps.
+- **Name** and **Recent** sort by name or by the last change. Click again to reverse the order.
+- The **grid** and **list** buttons switch between cards and a table.
+
+### Opening and editing a facility map
+
+- **Click a card** (or **View**) to open the plan on its site's Facility tab, at that floor.
+- **Edit** opens the same plan with the layout editor open. It needs `facility:edit` and a screen at least 768 px wide; on a narrower screen the plan opens for viewing.
+- Facility maps have no **Rename**, **Duplicate** or **Delete** on the Maps page. Replace and delete a plan, and manage its floors and spaces, on the site's Facility tab (see [Plans, floors and buildings](#plans-floors-and-buildings)).
+
+### New Map → Facility Map
+
+With `facility:edit`, the **New Map** menu has a **Facility Map** entry ("Floor plan of a site with live status") next to **Network Map** and **World Map**.
+
+<!-- SCREENSHOT TODO (maps-new-facility-map): Maps page with the New Map menu open, showing Network Map, World Map and Facility Map, 1440x900, Halden data. See the shot list in the PR. -->
+
+1. On **Monitoring → Maps**, click **New Map → Facility Map**.
+2. In **Create Facility Map**, choose the **Site**. If a site is chosen in the **All Sites** filter, it is picked for you.
+
+   <!-- SCREENSHOT TODO (maps-facility-site-picker): the Create Facility Map dialog with a site chosen, 1440x900, Halden data. See the shot list in the PR. -->
+
+3. Click **Continue to site**. The site's Facility tab opens with **Upload a floor plan** already open. Continue from step 2 of [Getting started](#getting-started).
+
+There is no separate builder for facility maps: the new map is the floor plan you upload on the site.
+
+---
+
+## Finding facility maps with search
+
+The search box at the top of every page (**Ctrl+K**) finds facility maps and the places on them. See [Search](./search.md) for everything search covers.
+
+- **Facility Maps**: floor plans, found by the plan's name or by its site, building or floor name. A result opens the plan on the site's Facility tab.
+- **Buildings, Floors & Spaces**: buildings, floors, rooms, network closets, MDFs, IDFs, server rooms and areas, found by name, with their type and site. A floor opens its plan. A space that is placed on a plan opens that plan with the space selected and its side panel open. A space that is not placed on any plan opens the plan of the nearest floor above it.
+
+<!-- SCREENSHOT TODO (search-facility-location): top bar search for a space name, showing the Buildings, Floors & Spaces section, 1440x900, Halden data. See the shot list in the PR. -->
+
+These results follow `facility:view` and the sites you can see, like the Facility tab.
 
 ---
 
