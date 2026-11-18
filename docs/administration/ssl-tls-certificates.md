@@ -119,13 +119,13 @@ DNS provider credentials are encrypted at rest with AES-256-GCM.
 
 Route 53 DNS validation runs the AWS CLI (`aws.exe`). Stratora uses either the copy the Server installs in the `aws-cli` folder of its install folder, or an AWS CLI v2 installed with its MSI in `C:\Program Files\Amazon\AWSCLIV2`. It uses a copy only from a folder that nobody but SYSTEM, Administrators and TrustedInstaller can change, and that includes the folders above it. It never uses an `aws` found on the PATH. Without such a copy, Route 53 DNS validation refuses to run: the provider test (**Test connection** on the provider card) and the SSL/TLS page show a message that names the cause and the steps to fix it. Other DNS providers are not affected.
 
-**A server installed in `C:\Stratora`.** There, the bundled `aws-cli` folder is refused. Do not change its permissions in place. Instead:
+**A server installed in `C:\Stratora`.** There, the bundled `aws-cli` folder inherits rights from `C:\` that let other users add files to it, so it is refused. Do not change its permissions in place. Instead:
 
 1. Install the AWS CLI v2 with its MSI from AWS. It installs to `C:\Program Files\Amazon\AWSCLIV2`, which Stratora uses next.
 2. Restart the Stratora backend (`Restart-Service StratoraBackend` from PowerShell opened with **Run as administrator**).
 3. Run **Test connection** on the Route 53 provider. It must succeed.
 
-**The owner of `C:\`.** On a standard Windows install the root of the system drive is owned by TrustedInstaller. If `C:\` has a different owner, Route 53 DNS validation refuses to run. Route 53 validation that worked before an upgrade to 2.5.3 can stop after it. With such an owner, the server can also log an "install folder permissions" warning that names `C:\` and its owner. To check the owner, run this in PowerShell:
+**The owner of `C:\`.** On a standard Windows install the root of the system drive is owned by TrustedInstaller. If `C:\` has a different owner, Route 53 DNS validation refuses to run. Before 2.5.3 Stratora did not check this, so Route 53 validation that worked before an upgrade to 2.5.3 can stop after it. With such an owner, the server can also log an "install folder permissions" warning that names `C:\` and its owner. To check the owner, run this in PowerShell:
 
 ```powershell
 (Get-Acl C:\).Owner
