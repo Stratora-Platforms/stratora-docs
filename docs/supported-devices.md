@@ -34,7 +34,7 @@ The level shown in the matrix is the highest level reached by any of the device'
 
 ## A note on environmental alerting
 
-Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller — and on the QNAP and Synology NAS templates. Room temperature and humidity alerting is available on the **Environmental sensor** template, and power alerting (on battery, battery low, runtime, overload) on the **UPS** and **PDU** templates. It is **not** available on network-device templates (switches, routers, firewalls, access points): some of those templates collect sensor readings (listed under Features at a different level), but no built-in alert uses them. Environmental alerts are not available for network gear.
+Environmental alerting (temperature, fan, PSU) is available on the **Server BMC** templates (Dell iDRAC, HPE iLO) — polled out-of-band from the server's management controller — and on the QNAP and Synology NAS templates. Room temperature and humidity alerting is available on the **Environmental sensor** templates, and power alerting (on battery, battery low, runtime, overload) on the **UPS** and **PDU** templates. It is **not** available on network-device templates (switches, routers, firewalls, access points): some of those templates collect sensor readings (listed under Features at a different level), but no built-in alert uses them.
 
 ## Device matrix
 
@@ -66,9 +66,15 @@ Environmental alerting (temperature, fan, PSU) is available on the **Server BMC*
 | Server BMC (out-of-band) | Dell | iDRAC | Auto-recognized (unverified) | **Simulated** | Reachability · Temperature · Fan · PSU · PSU redundancy |
 | Server BMC (out-of-band) | HPE | iLO | Auto-recognized (unverified) | **Code only** | Reachability · Temperature · Fan · PSU · PSU redundancy |
 | UPS | APC | Smart-UPS | Auto-recognized (unverified) | **Code only** | Reachability · On battery · Battery low · Runtime low · UPS overload |
+| UPS | Eaton | UPS (XUPS-MIB) | Auto-recognized (unverified) | **Code only** | Reachability · On battery · Battery low · Runtime low · UPS overload |
 | UPS | Generic | RFC 1628 UPS-MIB | Auto-recognized (unverified) | **Code only** | Reachability · On battery · Battery low · Runtime low · UPS overload |
 | PDU | APC | Rack PDU (rPDU2) | Auto-recognized (unverified) | **Code only** | Reachability · PDU overload · PDU phase overload · PDU bank overload |
+| PDU | Eaton | ePDU (G3/G4) | Auto-recognized (unverified) | **Code only** | Reachability · PDU phase overload · PDU bank overload |
+| PDU | Raritan | PX (PDU2-MIB) | Auto-recognized (unverified) | **Code only** | Reachability · PDU overload · PDU phase overload · PDU bank overload |
+| PDU | ServerTech | Sentry4 | Auto-recognized (unverified) | **Code only** | Reachability · PDU overload · PDU phase overload · PDU bank overload |
+| Environmental sensor | APC | NetBotz 750/755 | Auto-recognized (unverified) | **Code only** | Reachability · Temperature out of range · Humidity out of range |
 | Environmental sensor | Generic | ENTITY-SENSOR-MIB | Manual add | **Code only** | Reachability · Temperature out of range · Humidity out of range |
+| Environmental sensor | Vertiv | Geist Watchdog (V5) | Manual add | **Code only** | Reachability · Temperature out of range · Humidity out of range |
 | Hypervisor (VMware ESXi) | VMware | ESXi | Auto-recognized | **Real-world validated** | Reachability · Interface · Memory overcommit · Host CPU, host memory, host network, VM CPU, VM memory (via vCenter Server) |
 | Hypervisor mgmt (vCenter) | VMware | vCenter Server | API-connected | **Real-world validated** | Reachability |
 | Server | Any (OS-based) | Linux Server | Enrolled (agent) | **Real-world validated** | Reachability · CPU · Memory · Disk · Service state |
