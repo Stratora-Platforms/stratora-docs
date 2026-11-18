@@ -55,7 +55,7 @@ Notification delivery time depends on the channel:
 
 ## ACK / Escalate Response (SMS Polling Mode)
 
-In air-gapped or outbound-only deployments, Stratora uses Twilio Sync polling to receive ACK and ESCALATE replies sent via SMS. The poll interval is configurable (default: 15 seconds).
+In deployments that accept no inbound connections from the internet, Stratora uses Twilio Sync polling to receive ACK and ESCALATE replies sent via SMS. The poll interval is configurable (default: 15 seconds).
 
 | Action | Response Latency (polling mode) |
 |--------|---------------------------------|
