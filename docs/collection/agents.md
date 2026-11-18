@@ -80,10 +80,10 @@ curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/
 sudo dpkg -i /tmp/stratora-agent.deb
 ```
 
-2. Write the agent configuration and start the service:
+2. Create the agent configuration file (owned by the `stratora` user, mode `0600`), write the configuration and start the service:
 
 ```bash
-sudo tee /etc/stratora/agent.json << 'EOF'
+sudo install -m 0600 -o stratora -g stratora /dev/null /etc/stratora/agent.json && sudo tee /etc/stratora/agent.json > /dev/null << 'EOF'
 { "server_url": "https://stratora.example.com", "enrollment_token": "enroll_xxxxx", "site_name": "Main Office" }
 EOF
 sudo systemctl enable --now stratora-agent
@@ -98,10 +98,10 @@ curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/
 sudo rpm -i /tmp/stratora-agent.rpm
 ```
 
-2. Write the agent configuration and start the service:
+2. Create the agent configuration file (owned by the `stratora` user, mode `0600`), write the configuration and start the service:
 
 ```bash
-sudo tee /etc/stratora/agent.json << 'EOF'
+sudo install -m 0600 -o stratora -g stratora /dev/null /etc/stratora/agent.json && sudo tee /etc/stratora/agent.json > /dev/null << 'EOF'
 { "server_url": "https://stratora.example.com", "enrollment_token": "enroll_xxxxx", "site_name": "Main Office" }
 EOF
 sudo systemctl enable --now stratora-agent
@@ -134,13 +134,15 @@ If the agent doesn't appear, check:
 - **StratoraAgent** — Windows service managing the agent lifecycle (register/heartbeat, hostname detection, role detection, Telegraf config generation)
 - **stratora-agent-telegraf** — Windows service running the embedded Telegraf instance that collects and ships metrics
 - **stratora-tray.exe** — system-wide tray indicator (launched at logon for every interactive user) that shows agent connection status and links to logs
-- Installed to `C:\Program Files\Stratora\`, with configuration and logs under `C:\ProgramData\Stratora\`
+- Installed to `C:\Program Files\Stratora\`, with the configuration (`config.json`) in that folder
+- Agent log at `C:\Program Files\Stratora\logs\agent.log` (when it reaches 10 MB it is renamed to `agent.<date>-<time>.log` and a new one starts)
+- `C:\ProgramData\Stratora\`: the agent writes only its status file, `agent-status.json`, there. The installer also creates a `C:\ProgramData\Stratora\logs` folder, but the agent does not write its log there.
 
 ### Linux
 
 - **stratora-agent** — systemd service at `/opt/stratora/bin/stratora-agent`, running as the `stratora` user
 - Embedded Telegraf managed as a subprocess (linked to the system package's `telegraf` binary at install time if available)
-- Configuration at `/etc/stratora/agent.json`
+- Configuration at `/etc/stratora/agent.json` (owner `stratora`, mode `0600`; the agent and the package keep it that way)
 - State at `/var/lib/stratora/`
 - Logs via journald: `journalctl -u stratora-agent -f`
 
@@ -218,33 +220,35 @@ Production deployments should use a valid certificate instead of relying on the 
 
 ## Updating the Agent
 
+For the full upgrade procedure and the upgrade order (server first, then every collector and agent), see [Upgrading Stratora](../administration/upgrading-stratora.md).
+
 Agents upgrade in-place. Configuration, the enrolled component ID, and the component API key are preserved across upgrades, so **an upgraded agent does not re-enroll** and keeps its existing node record.
 
 ### Windows
 
-Run the new `StratoraAgent-X.Y.Z.msi` installer (interactively or silently) — WiX's `MajorUpgrade` schedule removes the older product after the new one is installed. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade; there is a brief metric gap (typically &lt;30 seconds) while the new Telegraf binary takes over.
+Download `StratoraAgent.msi` from your upgraded server (**Collection → Agents**, or `/api/v1/downloads/agent/windows`) and run it. The command line below is the simpler way: the interactive installer asks for a server URL and an enrollment token even on an upgrade, although the upgrade keeps the agent's enrollment and does not use them. The installer removes the older version inside the same installation and only then installs the new files. If the upgrade fails or is cancelled, Windows Installer puts the older version back. The `stratora-agent-telegraf` service is stopped and restarted as part of the upgrade, so there is a brief gap in that host's metrics.
 
 ```cmd
-msiexec /i StratoraAgent-X.Y.Z.msi /qn
+msiexec /i StratoraAgent.msi /qn
 ```
 
-The config file under `C:\Program Files\Stratora\` is explicitly preserved — the installer does not declare `RemoveFile` entries on the config component, specifically to prevent MajorUpgrade from deleting enrolled credentials.
+The upgrade keeps the agent's `config.json` and its install folder, including a custom one.
 
 ### Linux
 
-Install the new package directly over the old one:
+Download the new package from your upgraded server and install it directly over the old one:
 
 ```bash
 # Debian / Ubuntu
-sudo dpkg -i stratora-agent_X.Y.Z_amd64.deb
-sudo systemctl restart stratora-agent
+curl -sko /tmp/stratora-agent.deb https://stratora.example.com/api/v1/downloads/agent/linux-deb
+sudo dpkg -i /tmp/stratora-agent.deb
 
 # RHEL / Rocky / Alma
-sudo rpm -U stratora-agent-X.Y.Z-1.x86_64.rpm
-sudo systemctl restart stratora-agent
+curl -sko /tmp/stratora-agent.rpm https://stratora.example.com/api/v1/downloads/agent/linux-rpm
+sudo rpm -U /tmp/stratora-agent.rpm
 ```
 
-The postinst scripts reload systemd and keep `/etc/stratora/agent.json` in place. The embedded Telegraf subprocess is restarted by the agent on its next startup cycle.
+The packages keep `/etc/stratora/agent.json` in place and restart the agent on the new version by themselves. The `.deb` also starts an enrolled agent that an older package stopped during the upgrade, and leaves a stopped agent off when it is masked, or when you disabled it before an upgrade from 2.5.3 or later (an upgrade from 2.5.1 or 2.5.2 enables the service again). The `.rpm` restarts a running agent and enables the service. See [Upgrading Stratora](../administration/upgrading-stratora.md#linux-agent-debian--ubuntu-deb) for the details.
 
 ### After upgrade
 
