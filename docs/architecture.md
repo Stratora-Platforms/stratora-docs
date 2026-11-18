@@ -319,7 +319,7 @@ The Stratora server runs on a single machine: one backend, one bundled PostgreSQ
 
 | Layer | Technology | Why |
 |-------|------------|-----|
-| Backend | Go 1.24, Gin | Performance, concurrency, single binary |
+| Backend | Go 1.26, Gin | Performance, concurrency, single binary |
 | Frontend | React 19, TypeScript, Tailwind, Vite | Component model, ecosystem, React Query |
 | Metrics DB | VictoriaMetrics | PromQL, compression, performance |
 | Metadata DB | PostgreSQL | Reliability, JSONB support, migrations |

@@ -198,7 +198,7 @@ Stratora can notify your team when a maintenance window starts and ends, so on-c
 - **Notify on end** — sends a notification when monitoring resumes
 - Select which **channels** to use: Email, Slack, Teams, or Webhook
 
-Only channels you have configured under Integrations will appear.
+Only channels you have configured in [External Notifications](../integrations/external-notifications.md) appear.
 
 #### Step 5 — Review
 
