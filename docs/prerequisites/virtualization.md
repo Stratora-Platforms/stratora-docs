@@ -38,7 +38,7 @@ esxcli system snmp set --enable true
 
 ## Proxmox VE
 
-- **An API token.** Create one under **Datacenter → Permissions → API Tokens**. Use a **cluster-wide** token (any member's API returns cluster-wide data) and grant it a **read-only** role — `PVEAuditor` at path `/` is sufficient. Note the token ID (`user@realm!name`) and secret at creation time; the secret is shown once.
+- **An API token.** Create one under **Datacenter → Permissions → API Tokens**. Use a **cluster-wide** token (any member's API returns cluster-wide data) and grant it a **read-only** role — `PVEAuditor` at path `/` is the role Stratora is tested with. Note the token ID (`user@realm!name`) and secret at creation time; the secret is shown once.
 - **Network:** the Collector reaches a Proxmox host on **8006/TCP (HTTPS)**.
 - **Credential:** a **Proxmox VE API Token** credential in Stratora.
 
