@@ -9,6 +9,8 @@ title: Data Retention
 
 Stratora stores time-series metric data in [VictoriaMetrics](https://victoriametrics.com/). The **data retention** settings control how long this data is kept — balancing storage costs, query performance, and compliance requirements.
 
+The same retention period also applies to the [audit log](./audit-logs.md): audit entries older than it are deleted once a day.
+
 ---
 
 ## How Retention Works
@@ -51,6 +53,13 @@ The minimum retention period is **30 days**. The maximum is **3,650 days** (10 y
 3. Stratora updates the VictoriaMetrics configuration and restarts the metrics service automatically
 
 The change takes effect within seconds. No manual service restarts are required.
+
+### The audit log follows this value
+
+The value on this page also sets how long the [audit log](./audit-logs.md#retention) is kept. Audit entries older than it are deleted at the next daily cleanup.
+
+- If a save would delete audit entries that the audit log keeps today (because the new value is shorter), the page warns which entries go before you save.
+- On a server upgraded to 2.5.3 from an earlier version, the audit log keeps at least 90 days until you next save this page, and the page says so. Earlier versions always kept 90 days of audit log.
 
 ---
 

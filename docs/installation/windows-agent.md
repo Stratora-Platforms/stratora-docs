@@ -22,7 +22,7 @@ The agent installer is `StratoraAgent.msi`. It installs:
 
 | Requirement | Details |
 |---|---|
-| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. The installer allows Windows Server 2016 and 2019 and Windows 10 and 11, but they were not tested with this release. |
+| Operating system | Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported, and so are 64-bit Windows 10 and 11. This release was tested on Windows Server 2022. |
 | Account | A local administrator. |
 | Network | Outbound HTTPS (TCP 443) to the Stratora server. The agent never listens on a port and doesn't use a proxy. |
 | Reachability | Allow inbound ICMP Echo Request, or the node looks unreachable. See [Windows hosts](/docs/prerequisites/windows-hosts). |
@@ -38,7 +38,17 @@ The agent installer is `StratoraAgent.msi`. It installs:
 
 ### Get the installer
 
-From your Stratora server: **Collection → Agents**, **Download Agent MSI**, or `https://<your-stratora-server>/api/v1/downloads/agent/windows`. It downloads as `StratoraAgent.msi`. The Agents page also shows a ready-made install command with your server address and token filled in.
+From your Stratora server: **Collection → Agents**, **Download Agent MSI**, or `https://<your-stratora-server>/api/v1/downloads/agent/windows`. It downloads as `StratoraAgent.msi`. The Agents page also shows a ready-made install command with your server address and token filled in. The copy your server offers comes from the Server installer, whose checksum you checked when you installed the server.
+
+The releases page also publishes the Agent installer as `StratoraAgent-X.Y.Z.msi`. If you download it from there, check its SHA-256 against the value published in the release notes before you run it:
+
+```powershell
+Get-FileHash .\StratoraAgent-X.Y.Z.msi -Algorithm SHA256
+```
+
+:::note Unsigned installers
+The Stratora installers are not code-signed. Windows shows them as coming from an unknown publisher, and Microsoft Defender SmartScreen or Microsoft Defender Antivirus may warn about them or block them. Before you run an installer, check its SHA-256 checksum against the published value.
+:::
 
 ---
 

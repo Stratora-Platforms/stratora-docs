@@ -65,6 +65,14 @@ sudo dnf install /tmp/stratora-agent.rpm        # or: sudo rpm -i /tmp/stratora-
 
 `curl -k` skips certificate verification for this download only. Leave it out if the host trusts the server's certificate. The agent itself always verifies the server.
 
+The releases page also publishes the packages as `stratora-agent_X.Y.Z_amd64.deb` and `stratora-agent-X.Y.Z-1.x86_64.rpm`. If you install a package downloaded from there, check its SHA-256 against the value published in the release notes first:
+
+```bash
+sha256sum stratora-agent_X.Y.Z_amd64.deb
+```
+
+The value must match exactly.
+
 A new install doesn't start the agent: it waits for its configuration.
 
 ### 2. Write the configuration

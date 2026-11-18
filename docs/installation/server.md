@@ -16,7 +16,7 @@ This page covers a first-time install. To upgrade a server you already run, see 
 
 | Requirement | Details |
 |---|---|
-| Operating system | Windows Server 2016 or later, 64-bit. Stratora 2.5.3 was tested on Windows Server 2022. The installer allows Windows Server 2016 and 2019, but they were not tested with this release. |
+| Operating system | Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported. This release was tested on Windows Server 2022. |
 | Hardware | 4 CPU cores, 16 GB RAM and 200 GB of disk. The `data` folder holds the database and the metric store, so give it room to grow. |
 | Account | A local administrator. The installer runs elevated. |
 | Name | A DNS name (FQDN) for the server, with an A record that points to it. The Setup Wizard checks it, and collectors and agents use it to reach the server. |
@@ -66,11 +66,17 @@ The collector and agent that the Server installs for itself always go into `C:\P
 ## Download and check the installer
 
 1. Download `Stratora-Server-X.Y.Z.msi` from the [releases page](https://github.com/Stratora-Platforms/stratora-releases/releases). It is the only file you need: the Remote Collector and Agent installers are inside it, and your server offers them for download once it is installed.
-2. Check its SHA-256 against the value in the release notes:
+2. Check its SHA-256 against the value published in the release notes (the [Changelog](/docs/changelog) entry for the release), from PowerShell:
 
    ```powershell
    Get-FileHash .\Stratora-Server-X.Y.Z.msi -Algorithm SHA256
    ```
+
+   The value must match exactly. Don't run an installer whose checksum doesn't match.
+
+:::note Unsigned installers
+The Stratora installers are not code-signed. Windows shows them as coming from an unknown publisher, and Microsoft Defender SmartScreen or Microsoft Defender Antivirus may warn about them or block them. Before you run an installer, check its SHA-256 checksum against the published value.
+:::
 
 ---
 

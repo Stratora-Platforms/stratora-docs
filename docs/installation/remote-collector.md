@@ -21,7 +21,7 @@ The Stratora server already has a collector of its own. You only need a Remote C
 
 | Requirement | Details |
 |---|---|
-| Operating system | 64-bit Windows 10 or 11, or Windows Server 2016 or later. Stratora 2.5.3 was tested on Windows Server 2022. The installer allows Windows Server 2016 and 2019 and Windows 10 and 11, but they were not tested with this release. |
+| Operating system | Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported, and so are 64-bit Windows 10 and 11. This release was tested on Windows Server 2022. |
 | Account | A local administrator. |
 | Network | Outbound HTTPS (TCP 443) to the Stratora server, and access to the devices it polls (ICMP, SNMP on UDP 161, and the APIs it uses). See [Network](/docs/prerequisites/network). |
 | Server version | The same version as the collector. Download the installer from your server (below), so the versions match. |
@@ -44,7 +44,17 @@ Download it from your Stratora server:
 - **Collection → Collectors**, then **Deploy Collector**: download the MSI, or copy a ready-made silent install command with your server address and token filled in;
 - or `https://<your-stratora-server>/api/v1/downloads/collector/windows`.
 
-It downloads as `StratoraCollector.msi`.
+It downloads as `StratoraCollector.msi`. The copy your server offers comes from the Server installer, whose checksum you checked when you installed the server.
+
+The releases page also publishes the Collector installer as `StratoraCollector-X.Y.Z.msi`. If you download it from there, check its SHA-256 against the value published in the release notes before you run it:
+
+```powershell
+Get-FileHash .\StratoraCollector-X.Y.Z.msi -Algorithm SHA256
+```
+
+:::note Unsigned installers
+The Stratora installers are not code-signed. Windows shows them as coming from an unknown publisher, and Microsoft Defender SmartScreen or Microsoft Defender Antivirus may warn about them or block them. Before you run an installer, check its SHA-256 checksum against the published value.
+:::
 
 ---
 

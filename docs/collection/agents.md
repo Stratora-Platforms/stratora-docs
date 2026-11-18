@@ -16,13 +16,13 @@ Unlike SNMP-based monitoring (which is polled by a [collector](./collectors.md))
 
 ## Supported Platforms
 
-| Platform | Installer | Installs on | Tested with 2.5.3 |
+| Platform | Installer | Supported | Tested with 2.5.3 |
 |----------|-----------|-------------|-------------------|
-| Windows Server / Desktop | MSI (x64) | Windows Server 2016 or later; Windows 10, 11 (64-bit) | Windows Server 2022 only |
+| Windows Server / Desktop | MSI (x64) | Windows Server 2016, 2019, 2022, 2025; Windows 10, 11 (64-bit) | Windows Server 2022 |
 | Debian / Ubuntu | `.deb` | amd64 with systemd | Debian 12, Ubuntu 24.04 LTS |
 | RHEL family | `.rpm` | amd64 with systemd | Rocky Linux 8 (SELinux enforcing) |
 
-The installer allows Windows Server 2016 and 2019 and Windows 10 and 11, but they were not tested with this release; other Linux distributions were not tested either. Step-by-step install, upgrade and uninstall guides: [Windows Agent](/docs/installation/windows-agent) and [Linux Agent](/docs/installation/linux-agent). The Stratora server and every Remote Collector already include an agent, so you don't install one there.
+Windows Server 2016, 2019, 2022 and 2025 (64-bit) are supported, and so are 64-bit Windows 10 and 11. This release was tested on Windows Server 2022. Linux distributions other than those listed were not tested with this release. Step-by-step install, upgrade and uninstall guides: [Windows Agent](/docs/installation/windows-agent) and [Linux Agent](/docs/installation/linux-agent). The Stratora server and every Remote Collector already include an agent, so you don't install one there.
 
 Per-platform prerequisites — firewall rules, supported distributions, and what to enable before deploying the agent — are documented in [Windows hosts](/docs/prerequisites/windows-hosts) and [Linux hosts](/docs/prerequisites/linux-hosts).
 

@@ -99,7 +99,7 @@ Password reset is only available for **local accounts**. Users who authenticate 
 
 Admins can require a user to change their password at next login by setting the **Force password change** flag on the user. When this flag is set, the user is locked out of every feature in Stratora until they change their password — only the change-password screen, the logout action, and the account-info endpoint remain accessible. Other API requests return `403 password_change_required` until the user completes the change. The flag clears automatically once the new password is set.
 
-The default `admin` account ships with this flag set so the initial password must be changed on first login.
+The default `admin` account ships with this flag set, so the one-time initial password must be changed at the first sign-in.
 
 ### Disabling a User
 
@@ -110,6 +110,10 @@ The built-in **admin** account cannot be deactivated — this ensures there is a
 ### Deleting a User
 
 Permanent deletion removes the user from the database entirely. The user's actions in the [audit log](./audit-logs.md) are preserved (the username is stored independently of the user record).
+
+**What the user owned moves to you.** When you permanently delete a user, the dashboards, dashboard folders and topology maps they owned become yours, the administrator who deletes them, in the same step. Their content and sharing do not change, and other users' dashboards and maps are not touched. The delete confirmation says so before you confirm, and each change of owner is written to the audit log with the old and the new owner.
+
+A user who has signed in before can be permanently deleted too.
 
 ---
 
@@ -148,6 +152,8 @@ User sessions have the following characteristics:
 Every Stratora installation includes a default **admin** account:
 
 - Username: `admin`
-- A password change is required on first login
+- There is no default password. On a fresh install, the backend creates a one-time password in `data\initial-admin-password.txt` in the install folder, readable only by SYSTEM and Administrators. See [Getting Started](../getting-started.md).
+- A password change is required at the first sign-in; the one-time password cannot be kept, and the file is deleted once you set your own
+- On an upgrade, if `admin` still has the never-used `admin`/`admin` password of an earlier version, the upgrade replaces it with a one-time password in the same file. A password you have set is never changed
 - This account cannot be deactivated or deleted
 - It provides emergency access if identity provider integrations become unavailable
