@@ -144,7 +144,7 @@ Each address record can store a **MAC address**. MAC data is populated through:
 - Discovery scans: a device that answers SNMP reports its own MAC address, and for hosts on the same network segment as the Stratora server, the MAC is taken from the server's ARP cache. Hosts behind a router that do not answer SNMP are recorded without a MAC address.
 - Manual entry for statically assigned devices
 
-MAC addresses help identify which physical device holds an IP — useful for troubleshooting IP conflicts and tracking hardware moves.
+MAC addresses help identify which physical device holds an IP, which is useful when troubleshooting IP conflicts. IPAM stores only the latest MAC address for each IP: a scan that finds a MAC replaces the stored one, and no history of earlier MAC addresses is kept.
 
 ---
 
