@@ -27,7 +27,7 @@ Servers are **enrolled** through the Stratora Agent rather than scanned; vCenter
 Every device is shown at one of three levels:
 
 - **Real-world validated** — validated end to end against a real device or platform.
-- **Simulated** — validated against device data in our test environment.
+- **Simulated** — validated against recorded device data, without a live device.
 - **Code only** — supported in code; not yet validated against a device.
 
 The level shown in the matrix is the highest level reached by any of the device's core features: interfaces, CPU and memory for network devices; power, temperature, fan and memory health for server BMCs; CPU, memory, disk and network for servers; and the API connection for vCenter. Every feature, core or not, that sits at a different level is listed under [Features at a different level](#features-at-a-different-level).
@@ -117,7 +117,7 @@ Stratora monitors three hypervisor platforms. For setup, see [Adding Virtualizat
 
 | Platform | How Stratora collects | Credential | Validation |
 |---|---|---|---|
-| Proxmox VE | A Stratora Collector polls the Proxmox VE API over HTTPS | Proxmox VE API token | **Simulated** |
+| Proxmox VE | A Stratora Collector polls the Proxmox VE API over HTTPS | Proxmox VE API token | **Real-world validated** (Proxmox VE 9) |
 | VMware vSphere | A Stratora Collector polls the vCenter Server API over HTTPS; each ESXi host is also polled over SNMP | vCenter user name and password; SNMP for ESXi | **Real-world validated** for the vCenter connection and ESXi interfaces; most metrics **Code only** |
 | Microsoft Hyper-V | The Stratora Windows Agent on each Hyper-V host | None (the agent is enrolled) | **Real-world validated**; per-VM storage **Code only** |
 
@@ -125,7 +125,7 @@ The cross-platform **VM Unexpectedly Off** alert applies to all three platforms.
 
 ### Proxmox VE
 
-**Validation:** **Simulated** for Proxmox VE 9; **Code only** for Proxmox VE 8.
+**Validation:** **Real-world validated** for Proxmox VE 9; **Code only** for Proxmox VE 8.
 
 - **Connection.** A Stratora Collector polls the Proxmox VE REST API over HTTPS (port 8006) with a Proxmox VE API token. User name and password sign-in is not supported. Add one cluster member; the other members are discovered and added automatically. The inventory is polled every 60 seconds.
 - **Versions.** Proxmox VE 9 and 8. Earlier versions are not supported.
