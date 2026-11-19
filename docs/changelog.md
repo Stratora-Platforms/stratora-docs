@@ -16,6 +16,22 @@ For detailed installation instructions see [Getting Started](/docs/getting-start
 - Agent 2.5.3 (Linux)
 - Collector 2.5.3
 
+### Supported upgrade paths
+You can upgrade directly to 2.5.3 from 2.5.2 or 2.5.1. From an older release,
+upgrade in steps: first to a release that supports a direct upgrade from
+your version, then to 2.5.3.
+
+### Upgrade order
+Upgrade the server first, then upgrade every collector and agent right away.
+Collectors and agents that are not upgraded yet keep working with the
+upgraded server, but some fixes and improvements only arrive with the new
+versions, so do not leave them on the old version. After the server upgrade,
+if any collector or agent runs an older version than the server ships,
+Stratora shows each administrator a summary the next time they open
+Stratora, with how many there are and links to the Collectors and Nodes
+pages filtered to them. You can open the summary again at any time from the
+About page.
+
 Stratora 2.5.3 adds **Facility maps**, **power and environment monitoring**, **faster collector failover** and **safer upgrades**, and makes agents and collectors verify the Stratora server's certificate by default. You can upgrade to 2.5.3 from 2.5.1 and 2.5.2. Read the upgrade notes below before you upgrade.
 
 ### Highlights
@@ -181,6 +197,8 @@ These are fixed in 2.5.3.
 - If the Windows agent, the collector or their Telegraf service crashes, Windows restarts it.
 - One node with bad settings no longer breaks a collector's whole configuration.
 - A collector going offline no longer marks every node behind it unreachable.
+- While a collector is offline, open alerts for its nodes are no longer resolved. They are
+  checked again once the collector sends fresh data.
 - Aruba Instant access points now show their model and serial number.
 - FortiGate nodes show their IPsec VPN tunnels.
 
@@ -367,6 +385,7 @@ The value must match the table exactly.
   coming from an unknown publisher, and Microsoft Defender SmartScreen or Microsoft Defender
   Antivirus may warn about them or block them. Before you run an installer, check its SHA-256
   checksum against the published value (see "Downloads and checksums").
+- **Some status alerts still show raw codes** for certain values (for example RAID status).
 - **Phone dashboards.** On a phone, dashboards keep the desktop grid. Panels are not stacked into
   one column.
 - **2.5.2 agent on an existing node.** A 2.5.2 agent installed or reinstalled on a computer whose
