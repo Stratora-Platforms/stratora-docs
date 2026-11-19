@@ -141,10 +141,10 @@ A subnet can have multiple DHCP ranges. Addresses that fall within a defined ran
 
 Each address record can store a **MAC address**. MAC data is populated through:
 
-- Discovery scans that capture ARP/neighbor table data
+- Discovery scans: a device that answers SNMP reports its own MAC address, and for hosts on the same network segment as the Stratora server, the MAC is taken from the server's ARP cache. Hosts behind a router that do not answer SNMP are recorded without a MAC address.
 - Manual entry for statically assigned devices
 
-MAC addresses help identify which physical device holds an IP — useful for troubleshooting IP conflicts, tracking hardware moves, and correlating with switch port data.
+MAC addresses help identify which physical device holds an IP — useful for troubleshooting IP conflicts and tracking hardware moves.
 
 ---
 
