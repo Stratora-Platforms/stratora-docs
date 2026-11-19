@@ -119,7 +119,7 @@ Stratora monitors three hypervisor platforms. Each is collected differently, and
 |---|---|---|---|
 | Proxmox VE | A Stratora Collector polls the Proxmox VE API over HTTPS | Proxmox VE API token | **Simulated** (lab cluster in virtual machines) |
 | VMware vSphere | A Stratora Collector polls the vCenter Server API over HTTPS; each ESXi host is also polled over SNMP | vCenter user name and password; SNMP for ESXi | **Real-world validated** for the vCenter connection and ESXi interfaces; most metrics **Code only** |
-| Microsoft Hyper-V | The Stratora Windows Agent on each Hyper-V host | None (the agent is enrolled) | **Real-world validated** for host counters and VM inventory; some features at other levels |
+| Microsoft Hyper-V | The Stratora Windows Agent on each Hyper-V host | None (the agent is enrolled) | **Real-world validated** on a physical Hyper-V host for host counters, VM inventory, VM state and health, and per-VM CPU; some features at other levels |
 
 The cross-platform **VM Unexpectedly Off** alert applies to all three platforms. It is off by default and is turned on per VM.
 
@@ -137,7 +137,7 @@ The cross-platform **VM Unexpectedly Off** alert applies to all three platforms.
 
 ### VMware vSphere
 
-**Validation.** The vCenter API connection is **Real-world validated** against a real vCenter Server in a lab: sign-in, the inventory of hosts, VMs and datastores, and the performance data arrived end to end. ESXi interfaces and identity over SNMP are **Real-world validated** on a lab ESXi host. The individual metric families (host, VM, cluster and datastore metrics; ESXi CPU, memory and sensors) are **Code only**; see [Features at a different level](#features-at-a-different-level).
+**Validation.** The vCenter API connection is **Real-world validated** against a real vCenter Server in a lab: sign-in, the inventory of hosts, VMs and datastores, and the performance data arrived end to end. ESXi interfaces and identity over SNMP are **Real-world validated**, tested on a physical ESXi host. The individual metric families (host, VM, cluster and datastore metrics; ESXi CPU, memory and sensors) are **Code only**; see [Features at a different level](#features-at-a-different-level).
 
 - **Connection.** A Stratora Collector connects to vCenter Server over HTTPS with a vCenter user name and password. Performance counters are read through the vSphere API every 5 minutes, and the inventory of hosts, VMs and datastores through the vCenter REST API every 5 minutes. Each ESXi host is also added as its own node and polled over SNMP (v2c or v3): host and VM alerts are attributed to that node, and memory overcommit needs it.
 - **Versions.** Stratora uses the vCenter REST API (`/api`), which vCenter Server provides from version 7.0 Update 2. No specific vCenter version has been certified. A standalone ESXi host without vCenter can be monitored over SNMP only, with no VM inventory and no performance counters.
@@ -149,9 +149,11 @@ The cross-platform **VM Unexpectedly Off** alert applies to all three platforms.
 
 ### Microsoft Hyper-V
 
-**Validation.** Host performance counters, VM inventory and VM health are **Real-world validated** on real Hyper-V hosts in a lab. Failover-cluster quorum and node state were tested on a lab cluster that uses local storage. Per-VM CPU and storage figures are **Code only**: they are collected, but their values have not been checked against the host. Cluster Shared Volumes and VM moves between cluster nodes are not validated.
+**Validation.** Tested on a physical Hyper-V host with this release. **Real-world validated:** host performance counters (CPU, memory, disk, network); automatic detection of the Hyper-V role; the VM inventory (name, run state, configuration version, vCPUs); VM run state and the VM health summary; per-VM CPU, which matched the host's own counters; host uptime and reachability. The Snapshot Age High and Snapshot Chain Depth High alerts have fired on that host. The Hyper-V VM Health Critical alert has not been proven to fire, because no VM went into a critical state during testing.
+
+Per-VM storage is **Code only**. The used space counts only the disk file the VM is running on now, so a VM that runs on a checkpoint is undercounted. Failover-cluster data (each VM's owner node, quorum, witness and node state) is **Code only** for this release: it was checked on a lab cluster during development, but not re-tested on this release. Cluster Shared Volumes and VM moves between cluster nodes are not validated.
 
 - **Connection.** The Stratora Windows Agent on the Hyper-V host. When the agent finds the Hyper-V role running, it collects Hyper-V data automatically. There is no credential and no API connection. The host stays a Windows Server node, with the Windows Server alerts.
-- **Collected.** Hypervisor counters (logical and virtual processors, partitions, run time). Per VM: dynamic memory and memory pressure, virtual processor run time, virtual storage throughput, operations, errors and latency, virtual network adapter traffic and dropped packets, and the VM health summary. The VM inventory (state, vCPUs, memory, uptime, IPv4 addresses, virtual disk sizes and snapshots) is read with PowerShell. On a failover-cluster member: the cluster, each VM's owner node, quorum, witness and node state.
+- **Collected.** Hypervisor counters (logical and virtual processors, partitions, run time). Per VM: dynamic memory and memory pressure, virtual processor run time, virtual storage throughput, operations, errors and latency, virtual network adapter traffic and dropped packets, and the VM health summary. The VM inventory (run state, configuration version, vCPUs, memory, uptime, IPv4 addresses, virtual disk sizes and snapshots) is read with PowerShell. On a failover-cluster member: the cluster, each VM's owner node, quorum, witness and node state.
 - **Built-in alerts.** The Windows Server alerts, plus Hyper-V Host Network Throughput High; Hyper-V VM Memory Pressure High; Hyper-V VM Health Critical; Cluster Not Quorate; Cluster Node Down; Snapshot Age High; Snapshot Chain Depth High.
-- **Not collected.** Cluster Shared Volume storage.
+- **Not collected.** The VM generation (the configuration version is shown instead); the per-VM integration-services heartbeat; Cluster Shared Volume storage.
