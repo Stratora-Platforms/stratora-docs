@@ -103,7 +103,7 @@ The badge's tooltip and popover show the fingerprint and when it was trusted, an
 Hyper-V hosts are monitored by the **Stratora Windows Agent** — there are no credentials to manage; the agent itself is the trust.
 
 1. Install the Stratora Windows Agent on the Hyper-V host (see [Agents](./agents.md)).
-2. The agent enrolls and **self-reports the Hyper-V role** — the host appears as a Hyper-V node automatically.
+2. The agent enrolls and **self-reports the Hyper-V role** — the host stays a Windows Server node, and Hyper-V data and the Hyper-V dashboard are added automatically.
 
 The Hyper-V dashboard populates from the agent's data (hosts, VMs, clusters, memory pressure). As with Proxmox, a Hyper-V host **is** its own node — no second layer.
 
