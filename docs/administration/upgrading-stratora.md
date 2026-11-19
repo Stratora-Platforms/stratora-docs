@@ -64,6 +64,12 @@ Get-Service Stratora* | Start-Service
 
 Store the copy where only administrators can read it.
 
+### Database dumps
+
+If you also back up the database with a PostgreSQL dump (for example `pg_dump`), protect the dump file as you protect `data\server-keys.json`, the file in the `data` folder that holds the server's encryption keys: only SYSTEM and Administrators may read it, and it is stored only where administrators can read it. A dump contains the Microsoft Teams webhook addresses of queued notifications that have not finished, that is, notifications still waiting to be sent or to be retried. Anyone who has such an address can post to that Teams channel.
+
+From 2.5.3, a queue entry no longer keeps the webhook address once it has finished (sent, or out of retries), and finished queue entries are removed after 24 hours.
+
 ### Plan for a short monitoring gap
 
 While the server upgrades, its backend, web server and database are stopped. During that time the web interface is not available, no new data is stored, and no alerts or notifications go out. Collectors buffer a limited amount of data while the server is unavailable. Each collector and agent upgrade also pauses collection on that machine for a moment. Run the upgrade in a maintenance window.
@@ -134,7 +140,7 @@ The upgrade keeps how long VictoriaMetrics, the metric store, keeps metrics. On 
 2.5.3 runs the AWS CLI for Route 53 DNS validation only from a folder that nobody but SYSTEM, Administrators and TrustedInstaller can change, and that includes the folders above it. Other DNS providers are not affected.
 
 - **On a `C:\Stratora` install**, the bundled AWS CLI folder is refused. Install the AWS CLI v2 MSI, then run the provider test.
-- **The owner of `C:\`.** On a standard Windows install the root of the system drive is owned by TrustedInstaller. If `C:\` has a different owner, Route 53 DNS validation refuses to run. Route 53 validation that worked before the upgrade can stop after it. The provider test and the SSL/TLS page show a message that names the cause and the steps to fix it. With such an owner, the server can also log an "install folder permissions" warning that names `C:\` and its owner.
+- **The owner of `C:\`.** On a standard Windows install the root of the system drive is owned by TrustedInstaller. If `C:\` has a different owner, Route 53 DNS validation refuses to run. 2.5.2 did not check this, so Route 53 validation that worked before the upgrade can stop after it. The provider test and the SSL/TLS page show a message that names the cause and the steps to fix it. With such an owner, the server can also log an "install folder permissions" warning that names `C:\` and its owner.
 
 You can check the owner before you upgrade. In PowerShell:
 
@@ -164,6 +170,8 @@ After the upgrade, a 2.5.2 collector cannot read the stored key. Reinstalling 2.
 
 - An upgrade runs the old version's own uninstall steps once. When you upgrade a Remote Collector or Agent from 2.5.1 or 2.5.2 by hand, **start the installer by double-clicking it or from an elevated Command Prompt, not from a PowerShell window.**
 - A Repair runs the installed version's own installer. Repairing 2.5.2 or older still leaves the server stopped until you start its services or reboot.
+- A collector backup that a cancelled 2.5.2 upgrade left in clear text is still restored. The next upgrade replaces it with an encrypted one.
+- A registry copy of the agent key that a 2.5.2 agent left is restricted to SYSTEM and Administrators while it is kept.
 - Alerts that earlier versions left suppressed after a recurring maintenance window are resolved on the first check. If the condition still holds, a new alert is raised with fresh notifications.
 - On a collector upgraded in place from 2.5.2 where a standalone agent once took over the bundled agent's enrollment, the bundled agent may need to be enrolled again. Create an enrollment token that allows replacing an existing component. Then, as administrator, run `stratora-agent.exe -reenroll <token> -config <folder>\config.json` in the collector's `Agent` folder, and restart the `StratoraAgent` service.
 
